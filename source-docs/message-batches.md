@@ -1,0 +1,237 @@
+# Envio em lote (Message Batch)
+
+> **Recurso Pro:** todas as rotas `/message/batches...` são classificadas comercialmente como CodeChat API Go Pro. O runtime atual não aplica entitlement de plano nem retorna `402`; a autenticação executável continua sendo feita exclusivamente pelo token global.
+
+O Envio em lote persiste no PostgreSQL uma mensagem, os destinatários individuais, as instâncias permitidas e cada tentativa de envio. A requisição HTTP apenas cria ou altera o estado do lote; o `MessageBatchWorker` consome os itens de forma assíncrona, com concorrência `1` por lote. A fila no banco é a fonte da verdade.
+
+## Autenticação
+
+Todas as rotas abaixo usam o token global configurado por `AUTHENTICATION_GLOBAL_AUTH_TOKEN`:
+
+```http
+apikey: <token-global>
+```
+
+Os aliases `x-api-key` e `apiKey` também são aceitos pelas mesmas regras do middleware global. O token global é administrativo e, no runtime atual, não existe ACL adicional por usuário/instância. Na criação, todas as instâncias são consultadas, precisam existir e possuir autenticação; seus IDs internos e um snapshot dos nomes são persistidos. Nomes vazios ou repetidos são rejeitados.
+
+## Arquitetura e persistência
+
+- `message_batches`: definição, estado, lease e contadores derivados.
+- `message_batch_instances`: IDs internos permitidos, snapshot do nome e contadores por instância.
+- `message_batch_items`: destinatários normalizados, ordem, estado e resultado.
+- `message_batch_attempts`: uma linha por tentativa, inclusive indisponibilidade da instância.
+- `message_batch_outbox`: eventos globais entregues após o commit.
+- `Message.message_batch_id` e `Message.message_batch_item_id`: vínculo opcional com a mensagem persistida já existente.
+
+Contadores são recalculados dos itens na mesma transação que conclui uma tentativa. O progresso é `floor(processed * 100 / total)`, em que `processed = success + failed + skipped + unknown`.
+
+## Criar um lote
+
+```http
+POST /message/batches
+Content-Type: application/json
+apikey: <token-global>
+```
+
+```json
+{
+  "name": "Aviso de manutenção",
+  "instances": ["codechat-01", "codechat-02"],
+  "recipients": ["5531999999999", "5531888888888"],
+  "message": {
+    "type": "interactive",
+    "payload": {
+        "title": "Confirmação",
+        "description": "Deseja continuar?",
+        "footerText": "CodeChat",
+        "buttons": [
+            {
+                "displayText": "Repo",
+                "url": "https://github.com/code-chat-br/whatsapp-api-go"
+            },
+            {
+                "displayText": "Código de barras",
+                "copyCode": "32546413216543165489869589416558645341864321365468435469465"
+            },
+            {
+                "displayText": "Sim",
+                "id": "1"
+            },
+            {
+                "displayText": "Não",
+                "id": "0"
+            },
+            {
+                "displayText": "Talvez",
+                "id": "-1"
+            }
+        ]
+    }
+  },
+  "options": {
+    "replicable": true,
+    "presence": "composing",
+    "delay": {"minMs": 3000, "maxMs": 12000}
+  },
+  "autoStart": false,
+  "externalAttributes": {"origin": "admin-panel"}
+}
+```
+
+Resposta `201 Created`:
+
+```json
+{
+  "id": "01900000-0000-7000-8000-000000000001",
+  "name": "Aviso de manutenção",
+  "status": "DRAFT",
+  "instances": [
+    {"id": 1, "name": "codechat-01", "connectionStatus": "offline"},
+    {"id": 2, "name": "codechat-02", "connectionStatus": "online"}
+  ],
+  "counts": {
+    "received": 2,
+    "total": 2,
+    "processed": 0,
+    "pending": 2,
+    "sending": 0,
+    "success": 0,
+    "failed": 0,
+    "skipped": 0,
+    "unknown": 0
+  },
+  "progress": 0,
+  "createdAt": "2026-07-13T12:00:00-03:00",
+  "updatedAt": "2026-07-13T12:00:00-03:00"
+}
+```
+
+Com `autoStart: true`, lote, itens, instâncias, evento de criação e transição para `QUEUED` são gravados na mesma transação.
+
+### Destinatários
+
+Somente contatos individuais são aceitos. Os valores são normalizados pelo mesmo parser de endereço usado pelo projeto e a constraint `(batch_id, normalized_recipient)` impede duplicidade após normalização. A resposta informa `counts.received`, `counts.total` e `counts.duplicatesIgnored`.
+
+Qualquer valor terminado em `@g.us` ou normalizado como grupo rejeita o lote inteiro com `422` e mantém os índices originais:
+
+```json
+{
+  "statusCode": 422,
+  "error": "unprocessable-entity",
+  "message": [
+    "recipients[3] não pode ser um grupo",
+    "recipients[7] não pode terminar com @g.us"
+  ]
+}
+```
+
+### Mensagens compatíveis
+
+Os tipos persistentes suportados são `text`, `link`, `media`, `audio` (incluindo os aliases `ptt`, `whatsapp-audio` e `whatsapp_audio`), `contact`, `location` e `interactive`. O `payload` usa o corpo interno dos endpoints individuais: por exemplo, `{"text":"..."}` para texto, o objeto `mediaMessage` para mídia, um array de contatos para `contact` e o objeto interativo mostrado acima para `interactive`.
+
+Em `interactive`, o worker reutiliza o modo interativo `buttons`: cada botão é inferido por `url`, `copyCode` ou `id`, permitindo misturar os três tipos no mesmo payload, até o limite de 10 botões. `title` e `footerText` são opcionais; `description` e `buttons` são obrigatórios. `mediaUploadId` também é opcional: omitido, `0` ou string vazia enviam sem mídia. Como o pré-upload pertence a uma única instância, um ID positivo exige que o lote tenha exatamente uma instância; em lotes com múltiplas instâncias, mantenha o campo omitido, `0` ou vazio.
+
+`media` reutiliza URL ou `mediaUploadId` do pré-upload existente; bytes não são armazenados no lote. Upload multipart por requisição (`media-file` e `audio-file`), `reaction`, `form`, `payment-request`, `pix` e `review-order` são rejeitados explicitamente porque não formam um payload persistente e repetível neste worker. `mentionAll` é rejeitado por ser exclusivo de grupos.
+
+`replicable` é aceito e preservado no JSON de opções. O código anterior não possuía comportamento executável para essa propriedade; portanto, o Message Batch não inventa uma nova semântica nem altera o envio individual.
+
+O payload da mensagem tem limite de 1 MiB; cada objeto de atributos externos tem limite de 64 KiB. A lista recebida respeita `MESSAGE_BATCH_MAX_RECIPIENTS`.
+
+## Delay e múltiplas instâncias
+
+`options.delay.minMs` deve ser `>= 0`, `maxMs >= minMs` e `maxMs <= MESSAGE_BATCH_MAX_DELAY_MS`. Depois de cada item concluído, o worker escolhe um valor inclusivo e criptograficamente aleatório, persiste em `selectedDelayMs` e usa timer cancelável. Pause, stop ou encerramento do processo interrompem a espera sem `time.Sleep` irrecuperável.
+
+Para cada item, o worker filtra as instâncias conectadas do lote, embaralha a lista e persiste a escolhida antes de enviar. Se ela cair antes do envio, a tentativa vira `INSTANCE_UNAVAILABLE` e outra instância conectada é tentada. Se nenhuma estiver disponível, o item volta para `PENDING` e o lote entra em `WAITING_FOR_INSTANCE`; a reavaliação ocorre no intervalo configurado e o lote volta automaticamente a `PROCESSING`.
+
+## Estados e transições
+
+| Origem | Destino permitido |
+| --- | --- |
+| `DRAFT` | `QUEUED` |
+| `QUEUED` | `PROCESSING`, `WAITING_FOR_INSTANCE`, `INTERRUPTED` |
+| `PROCESSING` | `PAUSE_REQUESTED`, `STOP_REQUESTED`, `WAITING_FOR_INSTANCE`, `COMPLETED`, `COMPLETED_WITH_ERRORS`, `INTERRUPTED`, `FAILED` estrutural |
+| `PAUSE_REQUESTED` | `PAUSED`, `INTERRUPTED` |
+| `PAUSED` | `QUEUED` |
+| `WAITING_FOR_INSTANCE` | `PROCESSING`, `PAUSE_REQUESTED`, `STOP_REQUESTED`, `INTERRUPTED` |
+| `STOP_REQUESTED` | `STOPPED`, `INTERRUPTED` |
+| `INTERRUPTED` | `QUEUED` |
+
+Transição inválida retorna `409 Conflict`. `start` é idempotente em `QUEUED` e `PROCESSING`; `pause` é idempotente em `PAUSE_REQUESTED` e `PAUSED`; `stop` é idempotente em `STOP_REQUESTED` e `STOPPED`.
+
+Pause não inicia um novo item, deixa o envio já confirmado terminar, cancela o delay e chega a `PAUSED`. Um novo `start` continua do próximo `PENDING`. Stop chega a `STOPPED`, é terminal e conserva os itens não processados como `PENDING`.
+
+## Endpoints e filtros
+
+| Método | Rota | Operação |
+| --- | --- | --- |
+| `POST` | `/message/batches` | Cria o lote (`201`). |
+| `GET` | `/message/batches` | Lista lotes. |
+| `GET` | `/message/batches/:batchId` | Detalhes sem incorporar milhares de itens. |
+| `GET` | `/message/batches/:batchId/items` | Lista itens. |
+| `GET` | `/message/batches/:batchId/items/:itemId` | Item e todas as suas tentativas. |
+| `GET` | `/message/batches/:batchId/attempts` | Lista tentativas. |
+| `POST` | `/message/batches/:batchId/start` | Enfileira início ou continuação e retorna imediatamente. |
+| `POST` | `/message/batches/:batchId/pause` | Solicita pausa. |
+| `POST` | `/message/batches/:batchId/stop` | Solicita encerramento terminal. |
+
+Filtros de lotes: `status`, `instanceName`, `createdFrom`, `createdTo`, `query`, `limit`, `nextCursor`, `previousCursor`. Datas usam RFC 3339.
+
+Filtros de itens: `status`, `recipient`, `instanceName`, `limit`, `nextCursor`, `previousCursor`. Estados: `PENDING`, `SENDING`, `SUCCESS`, `FAILED`, `SKIPPED`, `INTERRUPTED`, `UNKNOWN`.
+
+Filtros de tentativas: `status`, `recipient`, `instanceName`, `limit`, `nextCursor`, `previousCursor`. Estados: `SENDING`, `SUCCESS`, `FAILED`, `INSTANCE_UNAVAILABLE`, `INTERRUPTED`, `UNKNOWN`.
+
+O limite padrão é `50` e o máximo `200`. Não envie `nextCursor` e `previousCursor` juntos. Os cursores são opacos para clientes; atualmente usam UUID para lotes/tentativas e posição numérica para itens. O envelope é:
+
+```json
+{
+  "nextCursor": "01900000-0000-7000-8000-000000000010",
+  "previousCursor": "01900000-0000-7000-8000-000000000002",
+  "totalRecords": 100,
+  "records": []
+}
+```
+
+## Exemplos com curl
+
+```bash
+curl -X POST "http://localhost:8084/message/batches" \
+  -H "apikey: $GLOBAL_TOKEN" \
+  -H "Content-Type: application/json" \
+  --data-binary @batch.json
+
+curl -X POST "http://localhost:8084/message/batches/$BATCH_ID/start" \
+  -H "apikey: $GLOBAL_TOKEN"
+
+curl "http://localhost:8084/message/batches/$BATCH_ID" \
+  -H "apikey: $GLOBAL_TOKEN"
+
+curl "http://localhost:8084/message/batches/$BATCH_ID/items?status=FAILED&limit=50" \
+  -H "apikey: $GLOBAL_TOKEN"
+
+curl -X POST "http://localhost:8084/message/batches/$BATCH_ID/pause" \
+  -H "apikey: $GLOBAL_TOKEN"
+```
+
+## Recovery, leases e resultado desconhecido
+
+Cada lote ativo possui `lease_owner` e `lease_expires_at`. Claim, item `SENDING` e tentativa são gravados com transações e `FOR UPDATE SKIP LOCKED`, impedindo dois workers/réplicas de confirmarem o mesmo item. Heartbeats renovam os leases. No encerramento gracioso, timers e novos claims são cancelados e lotes pertencentes ao processo ficam `INTERRUPTED`.
+
+Na inicialização e em cada ciclo, leases expirados de `QUEUED`, `PROCESSING`, `PAUSE_REQUESTED`, `WAITING_FOR_INSTANCE` ou `STOP_REQUESTED` são recuperados. Itens e tentativas que estavam em `SENDING` viram `UNKNOWN`; o lote vira `INTERRUPTED` e não reinicia automaticamente. O operador precisa chamar `/start`.
+
+O worker gera e persiste `clientMessageId` antes de chamar o WhatsApp e o reutiliza nas tentativas de troca de instância. Isso reduz duplicidade, mas não oferece garantia de exactly once: uma mensagem pode ter sido aceita pelo WhatsApp e o processo cair antes do commit local. `UNKNOWN` significa exatamente que o resultado externo não pôde ser confirmado; o sistema não reenvia esse item cegamente.
+
+## Webhooks e outbox
+
+Eventos de lote usam somente `WEBHOOK_GLOBAL_URL`. A mudança de item/estado e a linha de outbox são confirmadas juntas; a chamada HTTP ocorre fora da transação, com retry e backoff. `message.batch.progress` só é criado quando o percentual inteiro muda ou chega a 100. Consulte [Webhooks](./webhooks.md) para o mapa e os exemplos completos.
+
+## Variáveis de ambiente
+
+| Variável | Padrão |
+| --- | ---: |
+| `MESSAGE_BATCH_WORKER_ENABLED` | `true` |
+| `MESSAGE_BATCH_WORKER_POLL_INTERVAL_MS` | `1000` |
+| `MESSAGE_BATCH_INSTANCE_RECHECK_INTERVAL_MS` | `5000` |
+| `MESSAGE_BATCH_MAX_DELAY_MS` | `86400000` |
+| `MESSAGE_BATCH_MAX_RECIPIENTS` | `10000` |
+
+Se o worker estiver desabilitado, criação, consulta e alterações de estado permanecem disponíveis, mas a fila não é consumida e a outbox não é entregue por este processo.

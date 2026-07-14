@@ -1,0 +1,56 @@
+# Grupos
+
+Todas as rotas atuais usam o JWT da instância.
+
+| Método | Rota | Entrada | Sucesso |
+| --- | --- | --- | --- |
+| `POST` | `/instance/:instance/group` | JSON | `201` |
+| `PUT` | `/instance/:instance/group/update-picture` | JSON | `200` |
+| `GET` | `/instance/:instance/group/invitation-code?groupJid=...` | query | `200` |
+| `PUT` | `/instance/:instance/group/revoke-invitation?groupJid=...` | query | `200` vazio |
+| `PUT` | `/instance/:instance/group/update-participants?groupJid=...` | query + JSON | `200` vazio |
+| `DELETE` | `/instance/:instance/group/leave?groupJid=...` | query | `200` vazio |
+
+## Criar
+
+```json
+{
+  "subject":"Equipe",
+  "description":"Atendimento",
+  "participants":["5511999999999","5511888888888"]
+}
+```
+
+`subject` e ao menos um participante são obrigatórios. O sucesso retorna `id`, `subject`, `subjectOwner`, `subjectTime`, `size`, `creation`, `owner`, `desc`, `descId`, `restrict`, `announce`, `isCommunity`, `isCommunityAnnounce`, `joinApprovalMode`, `memberAddMode` e `participants`. Cada participante pode conter `id`, `phoneNumber`, `lid`, `isAdmin`, `isSuperAdmin`, `displayName` e `error`.
+
+## Atualizar foto
+
+```json
+{
+  "groupJid":"120363000000000000@g.us",
+  "image":"https://example.com/group.jpg"
+}
+```
+
+`groupJid` precisa terminar em `@g.us`; `image` precisa ser URL HTTP(S). O download é limitado a 16 MB. O sucesso retorna as informações atualizadas.
+
+## Convite
+
+`GET .../invitation-code` retorna `{"invitation":"<código>"}`. `PUT .../revoke-invitation` revoga o código atual e responde `200` com body vazio.
+
+## Participantes
+
+```json
+{
+  "action":"add",
+  "participants":["5511999999999"]
+}
+```
+
+`action` aceita `add`, `remove`, `promote` ou `demote`; a lista não pode ser vazia. O grupo vem na query `groupJid`. A resposta atual é `200` vazia.
+
+## Sair
+
+`DELETE .../leave?groupJid=120363...@g.us` responde `200` vazio.
+
+Os aliases antigos `/group/*/:instanceName` estão em [Endpoints legados](./legacy-endpoints.md).

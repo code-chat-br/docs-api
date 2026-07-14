@@ -1,0 +1,77 @@
+# Conexões
+
+Todas as rotas atuais usam o JWT da instância.
+
+## Matriz atual
+
+| Método | Rota | Sucesso | Finalidade |
+| --- | --- | --- | --- |
+| `GET` | `/instance/:instance/connect` | `200` | Inicia/acompanha conexão e retorna o primeiro QR. |
+| `POST` | `/instance/:instance/connect` | `200` | Mesmo handler e semântica do `GET`. |
+| `GET` | `/instance/:instance/connect/code/:phoneNumber` | `200` | Solicita pairing code. |
+| `POST` | `/instance/:instance/connect/code` | `200` | Solicita pairing code com telefone no JSON. |
+| `POST` | `/instance/:instance/connect/passkey/challenge` | `200` | Obtém challenge WebAuthn. |
+| `POST` | `/instance/:instance/connect/passkey/assertion` | `202` | Envia assertion WebAuthn. |
+| `GET` | `/instance/:instance/connection/status` | `200` | Consulta conexão e login. |
+| `DELETE` | `/instance/:instance/logout/:instanceName` | `200` | Desconecta e remove a sessão WhatsApp. |
+
+## QR Code
+
+`GET` e `POST /instance/codechat/connect` não recebem body. A resposta pode conter `count`, `code`, `base64`, `instanceName`, `connectionStatus`, `alreadyConnected`, `alreadyConnecting` e `ownerJid`. O processo continua após a resposta e respeita `WHATSAPP_PAIRING_TIMEOUT`.
+
+## Pairing code
+
+Pelo path:
+
+```http
+GET /instance/codechat/connect/code/5511999999999
+Authorization: Bearer <token-da-instancia>
+```
+
+Pelo body estrito:
+
+```http
+POST /instance/codechat/connect/code
+Authorization: Bearer <token-da-instancia>
+Content-Type: application/json
+
+{"phoneNumber":"5511999999999"}
+```
+
+A API normaliza o telefone para dígitos e responde `{"code":"ABCD-EFGH"}`. Campos JSON desconhecidos são rejeitados.
+
+O router registra `POST /instance/:instance/connect/code` duas vezes com o mesmo handler. Isso não cria duas operações OpenAPI; é uma duplicidade interna a remover futuramente.
+
+## Estado
+
+`GET /instance/codechat/connection/status` retorna:
+
+```json
+{
+  "state": "open",
+  "statusReason": 0,
+  "instanceName": "codechat",
+  "connectionStatus": "ONLINE",
+  "connected": true,
+  "loggedIn": true,
+  "ownerJid": "5511999999999@s.whatsapp.net"
+}
+```
+
+## Logout
+
+A rota registrada é exatamente:
+
+```http
+DELETE /instance/codechat/logout/codechat
+Authorization: Bearer <token-da-instancia>
+```
+
+Ela possui `:instance` e `:instanceName`. O middleware e o handler preferem o segundo; portanto, use o mesmo nome nos dois segmentos. A resposta contém `instanceName`, `state: "logged_out"`, `connectionStatus: "LOGGED_OUT"` e `message`.
+
+## Passkey
+
+O fluxo, os objetos WebAuthn e os estados `404`, `409`, `410`, `422` e `503` estão em [Pareamento por Passkey](./passkey-pairing.md).
+
+Os aliases antigos estão em [Endpoints legados](./legacy-endpoints.md).
+
