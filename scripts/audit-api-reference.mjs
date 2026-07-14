@@ -4,80 +4,30 @@ import process from 'node:process';
 import YAML from 'yaml';
 
 const projectRoot = path.resolve(import.meta.dirname, '..');
-const sourceRoot = path.resolve(projectRoot, process.env.CODECHAT_SOURCE_ROOT || '../whatsapp-go-api');
-const openApiPath = path.join(sourceRoot, 'docs', 'openapi.yml');
+const sourceDocs = path.resolve(projectRoot, process.env.CODECHAT_SOURCE_DOCS || './source-docs');
+const openApiPath = path.join(sourceDocs, 'openapi.yml');
+const publishedOpenApiPath = path.join(projectRoot, 'public', 'openapi.yml');
 const reportPath = path.join(projectRoot, 'docs', 'api-reference-audit.md');
-const routeFiles = [
-  path.join(sourceRoot, 'internal', 'http', 'routes.go'),
-  path.join(sourceRoot, 'internal', 'http', 'message_batch_routes.go'),
-];
-const methods = ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'];
+const methods = ['get', 'post', 'put', 'patch', 'delete', 'options', 'head', 'trace'];
 
-function normalizePath(value) {
-  return (value || '/').replace(/:([A-Za-z0-9_]+)/g, '{$1}');
-}
-
-function sourceLabel(file, line) {
-  return `${path.relative(sourceRoot, file).replaceAll('\\', '/')}:${line}`;
-}
-
-async function extractSourceRoutes() {
-  const registrations = [];
-  for (const file of routeFiles) {
-    const groups = new Map([['app', { path: '', auth: 'Pública' }]]);
-    const lines = (await readFile(file, 'utf8')).split(/\r?\n/);
-    for (const [index, line] of lines.entries()) {
-      const groupMatch = line.match(/^\s*(\w+)\s*:=\s*(\w+)\.Group\("([^"]*)"(.*)\)/);
-      if (groupMatch) {
-        const [, name, parent, segment, argumentsText] = groupMatch;
-        const parentGroup = groups.get(parent) || { path: '', auth: 'Pública' };
-        const auth = argumentsText.includes('globalAuth')
-          ? 'API key global'
-          : argumentsText.includes('instanceAuth')
-            ? 'Bearer da instância'
-            : parentGroup.auth;
-        groups.set(name, { path: parentGroup.path + segment, auth });
-        continue;
-      }
-
-      const route = line.match(/^\s*(\w+)\.(Get|Post|Put|Patch|Delete|Options|Head)\("([^"]*)"(.*)\)/);
-      if (!route) continue;
-      const [, receiver, rawMethod, segment, argumentsText] = route;
-      const receiverGroup = groups.get(receiver) || { path: '', auth: 'Pública' };
-      const auth = argumentsText.includes('globalAuth')
-        ? 'API key global'
-        : argumentsText.includes('instanceAuth')
-          ? 'Bearer da instância'
-          : receiverGroup.auth;
-      const handler = argumentsText.match(/,\s*([A-Za-z0-9_]+\.[A-Za-z0-9_]+)\s*$/)?.[1] || 'inline';
-      const routePath = normalizePath(receiverGroup.path + segment);
-      registrations.push({
-        key: `${rawMethod.toUpperCase()} ${routePath}`,
-        method: rawMethod.toUpperCase(),
-        path: routePath,
-        auth,
-        handler,
-        source: sourceLabel(file, index + 1),
-      });
-    }
-  }
-  return registrations;
-}
-
-function extractOpenApiOperations(spec) {
+function extractOperations(container, kind) {
   const operations = [];
-  for (const [routePath, pathItem] of Object.entries(spec.paths || {})) {
+  for (const [routePath, pathItem] of Object.entries(container || {})) {
     for (const method of methods) {
       const operation = pathItem?.[method];
       if (!operation) continue;
       operations.push({
-        key: `${method.toUpperCase()} ${routePath}`,
+        key: kind === 'HTTP' ? `${method.toUpperCase()} ${routePath}` : `${method.toUpperCase()} webhook:${routePath}`,
+        kind,
         method: method.toUpperCase(),
         path: routePath,
+        pathItem,
         operationId: operation.operationId || '',
         summary: operation.summary || '',
         description: operation.description || '',
         tags: operation.tags || [],
+        responses: operation.responses || {},
+        parameters: operation.parameters || [],
         deprecated: operation.deprecated === true,
         plan: operation['x-codechat-plan'] || '',
         hasExample: JSON.stringify(operation).includes('"example"'),
@@ -87,43 +37,82 @@ function extractOpenApiOperations(spec) {
   return operations;
 }
 
-function bullets(values, emptyText = 'Nenhum.') {
+function resolveParameter(spec, parameter) {
+  const prefix = '#/components/parameters/';
+  if (!parameter?.$ref?.startsWith(prefix)) return parameter;
+  return spec.components?.parameters?.[parameter.$ref.slice(prefix.length)];
+}
+
+function validatePathParameters(spec, operation) {
+  const placeholders = [...operation.path.matchAll(/\{([^}]+)\}/g)].map((match) => match[1]);
+  const parameters = [...(operation.pathItem.parameters || []), ...operation.parameters]
+    .map((parameter) => resolveParameter(spec, parameter))
+    .filter((parameter) => parameter?.in === 'path');
+  const names = parameters.map((parameter) => parameter.name);
+  const issues = [];
+
+  for (const placeholder of placeholders) {
+    if (!names.includes(placeholder)) issues.push(`parâmetro \`${placeholder}\` não declarado`);
+  }
+  for (const parameter of parameters) {
+    if (!placeholders.includes(parameter.name)) issues.push(`parâmetro \`${parameter.name}\` não existe no caminho`);
+    if (parameter.required !== true) issues.push(`parâmetro \`${parameter.name}\` não está marcado como obrigatório`);
+  }
+  return issues;
+}
+
+function bullets(values, emptyText = '- Nenhum.') {
   return values.length ? values.map((value) => `- ${value}`).join('\n') : emptyText;
 }
 
-if (process.env.CODECHAT_SKIP_AUDIT === '1') {
-  await readFile(reportPath, 'utf8');
-  console.log('Auditoria de runtime ignorada: relatório versionado disponível no contexto de build.');
-  process.exit(0);
+function relativePath(file) {
+  return path.relative(projectRoot, file).replaceAll('\\', '/');
 }
 
-const registrations = await extractSourceRoutes();
-const distinctSource = new Map();
-const duplicateRegistrations = [];
-for (const route of registrations) {
-  if (distinctSource.has(route.key)) duplicateRegistrations.push(route);
-  else distinctSource.set(route.key, route);
+const [sourceText, publishedText] = await Promise.all([
+  readFile(openApiPath, 'utf8'),
+  readFile(publishedOpenApiPath, 'utf8'),
+]);
+
+if (sourceText !== publishedText) {
+  throw new Error(
+    `O OpenAPI publicado em ${relativePath(publishedOpenApiPath)} está diferente de ${relativePath(openApiPath)}. Execute pnpm sync:docs.`,
+  );
 }
 
-const spec = YAML.parse(await readFile(openApiPath, 'utf8'));
-const documented = extractOpenApiOperations(spec);
-const documentedMap = new Map(documented.map((operation) => [operation.key, operation]));
-const missingInSpec = [...distinctSource.keys()].filter((key) => !documentedMap.has(key));
-const extraInSpec = [...documentedMap.keys()].filter((key) => !distinctSource.has(key));
+const spec = YAML.parse(sourceText);
+const documented = extractOperations(spec.paths, 'HTTP');
+const webhookOperations = extractOperations(spec.webhooks, 'Webhook');
+const allOperations = [...documented, ...webhookOperations];
+const operationIds = new Map();
+const duplicateOperationIds = [];
+
+for (const operation of allOperations) {
+  if (!operation.operationId) continue;
+  const previous = operationIds.get(operation.operationId);
+  if (previous) duplicateOperationIds.push(`\`${operation.operationId}\` em \`${previous}\` e \`${operation.key}\``);
+  else operationIds.set(operation.operationId, operation.key);
+}
+
+const operationsWithoutId = allOperations.filter((operation) => !operation.operationId);
+const operationsWithoutText = allOperations.filter((operation) => !operation.summary && !operation.description);
+const operationsWithoutTags = allOperations.filter((operation) => operation.tags.length === 0);
+const operationsWithoutResponses = allOperations.filter((operation) => Object.keys(operation.responses).length === 0);
+const pathParameterIssues = documented.flatMap((operation) =>
+  validatePathParameters(spec, operation).map((issue) => `\`${operation.key}\`: ${issue}`),
+);
 const schemasWithoutExamples = Object.entries(spec.components?.schemas || {})
   .filter(([, schema]) => !JSON.stringify(schema).includes('"example"'))
   .map(([name]) => name);
-const operationsWithoutExamples = documented.filter((operation) => !operation.hasExample);
-const operationsWithoutText = documented.filter((operation) => !operation.summary && !operation.description);
+const operationsWithoutExamples = allOperations.filter((operation) => !operation.hasExample);
 const deprecated = documented.filter((operation) => operation.deprecated);
 const pro = documented.filter((operation) => operation.plan === 'pro');
+const current = documented.filter(
+  (operation) => !operation.tags.some((tag) => tag.startsWith('Legacy')) && operation.plan !== 'pro',
+);
+const instanceWebhookEvents = Object.keys(spec.components?.schemas?.WebhookEvents?.properties || {});
+const messageBatchWebhookEvents = spec.components?.schemas?.MessageBatchWebhookEvent?.enum || [];
 
-const sourceRows = [...distinctSource.values()]
-  .map(
-    (route) =>
-      `| \`${route.method}\` | \`${route.path}\` | ${route.auth} | \`${route.handler}\` | \`${route.source}\` |`,
-  )
-  .join('\n');
 const specRows = documented
   .map(
     (operation) =>
@@ -131,31 +120,41 @@ const specRows = documented
   )
   .join('\n');
 
+const failures = [
+  ...operationsWithoutId.map((operation) => `\`${operation.key}\` sem operationId`),
+  ...duplicateOperationIds.map((issue) => `operationId duplicado: ${issue}`),
+  ...operationsWithoutText.map((operation) => `\`${operation.key}\` sem summary ou description`),
+  ...operationsWithoutTags.map((operation) => `\`${operation.key}\` sem tag`),
+  ...operationsWithoutResponses.map((operation) => `\`${operation.key}\` sem resposta`),
+  ...pathParameterIssues,
+];
+
 const report = `# Auditoria da referência de API
 
-Gerado em 2026-07-13 a partir do código executável em \`${path.relative(projectRoot, sourceRoot).replaceAll('\\', '/')}\` e da especificação \`${path.relative(sourceRoot, openApiPath).replaceAll('\\', '/')}\`.
+Gerado exclusivamente a partir da especificação versionada em \`${relativePath(openApiPath)}\`. A auditoria e o build não leem arquivos de outros repositórios.
 
 ## Resumo
 
 | Item | Quantidade |
 | --- | ---: |
-| Registros de rota no código | ${registrations.length} |
-| Operações HTTP distintas no código | ${distinctSource.size} |
-| Operações no OpenAPI | ${documented.length} |
-| Operações atuais, sem classificação Pro | ${documented.filter((operation) => !operation.tags.some((tag) => tag.startsWith('Legacy')) && operation.plan !== 'pro').length} |
+| Operações HTTP no OpenAPI | ${documented.length} |
+| Operações atuais, sem classificação Pro | ${current.length} |
 | Operações Pro | ${pro.length} |
 | Operações marcadas como deprecated | ${deprecated.length} |
+| Operações de webhook no OpenAPI | ${webhookOperations.length} |
 | Schemas em components.schemas | ${Object.keys(spec.components?.schemas || {}).length} |
-| Eventos de webhook por instância | 27 |
-| Eventos globais de Message Batch | 14 |
+| Eventos de webhook por instância | ${instanceWebhookEvents.length} |
+| Eventos globais de Message Batch | ${messageBatchWebhookEvents.length} |
 
-Resultado da paridade: ${missingInSpec.length === 0 && extraInSpec.length === 0 ? '**o OpenAPI cobre todas as operações HTTP distintas registradas no código.**' : '**há divergências pendentes entre código e OpenAPI.**'}
+Resultado: ${failures.length === 0 ? '**a especificação local está estruturalmente consistente e sincronizada com a cópia publicada.**' : '**há inconsistências estruturais pendentes na especificação local.**'}
 
-## Endpoints encontrados no código
+## Validações executadas
 
-| Método | Caminho | Autenticação | Handler | Fonte |
-| --- | --- | --- | --- | --- |
-${sourceRows}
+- \`${relativePath(openApiPath)}\` existe dentro deste repositório e é a fonte canônica.
+- \`${relativePath(publishedOpenApiPath)}\` é uma cópia idêntica à fonte canônica.
+- Todos os endpoints e webhooks possuem \`operationId\` único, texto descritivo, tag e resposta.
+- Todos os parâmetros de caminho estão declarados e marcados como obrigatórios.
+- O relatório, o catálogo de webhooks, o índice de busca e a referência são derivados apenas dos arquivos versionados neste projeto.
 
 ## Endpoints encontrados na especificação
 
@@ -163,76 +162,43 @@ ${sourceRows}
 | --- | --- | --- | --- |
 ${specRows}
 
-## Endpoints adicionados à especificação
-
-- \`POST /instance/{instance}/send/review-order\`, operationId \`reviewOrder\`.
-- \`PATCH /message/reviewOrder/{instanceName}\`, operationId \`legacyReviewOrder\`, mantido como alias legado deprecated.
-
-## Inconsistências corrigidas
-
-- As duas rotas de revisão de pedido estavam registradas e testadas no runtime, descritas nos guias editoriais e comentadas ou ausentes no OpenAPI. Ambas passaram a fazer parte do contrato OpenAPI 3.1.
-- A contagem da referência foi atualizada de 93 para ${documented.length} operações HTTP distintas.
-- A busca e as URLs compartilháveis agora usam \`operationId\` em vez de links genéricos para tags.
-- A interface deixou de depender visualmente do Scalar e passou a interpretar o OpenAPI diretamente.
-
-## Divergências ainda observáveis no código
-
-${bullets(duplicateRegistrations.map((route) => `Registro duplicado de \`${route.key}\` em \`${route.source}\`. A auditoria conta a operação uma única vez e não altera o handler.`))}
-- A rota atual \`DELETE /instance/{instance}/logout/{instanceName}\` mantém dois parâmetros de instância no caminho. O middleware autentica primeiro \`instanceName\`; a documentação preserva o contrato literal até uma decisão de compatibilidade.
-- Não existe rota WebSocket, SSE ou upgrade HTTP no runtime auditado. Os guias de tempo real explicam que a integração disponível usa webhooks.
-- A classificação Pro é documental: não há claim de plano, bloqueio de leitura ou resposta 402 no runtime atual.
-
 ## Endpoints possivelmente obsoletos
 
-Os ${deprecated.length} endpoints abaixo continuam registrados, mas estão marcados como \`deprecated\` por possuírem substitutos atuais:
+Os ${deprecated.length} endpoints abaixo continuam documentados, mas estão marcados como \`deprecated\` por possuírem substitutos atuais:
 
 ${bullets(deprecated.map((operation) => `\`${operation.key}\` (\`${operation.operationId}\`)`))}
 
 ## Schemas sem exemplos explícitos
 
-${schemasWithoutExamples.length} schemas não possuem \`example\` explícito. A interface gera exemplos coerentes a partir de tipos, enums, formatos, defaults e contexto CodeChat, sem alterar o contrato:
+${schemasWithoutExamples.length} schemas não possuem \`example\` explícito. A interface gera exemplos a partir de tipos, enums, formatos, defaults e contexto da CodeChat:
 
 ${bullets(schemasWithoutExamples.map((name) => `\`${name}\``))}
 
-## Rotas sem documentação suficiente
+## Cobertura editorial
 
 - Operações sem \`summary\` e sem \`description\`: ${operationsWithoutText.length}.
-- Operações sem exemplo explícito no nível da operação: ${operationsWithoutExamples.length}. A referência prioriza exemplos explícitos de mídia/schema e usa o gerador de exemplos como fallback.
-- Rotas presentes no código e ausentes no OpenAPI: ${missingInSpec.length}.
-${bullets(
-  missingInSpec.map((key) => `\`${key}\``),
-  '- Nenhuma.',
-)}
-- Rotas presentes no OpenAPI e ausentes no código: ${extraInSpec.length}.
-${bullets(
-  extraInSpec.map((key) => `\`${key}\``),
-  '- Nenhuma.',
-)}
+- Operações sem tag: ${operationsWithoutTags.length}.
+- Operações sem resposta: ${operationsWithoutResponses.length}.
+- Operações sem exemplo explícito no nível da operação: ${operationsWithoutExamples.length}. A referência prioriza exemplos de mídia/schema e usa o gerador como fallback.
+- Parâmetros de caminho inconsistentes: ${pathParameterIssues.length}.
+- \`operationId\` ausente ou duplicado: ${operationsWithoutId.length + duplicateOperationIds.length}.
 
-## Pontos dependentes de confirmação humana
+## Escopo da auditoria
 
-- URL pública de produção, versão comercial exibida e link GitHub definitivo por ambiente.
-- Política formal de versionamento, prazo de remoção dos aliases legados e eventual correção da rota de logout com dois parâmetros.
-- Política oficial de rate limits; o runtime atual não registra limitador nem produz \`429\`.
-- Eventual enforcement comercial dos recursos Pro; o runtime atual não produz \`402\`.
-- Requisitos futuros de assinatura HMAC e retry para webhooks por instância; esses recursos não existem no emissor atual.
+Esta verificação garante a consistência da documentação autocontida. A comparação com handlers, middlewares e rotas do runtime deve ser feita no momento em que os arquivos de \`source-docs\` forem atualizados; o deploy deste portal não depende do checkout do código Go.
 
-## Webhooks e WebSocket
+## Inconsistências encontradas
 
-- O código e o documento gerado confirmam 27 eventos por instância e 14 eventos globais de Message Batch.
-- Eventos por instância usam fila em memória, timeout de 15 segundos, sucesso em 2xx e não possuem retry automático nem dead-letter queue.
-- Eventos de Message Batch usam outbox PostgreSQL e retry persistente com backoff.
-- Não há assinatura HMAC no emissor atual; \`x-request-id\` é correlação, não prova de autenticidade ou chave de idempotência.
-- Não há suporte WebSocket/SSE implementado; nenhum protocolo ou endpoint foi inventado na nova referência.
+${bullets(failures)}
 `;
 
 await mkdir(path.dirname(reportPath), { recursive: true });
 await writeFile(reportPath, report, 'utf8');
 
-if (missingInSpec.length || extraInSpec.length) {
-  throw new Error(
-    `Paridade de rotas falhou. Ausentes no OpenAPI: ${missingInSpec.join(', ') || 'nenhuma'}. Ausentes no código: ${extraInSpec.join(', ') || 'nenhuma'}.`,
-  );
+if (failures.length) {
+  throw new Error(`Auditoria do OpenAPI falhou:\n${failures.join('\n')}`);
 }
 
-console.log(`Auditoria concluída: ${distinctSource.size} operações no código e ${documented.length} no OpenAPI.`);
+console.log(
+  `Auditoria concluída: ${documented.length} operações HTTP e ${webhookOperations.length} webhook validados a partir de ${relativePath(openApiPath)}.`,
+);

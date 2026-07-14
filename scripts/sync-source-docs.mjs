@@ -3,7 +3,7 @@ import path from 'node:path';
 import process from 'node:process';
 
 const projectRoot = path.resolve(import.meta.dirname, '..');
-const sourceDocs = path.resolve(projectRoot, process.env.CODECHAT_SOURCE_DOCS || '../whatsapp-go-api/docs');
+const sourceDocs = path.resolve(projectRoot, process.env.CODECHAT_SOURCE_DOCS || './source-docs');
 const contentDir = path.join(projectRoot, 'content', 'docs');
 const publicDir = path.join(projectRoot, 'public');
 

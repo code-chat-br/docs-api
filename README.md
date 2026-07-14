@@ -1,6 +1,6 @@
 # CodeChat API Docs
 
-Portal oficial de documentação e referência técnica da CodeChat. Guias editoriais e referência OpenAPI compartilham o mesmo `DocumentationShell`, mantendo uma única topbar, sidebar, base tipográfica, painel contextual, tema e comportamento responsivo. O conteúdo editorial continua em MDX e é sincronizado da pasta `docs` do repositório da API.
+Portal oficial de documentação e referência técnica da CodeChat. Guias editoriais e referência OpenAPI compartilham o mesmo `DocumentationShell`, mantendo uma única topbar, sidebar, base tipográfica, painel contextual, tema e comportamento responsivo. O conteúdo editorial e o OpenAPI são sincronizados da pasta versionada `source-docs` deste repositório.
 
 ## O que está incluído
 
@@ -15,7 +15,7 @@ Portal oficial de documentação e referência técnica da CodeChat. Guias edito
 - Catálogo de 41 webhooks reais: 27 por instância e 14 globais de Message Batch.
 - Guias editoriais existentes, changelog, migração e explicação explícita da ausência de WebSocket/SSE.
 
-O relatório completo de paridade entre runtime e contrato fica em [`docs/api-reference-audit.md`](docs/api-reference-audit.md).
+O relatório de consistência da referência fica em [`docs/api-reference-audit.md`](docs/api-reference-audit.md).
 
 ## Capturas de tela
 
@@ -40,6 +40,7 @@ src/
   features/search/         ranking do índice global
   config/                  branding e ordem documental
 content/docs/              conteúdo MDX sincronizado e guias locais
+source-docs/               fonte canônica versionada dos guias e do OpenAPI
 public/openapi.yml         cópia sincronizada servida pelo portal
 public/webhook-events.json catálogo gerado de eventos
 scripts/                   sync, auditoria, validação e índices
@@ -49,8 +50,9 @@ tests/                     testes unitários, componentes e E2E
 ## Pré-requisitos
 
 - Node.js 22 ou superior;
-- pnpm 11.12;
-- repositório `whatsapp-go-api` no diretório irmão, ou `CODECHAT_SOURCE_DOCS` apontando para sua pasta `docs`.
+- pnpm 11.12.
+
+Todos os arquivos necessários para desenvolvimento, validação e build estão versionados neste repositório.
 
 ## Desenvolvimento
 
@@ -81,27 +83,27 @@ pnpm start
 
 ## Variáveis de ambiente
 
-| Variável                       | Finalidade                              | Padrão                    |
-| ------------------------------ | --------------------------------------- | ------------------------- |
-| `NEXT_PUBLIC_SITE_URL`         | URL pública do portal                   | `http://localhost:3000`   |
-| `NEXT_PUBLIC_CODECHAT_API_URL` | Base URL usada em exemplos e playground | `http://localhost:8084`   |
-| `NEXT_PUBLIC_DOCS_TITLE`       | Título do portal                        | `CodeChat API`            |
-| `NEXT_PUBLIC_DOCS_VERSION`     | Versão exibida                          | `1.0.0`                   |
-| `NEXT_PUBLIC_GITHUB_URL`       | Link do repositório                     | repositório da API        |
-| `NEXT_PUBLIC_OPENAPI_URL`      | Caminho ou URL absoluta do OpenAPI      | `/openapi.yml`            |
-| `NEXT_PUBLIC_POSTMAN_URL`      | Coleção oficial da CodeChat no Postman  | coleção `Go v1.0.0`       |
-| `CODECHAT_SOURCE_DOCS`         | Pasta de documentação da API            | `../whatsapp-go-api/docs` |
+| Variável                       | Finalidade                              | Padrão                  |
+| ------------------------------ | --------------------------------------- | ----------------------- |
+| `NEXT_PUBLIC_SITE_URL`         | URL pública do portal                   | `http://localhost:3000` |
+| `NEXT_PUBLIC_CODECHAT_API_URL` | Base URL usada em exemplos e playground | `http://localhost:8084` |
+| `NEXT_PUBLIC_DOCS_TITLE`       | Título do portal                        | `CodeChat API`          |
+| `NEXT_PUBLIC_DOCS_VERSION`     | Versão exibida                          | `1.0.0`                 |
+| `NEXT_PUBLIC_GITHUB_URL`       | Link do repositório                     | repositório da API      |
+| `NEXT_PUBLIC_OPENAPI_URL`      | Caminho ou URL absoluta do OpenAPI      | `/openapi.yml`          |
+| `NEXT_PUBLIC_POSTMAN_URL`      | Coleção oficial da CodeChat no Postman  | coleção `Go v1.0.0`     |
+| `CODECHAT_SOURCE_DOCS`         | Fonte local dos guias e do OpenAPI      | `./source-docs`         |
 
 O `docker-compose.yml` também aceita os aliases solicitados `VITE_API_BASE_URL`, `VITE_DOCS_TITLE`, `VITE_DOCS_VERSION`, `VITE_GITHUB_URL`, `VITE_OPENAPI_URL` e `VITE_API_POSTMAN`, mapeando-os para as variáveis públicas do Next.js. Essas variáveis são aplicadas em build time; é necessário reconstruir a imagem ao alterá-las.
 
 ## OpenAPI e manutenção
 
-A fonte canônica é `../whatsapp-go-api/docs/openapi.yml`. Não edite apenas a cópia em `public/`.
+A fonte canônica é `source-docs/openapi.yml`. Não edite apenas a cópia em `public/`.
 
 Para documentar um endpoint:
 
-1. confirme a rota, middleware, DTO, validações e respostas no código Go;
-2. atualize o path existente na especificação canônica, incluindo `operationId`, tag, security e exemplos;
+1. confirme a rota, middleware, DTO, validações e respostas no código da API antes de trazer a alteração para este repositório;
+2. atualize o path existente em `source-docs/openapi.yml`, incluindo `operationId`, tag, security e exemplos;
 3. execute `pnpm sync:docs && pnpm audit:api && pnpm validate:openapi`;
 4. use `src/config/documentation.ts` somente para ordem, aliases ou metadados editoriais — nunca para duplicar a operação.
 
@@ -117,7 +119,7 @@ Não existe proxy remoto inseguro. Um proxy local pode ser configurado por quem 
 
 O Dockerfile usa múltiplos estágios e produz o servidor standalone do Next.js. O Compose adiciona Nginx com gzip, cache longo apenas para assets versionados, ausência de cache agressivo no OpenAPI, SPA/reverse-proxy fallback e healthchecks.
 
-O build da imagem reutiliza o OpenAPI sincronizado e o relatório de auditoria já versionados, pois o repositório irmão da API fica fora do contexto Docker. A auditoria contra o código Go continua obrigatória no desenvolvimento e no CI antes de produzir a imagem.
+O build da imagem sincroniza os arquivos de `source-docs`, valida o OpenAPI local e gera novamente o relatório, o catálogo de webhooks e o índice de busca. Nenhum checkout adicional é necessário.
 
 ```bash
 docker compose up --build -d
@@ -135,8 +137,8 @@ docker run --rm -p 3000:3000 codechat-api-docs
 
 - Vitest valida normalização, `$ref`, schemas recursivos, exemplos, busca, cURL, request builder e tabs de resposta.
 - Playwright valida navegação da sidebar, busca por teclado, playground e ausência de overflow no mobile.
-- A auditoria falha quando uma rota registrada não está no OpenAPI ou quando o OpenAPI contém rota inexistente.
-- O CI sincroniza o repositório fonte e executa lint, typecheck, testes, validação OpenAPI e build.
+- A auditoria falha quando a fonte local e a cópia publicada divergem ou quando o OpenAPI possui inconsistências estruturais.
+- O CI usa apenas este checkout e executa sincronização, lint, typecheck, testes, validação OpenAPI e build.
 
 ## Publicação
 
