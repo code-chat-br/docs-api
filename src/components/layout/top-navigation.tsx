@@ -84,7 +84,7 @@ export function TopNavigation({
             href={documentationConfig.externalLinks.github}
             target="_blank"
             rel="noreferrer"
-            aria-label="Abrir repositório da CodeChat no GitHub"
+            aria-label="Abrir repositório público da API no GitHub"
           >
             <GitFork size={17} />
           </a>

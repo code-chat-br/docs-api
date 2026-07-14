@@ -49,7 +49,7 @@ export const documentationConfig = {
     github:
       process.env.NEXT_PUBLIC_GITHUB_URL ||
       process.env.VITE_GITHUB_URL ||
-      'https://github.com/jrCleber/whatsapp-api-go',
+      'https://github.com/code-chat-br/whatsapp-api-go',
     changelog: '/docs/changelog',
     postman:
       process.env.NEXT_PUBLIC_POSTMAN_URL ||

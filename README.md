@@ -83,16 +83,17 @@ pnpm start
 
 ## Variáveis de ambiente
 
-| Variável                       | Finalidade                              | Padrão                  |
-| ------------------------------ | --------------------------------------- | ----------------------- |
-| `NEXT_PUBLIC_SITE_URL`         | URL pública do portal                   | `http://localhost:3000` |
-| `NEXT_PUBLIC_CODECHAT_API_URL` | Base URL usada em exemplos e playground | `http://localhost:8084` |
-| `NEXT_PUBLIC_DOCS_TITLE`       | Título do portal                        | `CodeChat API`          |
-| `NEXT_PUBLIC_DOCS_VERSION`     | Versão exibida                          | `1.0.0`                 |
-| `NEXT_PUBLIC_GITHUB_URL`       | Link do repositório                     | repositório da API      |
-| `NEXT_PUBLIC_OPENAPI_URL`      | Caminho ou URL absoluta do OpenAPI      | `/openapi.yml`          |
-| `NEXT_PUBLIC_POSTMAN_URL`      | Coleção oficial da CodeChat no Postman  | coleção `Go v1.0.0`     |
-| `CODECHAT_SOURCE_DOCS`         | Fonte local dos guias e do OpenAPI      | `./source-docs`         |
+| Variável                       | Finalidade                              | Padrão                         |
+| ------------------------------ | --------------------------------------- | ------------------------------ |
+| `NEXT_PUBLIC_SITE_URL`         | URL pública do portal                   | `http://localhost:3000`        |
+| `NEXT_PUBLIC_CODECHAT_API_URL` | Base URL usada em exemplos e playground | `http://localhost:8084`        |
+| `NEXT_PUBLIC_DOCS_TITLE`       | Título do portal                        | `CodeChat API`                 |
+| `NEXT_PUBLIC_DOCS_VERSION`     | Versão exibida                          | `1.0.0`                        |
+| `NEXT_PUBLIC_GITHUB_URL`       | Repositório público da API              | `code-chat-br/whatsapp-api-go` |
+| `NEXT_PUBLIC_DOCS_GITHUB_URL`  | Repositório público da documentação     | `code-chat-br/docs-api`        |
+| `NEXT_PUBLIC_OPENAPI_URL`      | Caminho ou URL absoluta do OpenAPI      | `/openapi.yml`                 |
+| `NEXT_PUBLIC_POSTMAN_URL`      | Coleção oficial da CodeChat no Postman  | coleção `Go v1.0.0`            |
+| `CODECHAT_SOURCE_DOCS`         | Fonte local dos guias e do OpenAPI      | `./source-docs`                |
 
 O `docker-compose.yml` também aceita os aliases solicitados `VITE_API_BASE_URL`, `VITE_DOCS_TITLE`, `VITE_DOCS_VERSION`, `VITE_GITHUB_URL`, `VITE_OPENAPI_URL` e `VITE_API_POSTMAN`, mapeando-os para as variáveis públicas do Next.js. Essas variáveis são aplicadas em build time; é necessário reconstruir a imagem ao alterá-las.
 
