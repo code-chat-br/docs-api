@@ -1,0 +1,26 @@
+---
+title: "Enviando a primeira mensagem"
+description: "Faça um envio de texto com o payload aceito pela API atual."
+---
+
+Com a instância conectada, envie texto para um telefone ou JID compatível.
+
+```bash
+curl -X POST "http://localhost:8084/instance/codechat/send/text" \
+  -H "Authorization: Bearer $INSTANCE_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "number": "5531999999999",
+    "textMessage": {
+      "text": "Olá, enviado pela CodeChat API"
+    }
+  }'
+```
+
+`textMessage.text` é obrigatório, não pode conter apenas espaços e aceita até 65.536 caracteres. Na maioria dos envios, use exatamente um entre `number`, `chat` e `recipient`.
+
+## Resultado
+
+O envio síncrono responde `200` com a mensagem persistida. Quando `options.mentionAll` aciona processamento assíncrono, a resposta é `202` e inclui `processId`.
+
+Se o WhatsApp aceitar a mensagem, mas a persistência local falhar, a API retorna `406`. Consulte [Mensagens](/docs/messages) para mídia, áudio PTT, contato, localização e reação.

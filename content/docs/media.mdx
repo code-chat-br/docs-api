@@ -1,0 +1,76 @@
+---
+title: "Mídia"
+description: "Download e upload antecipado de arquivos."
+---
+## Download de uma mensagem
+
+```http
+POST /instance/:instance/media/data?binary=false
+Authorization: Bearer <token-da-instância>
+Content-Type: application/json
+```
+
+Envie exatamente um dos modos:
+
+```json
+{"id":101}
+```
+
+```json
+{"keyId":"3EB0..."}
+```
+
+```json
+{
+  "messageType":"imageMessage",
+  "content":{"url":"...","directPath":"...","mediaKey":"..."},
+  "keyId":"3EB0..."
+}
+```
+
+`id` precisa ser inteiro positivo; `keyId` aceita até 256 caracteres. No modo manual, `messageType` aceita `imageMessage`, `videoMessage`, `documentMessage`, `stickerMessage` ou `audioMessage`, e `content` precisa ser objeto não vazio.
+
+Com `binary=true`, a resposta é o arquivo bruto com `Content-Type` e `Content-Disposition`. Sem o parâmetro ou com `false`, a resposta é `multipart/form-data` com `mediaType`, `fileName`, `size` (objeto JSON de metadados), `mimetype` e a parte `file`. O download é limitado a 50 MB.
+
+## Upload antecipado
+
+O upload antecipado envia a mídia imediatamente ao WhatsApp e guarda apenas metadados e credenciais de mídia no PostgreSQL. O binário não fica salvo localmente. Os registros são vinculados à instância; a expiração padrão de dez dias é informativa.
+
+| Método | Rota | Sucesso | Finalidade |
+| --- | --- | --- | --- |
+| `POST` | `/instance/:instance/media/uploads` | `201` | Faz upload. |
+| `GET` | `/instance/:instance/media/uploads` | `200` | Lista com cursor. |
+| `GET` | `/instance/:instance/media/:id/uploads` | `200` | Consulta um registro. |
+| `DELETE` | `/instance/:instance/media/:id/uploads` | `204` | Exclui somente o registro local. |
+
+### Criar
+
+```bash
+curl -X POST "http://localhost:8084/instance/codechat/media/uploads" \
+  -H "Authorization: Bearer $INSTANCE_TOKEN" \
+  -F "mediaType=image" \
+  -F "externalId=asset-123" \
+  -F 'externalAttributes={"tenantId":"acme"}' \
+  -F "file=@photo.jpg"
+```
+
+`mediaType` aceita `image`, `video`, `audio` ou `document`. `externalId` aceita até 255 caracteres. `externalAttributes` precisa ser objeto JSON de até 16 KB. O limite padrão do arquivo é 100 MB e pode ser configurado.
+
+A resposta inclui `id`, `instanceId`, `externalId`, `mediaType`, `mimeType`, `originalFileName`, `originalFileSize`, `originalFileSHA256`, `jpegThumbnail`, `externalAttributes`, `createdAt`, `updatedAt`, `expiresAt` e `expired`. O objeto `upload` agrupa `url`, `directPath`, `handle`, `objectId`, `mediaKey`, `fileEncSHA256`, `fileSHA256` e `fileLength` retornados pelo WhatsApp.
+
+### Listar
+
+Filtros: `externalId`, `mediaType`, `expired=true|false`, `createdFrom` e `createdTo` em RFC3339, `limit` e `cursor`. `limit` usa 20 por padrão e é limitado a 100; cursor precisa ser inteiro positivo.
+
+```json
+{
+  "nextCursor": "42",
+  "previousCursor": null,
+  "totalRecords": 1,
+  "records": []
+}
+```
+
+Consulta e exclusão sempre restringem o registro à instância autenticada. A exclusão não remove o objeto já hospedado pelo WhatsApp.
+
+Erros comuns: `400`, `404`, `413`, `415`, `500` e `503`. O alias legado do download é `POST /chat/mediaData/:instanceName`.

@@ -1,0 +1,20 @@
+---
+title: "Visão geral de eventos"
+description: "Como a API transforma eventos internos em entregas HTTP por webhook."
+---
+
+A implementação atual publica eventos somente por **webhooks HTTP POST**. Há dois fluxos: eventos por instância, com envelope contendo `instance`, e eventos globais de Message Batch, sem esse campo.
+
+## O que está implementado
+
+- 41 nomes públicos: 27 eventos por instância e 14 eventos globais de Message Batch.
+- Webhook por instância com flags em `events`.
+- Webhook global controlado por `WEBHOOK_GLOBAL_URL` e `WEBHOOK_GLOBAL_ENABLED`.
+- Fila em memória com múltiplos workers para eventos por instância.
+- Outbox PostgreSQL com retry e backoff para eventos globais de Message Batch.
+
+## Limites operacionais
+
+Eventos por instância não têm retry automático nem dead-letter queue. Eventos de Message Batch são reagendados pela outbox após falhas, com backoff persistente. Nenhum dos fluxos garante ordem ou assinatura HMAC; o `x-request-id` serve apenas para correlação.
+
+Também não há endpoint WebSocket ou Server-Sent Events no runtime auditado. Veja [Tempo real](/docs/realtime) para a decisão de integração correta.

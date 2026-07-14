@@ -1,0 +1,11 @@
+.next
+.source
+content
+docs
+node_modules
+public
+openapi.yml
+pnpm-lock.yaml
+test-results
+playwright-report
+coverage

@@ -1,0 +1,12 @@
+---
+title: "Versionamento"
+description: "Como interpretar versão, rotas atuais e aliases legados."
+---
+
+A API auditada não usa um prefixo de versão no caminho. Rotas atuais e aliases legados continuam registrados simultaneamente; os aliases só aparecem como `deprecated` quando existe um substituto atual equivalente.
+
+A versão exibida pelo portal vem de `NEXT_PUBLIC_DOCS_VERSION` e a versão do contrato vem de `info.version` no OpenAPI. Alterar esses valores não muda rotas nem handlers.
+
+Para migrar, use [Endpoints legados](/docs/legacy-endpoints), [Migração Node.js → Go](/docs/migration) e o [Changelog](/docs/changelog).
+
+> **Precisa de confirmação:** o código atual não declara uma política formal de compatibilidade semântica ou prazo de remoção para aliases antigos.

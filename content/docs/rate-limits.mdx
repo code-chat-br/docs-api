@@ -1,0 +1,10 @@
+---
+title: "Rate limits"
+description: "Estado real da limitação de tráfego no runtime atual."
+---
+
+O runtime auditado não registra middleware de rate limiting e não foi encontrado um produtor ativo de `429 Too Many Requests`. Portanto, a documentação não anuncia cotas, janelas ou headers de limite inexistentes.
+
+Existe uma enumeração interna para `429`, mas isso não torna o status parte do comportamento atual. Adote limites no gateway da sua infraestrutura quando necessário e não suponha valores até que uma política oficial seja definida.
+
+> **Precisa de confirmação:** cotas comerciais, limites por instância e headers padronizados ainda não possuem contrato publicado.

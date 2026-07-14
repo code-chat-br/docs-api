@@ -1,0 +1,82 @@
+---
+title: "Chats"
+description: "Operações de conversa, leitura, arquivo e edição."
+---
+Todas as rotas atuais usam o JWT da instância.
+
+| Método | Rota | Body ou query | Sucesso |
+| --- | --- | --- | --- |
+| `POST` | `/instance/:instance/chat/is-account` | `numbers` | `200` |
+| `PATCH` | `/instance/:instance/chat/read-message` | IDs ou remetente/chat/IDs | `200` |
+| `PUT` | `/instance/:instance/chat/archive` | `lastMessage` e `archive` | `204` |
+| `DELETE` | `/instance/:instance/chat/delete-message?id=1` | query `id` | `204` |
+| `POST` | `/instance/:instance/chat/profile-picture` | destinatário | `200` |
+| `POST` | `/instance/:instance/chat/reject-call` | `callId`, `callFrom` | `204` |
+| `POST` | `/instance/:instance/chat/edit-message` | `id`, `text` | `200` |
+
+## Verificar contas
+
+```json
+{"numbers":["5511999999999","5511888888888@s.whatsapp.net"]}
+```
+
+Aceita de 1 a 100 telefones/JIDs individuais, não grupos. A resposta é um array com `jid`, `lid` opcional e `exists`.
+
+## Marcar como lida
+
+Modo por IDs internos:
+
+```json
+{"ids":[101,102]}
+```
+
+Modo por chaves do WhatsApp:
+
+```json
+{
+  "sender":"5511999999999@s.whatsapp.net",
+  "chat":"5511999999999@s.whatsapp.net",
+  "messageIds":["3EB0...", "3EB1..."]
+}
+```
+
+Use apenas um modo. A resposta é `{"message":"Read messages","read":"success"}`.
+
+## Arquivar
+
+```json
+{
+  "archive": true,
+  "lastMessage": {
+    "key": {"remoteJid":"5511999999999@s.whatsapp.net","fromMe":false,"id":"3EB0..."}
+  }
+}
+```
+
+Responde `204` sem body.
+
+## Excluir mensagem
+
+`DELETE /instance/codechat/chat/delete-message?id=101` recebe o ID interno positivo e responde `204`.
+
+## Foto de perfil
+
+Envie exatamente um entre `number`, `chat` e `recipient`. A resposta é `{"profilePictureUrl":"https://..."}` ou `{"profilePictureUrl":null}`.
+
+## Rejeitar chamada
+
+```json
+{"callId":"ABCD","callFrom":"5511999999999@s.whatsapp.net"}
+```
+
+`callFrom` precisa ser JID válido. Responde `204`.
+
+## Editar mensagem
+
+```json
+{"id":"3EB0...","text":"Texto corrigido"}
+```
+
+`id` aceita ID interno positivo ou ID WhatsApp não vazio. Só mensagens próprias do tipo conversation/extended text são editáveis. O sucesso retorna a mensagem persistida.
+
+O download de mídia de uma mensagem está em [Mídia](/docs/media). Aliases antigos `/chat/*` estão em [Endpoints legados](/docs/legacy-endpoints).

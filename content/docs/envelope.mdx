@@ -1,0 +1,45 @@
+---
+title: "Envelope de webhook"
+description: "Estruturas dos webhooks por instância e dos eventos globais de Message Batch."
+---
+
+## Eventos por instância
+
+```json
+{
+  "data": {},
+  "event": "messages.upsert",
+  "instance": {
+    "connectionStatus": "online",
+    "externalAttributes": {},
+    "id": 1,
+    "name": "codechat",
+    "ownerJid": "5531999999999@s.whatsapp.net"
+  },
+  "timestamp": "2026-07-13T12:00:00Z"
+}
+```
+
+`data` varia por evento e pode ser objeto ou array. `ownerJid` pode ser `null`; `externalAttributes` sempre é serializado como objeto.
+
+## Eventos de Message Batch
+
+```json
+{
+  "event": "message.batch.progress",
+  "timestamp": "2026-07-13T15:10:00Z",
+  "data": {
+    "batch": {
+      "id": "01900000-0000-7000-8000-000000000001",
+      "status": "PROCESSING",
+      "progress": 35
+    }
+  }
+}
+```
+
+O fluxo global de lote não inclui `instance` no envelope. Eventos de ciclo de vida usam `data.batch`; `message.batch.item.failed` e `message.batch.item.unknown` usam `batchId`, `itemId`, `recipient`, `error` e, quando disponível, `instance`.
+
+Nos dois formatos, `timestamp` usa RFC3339 UTC.
+
+A descrição completa de cada payload está em [Webhooks](/docs/webhooks#eventos).

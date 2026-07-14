@@ -1,0 +1,19 @@
+---
+title: "Códigos de status"
+description: "Guia rápido dos estados HTTP observados na implementação."
+---
+
+| Status | Interpretação principal |
+| --- | --- |
+| `200` / `201` / `202` | Sucesso síncrono, criação ou processamento assíncrono |
+| `400` | JSON, parâmetros ou validação comum inválidos |
+| `401` / `403` | Credencial inválida ou JWT de outra instância |
+| `404` | Recurso não encontrado |
+| `406` | WhatsApp aceitou, mas a persistência local falhou |
+| `408` | Timeout |
+| `409` / `410` | Conflito ou challenge Passkey expirado |
+| `413` / `415` | Limite ou tipo de mídia |
+| `422` | Regra semântica inválida |
+| `500` / `503` | Falha interna ou dependência indisponível |
+
+O runtime atual não produz `402 Payment Required` e não registra rate limiter que produza `429`. Consulte [Erros](/docs/errors) para o envelope e as inconsistências conhecidas.

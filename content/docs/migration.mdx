@@ -1,0 +1,44 @@
+---
+title: "Migração de Node.js para Go"
+description: "Estratégia segura para migrar integrações legadas para o contrato atual da API Go."
+---
+
+Use este roteiro ao substituir uma integração construída sobre as rotas legadas da API Node.js pelo contrato atual da CodeChat API Go. Os aliases antigos continuam registrados, mas ficam separados das rotas atuais na [Referência da API](/api-reference) e no [mapa de endpoints legados](/docs/legacy-endpoints).
+
+## O que preservar
+
+- Mantenha separados o token global e o JWT da instância. A migração de rota não altera a finalidade de cada credencial.
+- Preserve os nomes, tipos e valores dos campos JSON até confirmar a operação equivalente no OpenAPI.
+- Não transforme aliases de headers, paths ou payloads em um contrato novo durante a troca de runtime.
+- Trate webhooks como o canal de eventos implementado. A API Go auditada não expõe WebSocket nem SSE.
+
+## Rotas atuais e aliases
+
+As rotas atuais agrupam operações sob `/instance/{instance}`. Alguns exemplos:
+
+| Fluxo | Rota atual | Alias legado |
+| --- | --- | --- |
+| Criar instância | `POST /instance` | `POST /instance/create` |
+| Consultar instância | `GET /instance/{instance}` | `GET /instance/fetchInstance/{instanceName}` |
+| Enviar texto | `POST /instance/{instance}/send/text` | `POST /message/sendText/{instanceName}` |
+| Configurar webhook | `PUT /instance/{instance}/webhook` | `PUT /webhook/set/{instanceName}` |
+
+Consulte cada operação antes de migrar: método, path, autenticação, body e resposta precisam ser comparados em conjunto. `reviewOrder`, por exemplo, muda de `PATCH /message/reviewOrder/{instanceName}` para `POST /instance/{instance}/send/review-order`.
+
+## Roteiro
+
+1. Faça um inventário dos aliases usados pela integração Node.js.
+2. Localize cada operação legada no mapa e confirme que existe substituto atual.
+3. Compare método, caminho, autenticação, body e códigos de resposta no OpenAPI.
+4. Preserve o JWT e o nome da instância durante a troca.
+5. Migre uma operação por vez e valide sucesso, erro e entrega de webhook em ambiente controlado.
+6. Remova o alias antigo apenas depois do período de monitoramento.
+
+## Pontos que exigem atenção
+
+- Campos JSON desconhecidos são rejeitados pelos handlers que usam decodificação estrita.
+- Recursos Pro aparecem classificados no contrato, mas o runtime atual não implementa bloqueio de plano nem resposta `402`.
+- Webhooks por instância e eventos globais de Message Batch possuem políticas diferentes de retry.
+- A rota atual de logout preserva dois parâmetros de instância; use o path publicado sem normalizá-lo por conta própria.
+
+Uma rota sem substituto atual, como a rotação em `PUT /instance/refreshToken/:instanceName`, não é marcada como deprecated apenas por ter formato legado.

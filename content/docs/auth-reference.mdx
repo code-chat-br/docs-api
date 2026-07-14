@@ -1,0 +1,16 @@
+---
+title: "Referência de autenticação"
+description: "Resumo operacional dos dois esquemas de segurança do OpenAPI."
+---
+
+## `GlobalApiKey`
+
+Envie `apikey: $GLOBAL_TOKEN` em `POST /instance`, `GET /instance` e nas nove operações `/message/batches...`. Os aliases `x-api-key` e `apiKey` também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor.
+
+## `InstanceBearer`
+
+Envie `Authorization: Bearer $INSTANCE_TOKEN` nas operações da instância. O JWT usa HS256 e contém `instanceName`, comparado com o nome da rota.
+
+## Referência interativa
+
+A [referência própria da CodeChat](/api-reference) lê os dois esquemas diretamente do OpenAPI. Credenciais são enviadas somente para a Base URL escolhida. O playground usa `sessionStorage` por padrão e só usa `localStorage` quando a pessoa marca explicitamente a opção de persistência; o portal não usa proxy externo.

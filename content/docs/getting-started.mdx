@@ -1,0 +1,39 @@
+---
+title: "Primeiros passos"
+description: "O caminho mínimo entre configurar a API e receber o primeiro evento."
+---
+
+Este roteiro usa o contrato atual. A base URL local padrão é `http://localhost:8084`; ajuste host e porta conforme seu ambiente.
+
+## URL base
+
+Use `http://localhost:8084` apenas no desenvolvimento local. Em outros ambientes, informe a URL HTTPS publicada pela sua infraestrutura; o código não define um domínio público único.
+
+## Fluxo em quatro etapas
+
+1. Configure o servidor e o token global em [Instalação e ambiente](/docs/environment).
+2. [Crie uma instância](/docs/creating-instance) com `POST /instance` e guarde o JWT retornado em `Auth.token`.
+3. [Conecte o WhatsApp](/docs/connecting-whatsapp) por QR Code, pairing code ou Passkey.
+4. [Envie uma mensagem](/docs/first-message) e depois [configure webhooks](/docs/webhooks) para receber eventos.
+
+## Credenciais diferentes
+
+| Credencial | Header recomendado | Onde usar |
+| --- | --- | --- |
+| Token global | `apikey: $GLOBAL_TOKEN` | Criar/listar instâncias e administrar envios em lote |
+| JWT da instância | `Authorization: Bearer $INSTANCE_TOKEN` | Conexão, mensagens, chats, mídia, grupos e webhooks |
+
+O JWT contém `instanceName`. Se ele pertencer a outra instância, o servidor retorna `403`.
+
+## Verifique o servidor
+
+```bash
+curl "http://localhost:8084/health"
+curl "http://localhost:8084/ready"
+```
+
+`/health` confirma que o processo está ativo. `/ready` também verifica dependências necessárias para receber tráfego.
+
+## Próximo passo
+
+Abra a [referência API interativa](/api-reference) para navegar pelas operações, schemas, exemplos e códigos de resposta diretamente do OpenAPI sincronizado.

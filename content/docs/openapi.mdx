@@ -1,0 +1,15 @@
+---
+title: "OpenAPI"
+description: "Como o portal consome e valida o contrato OpenAPI 3.1."
+---
+
+O arquivo publicado em `/openapi.yml` é uma cópia sincronizada de `whatsapp-go-api/docs/openapi.yml`. Ele é validado com Redocly antes do build e alimenta a [referência própria da CodeChat](/api-reference), a busca global e o resumo de operações.
+
+## Separação visível
+
+- Operações atuais usam as tags funcionais `Instances`, `Connections`, `Messages`, `Message Batches`, `Chats`, `Media`, `Groups` e `Webhooks`.
+- Os 14 eventos globais de lote aparecem no objeto `webhooks` do OpenAPI 3.1, com headers, envelopes e exemplos próprios.
+- As operações Pro, incluindo as nove rotas de Message Batches, usam `x-codechat-plan: pro` e `x-codechat-plan-enforced: false`.
+- Aliases antigos ficam em tags `Legacy - …`; `deprecated: true` aparece somente quando existe substituto atual equivalente.
+
+Não edite a cópia em `public/openapi.yml` manualmente. Altere o contrato na API fonte e execute `pnpm sync:docs` no portal.

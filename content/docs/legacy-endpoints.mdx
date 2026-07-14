@@ -1,0 +1,85 @@
+---
+title: "Endpoints legados"
+description: "Aliases compatíveis, substitutos atuais e estado de depreciação."
+---
+As rotas desta página continuam registradas e funcionais. Elas são marcadas como `deprecated` no OpenAPI somente quando existe substituto atual equivalente. Não remova integrações existentes sem migrar e validar o novo caminho.
+
+## Instâncias
+
+| Método | Rota legada | Substituto atual | Deprecated |
+| --- | --- | --- | --- |
+| `POST` | `/instance/create` | `POST /instance` | Sim |
+| `GET` | `/instance/fetchInstances` | `GET /instance` | Sim |
+| `GET` | `/instance/fetchInstance/:instanceName` | `GET /instance/:instance` | Sim |
+| `PUT` | `/instance/refreshToken/:instanceName` | Nenhum equivalente atual | Não |
+| `DELETE` | `/instance/delete/:instanceName` | `DELETE /instance/:instance` | Sim |
+
+Bodies, respostas e autenticação são os mesmos descritos em [Instâncias](/docs/instances). Criação/listagem usam token global; as outras rotas usam JWT da instância.
+
+## Conexões
+
+| Método | Rota legada | Substituto atual |
+| --- | --- | --- |
+| `GET` | `/instance/connect/:instanceName` | `GET /instance/:instance/connect` |
+| `POST` | `/instance/connect/:instanceName` | `POST /instance/:instance/connect` |
+| `GET` | `/instance/connect/:instanceName/code/:phoneNumber` | `GET /instance/:instance/connect/code/:phoneNumber` |
+| `POST` | `/instance/connect/:instanceName/code` | `POST /instance/:instance/connect/code` |
+| `POST` | `/instance/connect/:instanceName/passkey/challenge` | `POST /instance/:instance/connect/passkey/challenge` |
+| `POST` | `/instance/connect/:instanceName/passkey/assertion` | `POST /instance/:instance/connect/passkey/assertion` |
+| `DELETE` | `/instance/logout/:instanceName` | `DELETE /instance/:instance/logout/:instanceName` |
+
+Todas usam o JWT da instância e estão deprecated porque possuem substituto atual. Consulte [Conexões](/docs/connections).
+
+## Webhooks
+
+| Método | Rota legada | Substituto atual |
+| --- | --- | --- |
+| `PUT` | `/webhook/set/:instanceName` | `PUT /instance/:instance/webhook` |
+| `GET` | `/webhook/find/:instanceName` | `GET /instance/:instance/webhook` |
+
+As duas usam JWT da instância, permanecem funcionais e estão deprecated.
+
+## Mensagens
+
+| Método | Rota legada | Substituto atual |
+| --- | --- | --- |
+| `POST` | `/message/sendText/:instanceName` | `/instance/:instance/send/text` |
+| `POST` | `/message/sendLink/:instanceName` | `/instance/:instance/send/link` |
+| `POST` | `/message/sendMedia/:instanceName` | `/instance/:instance/send/media` |
+| `POST` | `/message/sendMediaFile/:instanceName` | `/instance/:instance/send/media-file` |
+| `POST` | `/message/sendWhatsAppAudio/:instanceName` | `/instance/:instance/send/ppt` |
+| `POST` | `/message/sendWhatsAppAudioFile/:instanceName` | `/instance/:instance/send/ppt-file` |
+| `POST` | `/message/sendContact/:instanceName` | `/instance/:instance/send/contact` |
+| `POST` | `/message/sendLocation/:instanceName` | `/instance/:instance/send/location` |
+| `POST` | `/message/sendReaction/:instanceName` | `/instance/:instance/send/reaction` |
+| `PATCH` | `/message/reviewOrder/:instanceName` | `POST /instance/:instance/send/review-order` |
+
+Os handlers, bodies e respostas são compartilhados com as rotas atuais. Todos usam JWT e estão deprecated. Em especial, `reviewOrder` possui a mesma semântica de revisão de pedido; só método e caminho mudam.
+
+## Chats e mídia
+
+| Método | Rota legada | Substituto atual |
+| --- | --- | --- |
+| `POST` | `/chat/whatsappNumbers/:instanceName` | `/instance/:instance/chat/is-account` |
+| `PATCH` | `/chat/readMessages/:instanceName` | `/instance/:instance/chat/read-message` |
+| `PUT` | `/chat/archiveChat/:instanceName` | `/instance/:instance/chat/archive` |
+| `DELETE` | `/chat/deleteMessage/:instanceName` | `/instance/:instance/chat/delete-message` |
+| `POST` | `/chat/fetchProfilePictureUrl/:instanceName` | `/instance/:instance/chat/profile-picture` |
+| `POST` | `/chat/rejectCall/:instanceName` | `/instance/:instance/chat/reject-call` |
+| `POST` | `/chat/editMessage/:instanceName` | `/instance/:instance/chat/edit-message` |
+| `POST` | `/chat/mediaData/:instanceName` | `/instance/:instance/media/data` |
+
+Todos usam JWT, compartilham handlers com os substitutos e estão deprecated.
+
+## Grupos
+
+| Método | Rota legada | Substituto atual |
+| --- | --- | --- |
+| `POST` | `/group/create/:instanceName` | `/instance/:instance/group` |
+| `PUT` | `/group/updateGroupPicture/:instanceName` | `/instance/:instance/group/update-picture` |
+| `GET` | `/group/inviteCode/:instanceName` | `/instance/:instance/group/invitation-code` |
+| `PUT` | `/group/revokeInviteCode/:instanceName` | `/instance/:instance/group/revoke-invitation` |
+| `PUT` | `/group/updateParticipant/:instanceName` | `/instance/:instance/group/update-participants` |
+| `DELETE` | `/group/leaveGroup/:instanceName` | `/instance/:instance/group/leave` |
+
+Todos usam JWT, compartilham handlers com os substitutos e estão deprecated. Bodies e respostas estão em [Grupos](/docs/groups).

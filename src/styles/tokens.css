@@ -1,0 +1,15 @@
+:root {
+  /* Escala tipográfica da documentação. 11px é reservado a metadados compactos. */
+  --doc-font-size-micro: 0.6875rem;
+  --doc-font-size-label: 0.75rem;
+  --doc-font-size-sm: 0.8125rem;
+  --doc-font-size-nav: clamp(0.8125rem, 0.79rem + 0.08vw, 0.875rem);
+  --doc-font-size-body: 0.9375rem;
+  --doc-font-size-code: clamp(0.75rem, 0.73rem + 0.08vw, 0.8125rem);
+  --doc-font-size-metric: clamp(1.125rem, 1.04rem + 0.25vw, 1.375rem);
+
+  --doc-line-height-tight: 1.25;
+  --doc-line-height-control: 1.4;
+  --doc-line-height-body: 1.7;
+  --doc-line-height-code: 1.7;
+}

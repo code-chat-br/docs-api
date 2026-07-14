@@ -1,0 +1,25 @@
+---
+title: "Segurança"
+description: "Cuidados com tokens, referência interativa, mídia e webhooks."
+---
+
+## Credenciais
+
+- Trate o token global e o JWT de cada instância como segredos.
+- Não coloque tokens em URLs, repositórios, logs ou código cliente público.
+- Use HTTPS fora do desenvolvimento local.
+- Ao rotacionar um JWT, atualize consumidores de forma coordenada.
+
+## Referência interativa
+
+O portal não envia credenciais para servidor próprio ou serviço externo. O playground salva tokens em `sessionStorage` por padrão; `localStorage` só é usado por escolha explícita. A chamada sai diretamente do navegador para a Base URL selecionada. Isso exige que a API permita a origem via CORS e significa que o navegador terá acesso ao token durante a sessão.
+
+Use credenciais de desenvolvimento com escopo e duração adequados. Para descartá-las, limpe os campos do playground ou o armazenamento do site no navegador.
+
+## Webhooks
+
+O emissor atual não assina entregas com HMAC. Use HTTPS, proteção de rede e autenticação no destino. Responda rapidamente e mova o processamento demorado para sua própria fila.
+
+## Mídia
+
+Os fluxos documentados aplicam limites, verificação de tipo e proteção contra URLs locais/privadas em cenários sensíveis. Ainda assim, valide arquivos e autorização novamente no seu domínio de negócio.

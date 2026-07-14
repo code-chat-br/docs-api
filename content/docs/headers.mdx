@@ -1,0 +1,16 @@
+---
+title: "Headers de webhook"
+description: "Metadados HTTP enviados pelo dispatcher em cada entrega."
+---
+
+| Header | Por instância | Message Batch global |
+| --- | --- | --- |
+| `Content-Type` | `application/json` | `application/json` |
+| `User-Agent` | `CodeChat-Webhook/1.0` | `CodeChat-MessageBatch-Webhook/1.0` |
+| `x-request-id` | Correlação da entrega | UUID da tentativa HTTP |
+| `x-webhook-event` | Mesmo valor do campo `event` | Mesmo valor do campo `event` |
+| `x-owner-jid` | Owner ou string vazia | Não enviado |
+| `x-instance-name` | Nome público da instância | Não enviado |
+| `x-instance-id` | ID numérico interno | Não enviado |
+
+O emissor atual não adiciona assinatura HMAC nem segredo compartilhado. Proteja o destino com HTTPS e controles de rede ou autenticação apropriados ao seu ambiente.

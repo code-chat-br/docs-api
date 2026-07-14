@@ -1,0 +1,35 @@
+---
+title: "Conectando o WhatsApp"
+description: "Inicie a sessão por QR Code, pairing code ou Passkey."
+---
+
+Todas as chamadas desta etapa usam o JWT retornado na criação da instância.
+
+## QR Code
+
+```bash
+curl "http://localhost:8084/instance/codechat/connect" \
+  -H "Authorization: Bearer $INSTANCE_TOKEN"
+```
+
+A resposta pode conter `code` e `base64`, além do estado atual. A conexão continua em segundo plano depois da resposta e respeita `WHATSAPP_PAIRING_TIMEOUT`.
+
+## Pairing code
+
+```bash
+curl -X POST "http://localhost:8084/instance/codechat/connect/code" \
+  -H "Authorization: Bearer $INSTANCE_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"phoneNumber":"5511999999999"}'
+```
+
+O telefone é normalizado para dígitos. A resposta possui `code`, que deve ser informado no WhatsApp.
+
+## Confirme o estado
+
+```bash
+curl "http://localhost:8084/instance/codechat/connection/status" \
+  -H "Authorization: Bearer $INSTANCE_TOKEN"
+```
+
+Considere a sessão pronta quando `connected` e `loggedIn` forem `true`. O fluxo experimental de WebAuthn está em [Pareamento por Passkey](/docs/passkey).

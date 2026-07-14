@@ -1,0 +1,90 @@
+---
+title: "Instâncias"
+description: "Criação, consulta, token e remoção de instâncias."
+---
+## Matriz atual
+
+| Método | Rota | Auth | Sucesso | Finalidade |
+| --- | --- | --- | --- | --- |
+| `POST` | `/instance` | Token global | `201` | Cria uma instância e seu JWT. |
+| `GET` | `/instance` | Token global | `200` | Lista instâncias; aceita `instanceName`. |
+| `GET` | `/instance/:instance` | JWT da instância | `200` | Consulta uma instância. |
+| `DELETE` | `/instance/:instance` | JWT da instância | `200` | Exclui; aceita `force=true|false`. |
+
+> A API não registra `PUT /instance/:instance/token`. A rotação permanece disponível apenas como `PUT /instance/refreshToken/:instanceName`; ela não é marcada como deprecated porque ainda não há substituto atual equivalente.
+
+## Criar
+
+```http
+POST /instance
+apikey: <token-global>
+Content-Type: application/json
+```
+
+```json
+{
+  "instanceName": "codechat",
+  "description": "Atendimento principal",
+  "externalAttributes": {"tenantId": "acme"}
+}
+```
+
+`instanceName` e `description` têm no máximo 255 caracteres. Se o nome for omitido, a API gera `instance-<uuid>`. `externalAttributes` precisa ser objeto JSON.
+
+Resposta `201`:
+
+```json
+{
+  "id": 1,
+  "name": "codechat",
+  "description": "Atendimento principal",
+  "createdAt": "2026-07-13T12:00:00Z",
+  "updatedAt": "2026-07-13T12:00:00Z",
+  "Auth": {
+    "id": 1,
+    "token": "<jwt-da-instancia>"
+  }
+}
+```
+
+O nome `Auth` começa com maiúscula no contrato real. A criação pode retornar `400`, `409`, `422`, `500` ou `503`.
+
+## Listar
+
+`GET /instance?instanceName=codechat` retorna um array. O filtro é opcional, não pode ser vazio e aceita até 255 caracteres.
+
+Cada item contém `id`, `name`, `description`, `status` (`ONLINE` ou `OFFLINE`), `connectionStatus`, `ownerJid`, `profilePicUrl`, `createdAt`, `updatedAt`, `Auth` e `Webhook`. `Auth` e `Webhook` podem ser `null`.
+
+## Consultar
+
+```http
+GET /instance/codechat
+Authorization: Bearer <token-da-instancia>
+```
+
+A resposta possui os mesmos dados públicos da listagem, sem `Auth`.
+
+## Excluir
+
+```http
+DELETE /instance/codechat?force=false
+Authorization: Bearer <token-da-instancia>
+```
+
+`force` aceita apenas `true` ou `false`. A resposta informa `instanceName`, `deleted`, `forced` e `message`. Sem `force=true`, dependências impedem a exclusão; consulte a inconsistência do mapeamento em [Erros](/docs/errors).
+
+## Rotacionar token
+
+```http
+PUT /instance/refreshToken/codechat
+Authorization: Bearer <token-atual>
+Content-Type: application/json
+
+{"oldToken":"<token-atual>"}
+```
+
+O token do body precisa ser igual ao bearer e ao token armazenado. A resposta contém `id`, `createdAt`, `updatedAt`, `token` e `instanceId`.
+
+## Aliases legados
+
+`POST /instance/create`, `GET /instance/fetchInstances`, `GET /instance/fetchInstance/:instanceName`, `DELETE /instance/delete/:instanceName` e a rota de refresh acima são detalhados em [Endpoints legados](/docs/legacy-endpoints).

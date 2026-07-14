@@ -1,0 +1,48 @@
+---
+title: "Criando uma instância"
+description: "Registre uma instância com o token global e obtenha seu JWT."
+---
+
+Uma instância isola credenciais, sessão do WhatsApp, mensagens e configuração de webhook.
+
+## Requisição
+
+```bash
+curl -X POST "http://localhost:8084/instance" \
+  -H "apikey: $GLOBAL_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "instanceName": "codechat",
+    "description": "Atendimento principal",
+    "externalAttributes": {"tenantId": "acme"}
+  }'
+```
+
+`instanceName` pode ser omitido; nesse caso, a API gera `instance-<uuid>`. Nomes e descrições aceitam até 255 caracteres. `externalAttributes` precisa ser um objeto JSON.
+
+## Resposta `201`
+
+```json
+{
+  "id": 1,
+  "name": "codechat",
+  "description": "Atendimento principal",
+  "createdAt": "2026-07-13T12:00:00Z",
+  "updatedAt": "2026-07-13T12:00:00Z",
+  "Auth": {
+    "id": 1,
+    "token": "eyJ..."
+  }
+}
+```
+
+O nome `Auth` começa com maiúscula no contrato real. Trate `Auth.token` como segredo e use-o somente como bearer nas rotas da mesma instância.
+
+## Erros comuns
+
+- `401`: token global ausente ou inválido.
+- `409`: o nome já existe.
+- `422`: a instância não pôde ser criada por uma regra semântica.
+- `503`: banco ou dependência indisponível.
+
+Veja todas as operações em [Instâncias](/docs/instances).

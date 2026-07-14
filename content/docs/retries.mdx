@@ -1,0 +1,22 @@
+---
+title: "Entrega, retries e idempotência"
+description: "Semântica operacional real da fila de webhooks."
+---
+
+Respostas `2xx` são consideradas sucesso nos dois fluxos. O comportamento após falha depende da origem do evento.
+
+## Propriedades atuais
+
+| Propriedade | Eventos por instância | Eventos de Message Batch |
+| --- | --- | --- |
+| Método | `POST` | `POST` |
+| Timeout | 15 segundos | 15 segundos |
+| Fila | 1.000 itens em memória | Outbox PostgreSQL |
+| Retry | Não implementado | Reagendamento com backoff persistente |
+| Confirmação | Resposta `2xx` | Resposta `2xx` |
+| Ordenação | Não garantida | Não garantida |
+| Dead-letter queue | Não implementada | Não documentada como contrato público |
+
+## Estratégia do consumidor
+
+Processe entregas rapidamente e responda `2xx`. Se sua lógica for demorada, persista o evento em uma fila própria antes de responder. Use `event`, IDs do lote/item e contexto de negócio para deduplicação; `x-request-id` muda entre tentativas HTTP e não é uma chave de idempotência.

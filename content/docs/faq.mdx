@@ -1,0 +1,32 @@
+---
+title: "FAQ técnica"
+description: "Respostas curtas para dúvidas confirmadas no código e no contrato."
+---
+
+## Qual credencial devo usar?
+
+Use `apikey` nas operações globais e `Authorization: Bearer $INSTANCE_TOKEN` nas operações de uma instância. Consulte [Autenticação](/docs/authentication).
+
+## Posso usar `x-api-key` ou `apiKey`?
+
+Sim, o middleware global aceita exatamente `apikey`, `x-api-key` e `apiKey`. Se enviar mais de um alias, todos precisam possuir o mesmo valor.
+
+## A CodeChat oferece WebSocket?
+
+Não no runtime auditado. Não existem rota de upgrade, WebSocket ou SSE; tempo real é entregue por [webhooks](/api-reference/webhooks).
+
+## Endpoints Pro retornam `402`?
+
+Não atualmente. A classificação Pro é documental e `x-codechat-plan-enforced` está como `false`; não foi encontrado enforcement de plano ou produtor de `402`.
+
+## Existe retry de webhook?
+
+Webhooks por instância não possuem retry automático. Eventos globais de Message Batch usam outbox PostgreSQL com retry persistente e backoff. Consulte [Retries](/docs/retries).
+
+## O playground envia meu token para o portal?
+
+Não. A chamada sai diretamente do navegador para a Base URL configurada. Tokens usam `sessionStorage` por padrão e `localStorage` somente com consentimento explícito.
+
+## Existe rate limit embutido?
+
+Não foi encontrado rate limiter ativo. Veja [Rate limits](/docs/rate-limits).

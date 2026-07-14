@@ -1,0 +1,16 @@
+---
+title: "Tempo real"
+description: "O canal disponível hoje e o que não existe no runtime auditado."
+---
+
+## Estado atual
+
+A CodeChat API Go auditada **não registra endpoint WebSocket nem Server-Sent Events (SSE)**. Não existe URL de conexão, protocolo de inscrição ou cliente oficial para esses transportes no código atual.
+
+Eventos são entregues por [webhooks HTTP](/docs/webhooks). Para uma experiência em tempo real na sua aplicação, receba o webhook no seu backend e distribua o evento aos seus próprios clientes pelo transporte que você controla.
+
+## Por que `/websocket` redireciona para cá
+
+URLs antigas ou esperadas como `/websocket` e `/websocket/events` são preservadas apenas como redirecionamentos informativos no portal. Elas não representam rotas da API e não devem ser usadas como endereço de conexão.
+
+Se um transporte em tempo real for adicionado ao runtime no futuro, esta página e o OpenAPI devem ser atualizados a partir da implementação antes de publicar exemplos.

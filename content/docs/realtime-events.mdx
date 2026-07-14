@@ -1,0 +1,14 @@
+---
+title: "Eventos em tempo real"
+description: "Como consumir os eventos existentes sem inventar um transporte WebSocket ou SSE."
+---
+
+Não há catálogo separado de eventos WebSocket/SSE. O catálogo implementado reúne **41 eventos de webhook**: 27 por instância e 14 globais de Message Batch, descritos em [Webhooks](/docs/webhooks#eventos).
+
+Uma arquitetura comum é:
+
+1. CodeChat envia `POST` ao seu endpoint de webhook.
+2. Seu backend valida, persiste e reconhece a entrega com `2xx`.
+3. Seu backend publica o evento aos clientes autorizados pelo canal interno escolhido.
+
+O terceiro passo pertence à sua aplicação; nomes de salas, URLs, autenticação e semântica de reconexão não fazem parte do contrato atual da CodeChat API.

@@ -1,0 +1,68 @@
+name: Portal checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_REPOSITORY: jrCleber/whatsapp-api-go
+  CODECHAT_SOURCE_DOCS: ../whatsapp-go-api/docs
+  NEXT_PUBLIC_SITE_URL: http://localhost:3000
+  NEXT_PUBLIC_CODECHAT_API_URL: http://localhost:8084
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout portal
+        uses: actions/checkout@v4
+
+      - name: Checkout API source of truth
+        run: git clone --depth 1 "https://github.com/${SOURCE_REPOSITORY}.git" ../whatsapp-go-api
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.12.0
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Synchronize source documentation
+        run: pnpm sync:docs
+
+      - name: Generate webhook catalog and audit route parity
+        run: pnpm generate:webhooks && pnpm audit:api
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Validate OpenAPI
+        run: pnpm validate:openapi
+
+      - name: Unit and component tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: End-to-end tests
+        run: pnpm test:e2e
