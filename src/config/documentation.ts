@@ -30,7 +30,7 @@ export const documentationConfig = {
     { title: 'Tratamento de erros', href: '/docs/errors' },
     { title: 'Rate limits', href: '/docs/rate-limits' },
     { title: 'Webhooks', href: '/api-reference/webhooks' },
-    { title: 'Tempo real', href: '/docs/realtime' },
+    { title: 'WebSocket de eventos', href: '/docs/websocket' },
     { title: 'Migração Node.js → Go', href: '/docs/migration' },
     { title: 'Versionamento', href: '/docs/versioning' },
     { title: 'Changelog', href: '/docs/changelog' },

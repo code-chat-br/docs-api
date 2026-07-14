@@ -27,6 +27,13 @@
 | `WHATSAPP_SESSION_POSTGRES_URL` | Não | `postgres://...` | String de conexão opcional e dedicada do PostgreSQL para as sessões do whatsmeow. Quando vazia, `DATABASE_URL` é usada pelo SQL store do whatsmeow. |
 | `WEBHOOK_GLOBAL_URL` | Não | `https://example.com/webhook` | URL do webhook global. Precisa ser `http` ou `https` absoluta; obrigatória somente quando `WEBHOOK_GLOBAL_ENABLED=true`. |
 | `WEBHOOK_GLOBAL_ENABLED` | Não | `false` | Habilita o envio de todos os eventos reconhecidos de todas as instâncias para `WEBHOOK_GLOBAL_URL`. O padrão é `false`. |
+| `WEBSOCKET_ENABLED` | Não | `true` | Habilita as rotas `/ws/instance/events` e `/ws/global/events`. O padrão é `true`. |
+| `WEBSOCKET_ALLOWED_ORIGINS` | Não | `http://localhost:3000,http://localhost:5173` | Lista separada por vírgula de origens aceitas para browsers. Quando vazia, clientes com `Origin` são rejeitados. |
+| `WEBSOCKET_ALLOW_EMPTY_ORIGIN` | Não | `true` | Permite clientes backend sem header `Origin`. |
+| `WEBSOCKET_PING_INTERVAL` | Não | `25s` | Intervalo de ping do servidor WebSocket. |
+| `WEBSOCKET_PONG_TIMEOUT` | Não | `60s` | Prazo máximo para receber pong antes de encerrar a conexão. |
+| `WEBSOCKET_WRITE_TIMEOUT` | Não | `10s` | Prazo máximo de escrita de frames. |
+| `WEBSOCKET_SEND_BUFFER` | Não | `256` | Tamanho do buffer por cliente WebSocket. |
 | `AUTHENTICATION_JWT_EXPIRES_IN` | Sim | `3600` | Expiração do JWT em segundos. O valor `0` remove a claim `exp`. |
 | `AUTHENTICATION_JWT_SECRET` | Sim | `strong-secret` | Chave secreta usada para assinar JWTs com HS256. |
 | `AUTHENTICATION_GLOBAL_AUTH_TOKEN` | Sim | `admin-token` | Token usado somente para criar e listar instâncias. |

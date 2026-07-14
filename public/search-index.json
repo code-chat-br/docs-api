@@ -75,9 +75,17 @@
     "id": "doc:changelog.mdx",
     "type": "Guia",
     "title": "Changelog da documentação",
-    "description": "Marcos do portal e origem do conteúdo publicado. 2026-07-13 - Referência própria criada com Next.js, React, Fumadocs e renderização dinâmica do OpenAPI. - OpenAPI 3.1 sincronizado com 95 operações: 43 atuais, 14 classificadas como Pro e 38 rotas em categorias legadas. - Guias técnicos importados da API fonte e complementados com primeiros passos, segurança e operação. - Guia e referência das nove operações persistentes de Message Batch incorporados. - As nove operações e os eventos de Message Batch foram classificados como recurso Pro, sem enforcement no runtime. - Catálogo ampliado para 41 eventos de webhook: 27 por instância e 14 globais de lote. - Ausência de WebSocket/SSE e de enforcement Pro documentada explicitamente. O histórico do ",
+    "description": "Marcos do portal e origem do conteúdo publicado. 2026-07-14 - Guia de WebSocket de eventos incorporado com URLs, autenticação, allowlist de eventos, payloads e códigos de fechamento. - Variáveis WEBSOCKET adicionadas à documentação de ambiente. - Message Batch passou a documentar ownerUserId como isolamento dos eventos globais em /ws/global/events . 2026-07-13 - Referência própria criada com Next.js, React, Fumadocs e renderização dinâmica do OpenAPI. - OpenAPI 3.1 sincronizado com 95 operações: 43 atuais, 14 classificadas como Pro e 38 rotas em categorias legadas. - Guias técnicos importados da API fonte e complementados com primeiros passos, segurança e operação. - Guia e referência das nove operações persistentes de Message Batch incorp",
     "href": "/docs/changelog",
-    "search": "changelog da documentação marcos do portal e origem do conteúdo publicado. 2026-07-13 - referência própria criada com next.js, react, fumadocs e renderização dinâmica do openapi. - openapi 3.1 sincronizado com 95 operações: 43 atuais, 14 classificadas como pro e 38 rotas em categorias legadas. - guias técnicos importados da api fonte e complementados com primeiros passos, segurança e operação. - guia e referência das nove operações persistentes de message batch incorporados. - as nove operações e os eventos de message batch foram classificados como recurso pro, sem enforcement no runtime. - catálogo ampliado para 41 eventos de webhook: 27 por instância e 14 globais de lote. - ausência de websocket/sse e de enforcement pro documentada explicitamente. o histórico do   "
+    "search": "changelog da documentação marcos do portal e origem do conteúdo publicado. 2026-07-14 - guia de websocket de eventos incorporado com urls, autenticação, allowlist de eventos, payloads e códigos de fechamento. - variáveis websocket adicionadas à documentação de ambiente. - message batch passou a documentar owneruserid como isolamento dos eventos globais em /ws/global/events . 2026-07-13 - referência própria criada com next.js, react, fumadocs e renderização dinâmica do openapi. - openapi 3.1 sincronizado com 95 operações: 43 atuais, 14 classificadas como pro e 38 rotas em categorias legadas. - guias técnicos importados da api fonte e complementados com primeiros passos, segurança e operação. - guia e referência das nove operações persistentes de message batch incorp  "
+  },
+  {
+    "id": "heading:changelog.mdx:2026-07-14",
+    "type": "Seção",
+    "title": "2026-07-14",
+    "description": "Changelog da documentação",
+    "href": "/docs/changelog#2026-07-14",
+    "search": "2026-07-14 changelog da documentação  "
   },
   {
     "id": "heading:changelog.mdx:2026-07-13",
@@ -379,9 +387,9 @@
     "id": "doc:events-overview.mdx",
     "type": "Guia",
     "title": "Visão geral de eventos",
-    "description": "Como a API transforma eventos internos em entregas HTTP por webhook. A implementação atual publica eventos somente por webhooks HTTP POST . Há dois fluxos: eventos por instância, com envelope contendo instance , e eventos globais de Message Batch, sem esse campo. O que está implementado - 41 nomes públicos: 27 eventos por instância e 14 eventos globais de Message Batch. - Webhook por instância com flags em events . - Webhook global controlado por WEBHOOK GLOBAL URL e WEBHOOK GLOBAL ENABLED . - Fila em memória com múltiplos workers para eventos por instância. - Outbox PostgreSQL com retry e backoff para eventos globais de Message Batch. Limites operacionais Eventos por instância não têm retry automático nem dead-letter queue. Eventos de Message Batch são reage",
+    "description": "Como a API transforma eventos internos em entregas por webhook e WebSocket. A implementação atual publica eventos por webhooks HTTP POST e por WebSocket . Há dois escopos: eventos por instância, com envelope contendo instance , e eventos globais de Message Batch, sem esse campo. O que está implementado - 41 nomes públicos: 27 eventos por instância e 14 eventos globais de Message Batch. - Webhook por instância com flags em events . - Webhook global controlado por WEBHOOK GLOBAL URL e WEBHOOK GLOBAL ENABLED . - WebSocket por instância em /ws/instance/events . - WebSocket global em /ws/global/events . - Fila em memória com múltiplos workers para eventos por instância. - Outbox PostgreSQL com retry e backoff para eventos globais de Message Batch. Limites operacionais Ev",
     "href": "/docs/events-overview",
-    "search": "visão geral de eventos como a api transforma eventos internos em entregas http por webhook. a implementação atual publica eventos somente por webhooks http post . há dois fluxos: eventos por instância, com envelope contendo instance , e eventos globais de message batch, sem esse campo. o que está implementado - 41 nomes públicos: 27 eventos por instância e 14 eventos globais de message batch. - webhook por instância com flags em events . - webhook global controlado por webhook global url e webhook global enabled . - fila em memória com múltiplos workers para eventos por instância. - outbox postgresql com retry e backoff para eventos globais de message batch. limites operacionais eventos por instância não têm retry automático nem dead-letter queue. eventos de message batch são reage  "
+    "search": "visão geral de eventos como a api transforma eventos internos em entregas por webhook e websocket. a implementação atual publica eventos por webhooks http post e por websocket . há dois escopos: eventos por instância, com envelope contendo instance , e eventos globais de message batch, sem esse campo. o que está implementado - 41 nomes públicos: 27 eventos por instância e 14 eventos globais de message batch. - webhook por instância com flags em events . - webhook global controlado por webhook global url e webhook global enabled . - websocket por instância em /ws/instance/events . - websocket global em /ws/global/events . - fila em memória com múltiplos workers para eventos por instância. - outbox postgresql com retry e backoff para eventos globais de message batch. limites operacionais ev  "
   },
   {
     "id": "heading:events-overview.mdx:o-que-esta-implementado",
@@ -403,9 +411,9 @@
     "id": "doc:faq.mdx",
     "type": "Guia",
     "title": "FAQ técnica",
-    "description": "Respostas curtas para dúvidas confirmadas no código e no contrato. Qual credencial devo usar? Use apikey nas operações globais e Authorization: Bearer $INSTANCE TOKEN nas operações de uma instância. Consulte Autenticação. Posso usar x-api-key ou apiKey ? Sim, o middleware global aceita exatamente apikey , x-api-key e apiKey . Se enviar mais de um alias, todos precisam possuir o mesmo valor. A CodeChat oferece WebSocket? Não no runtime auditado. Não existem rota de upgrade, WebSocket ou SSE; tempo real é entregue por webhooks. Endpoints Pro retornam 402 ? Não atualmente. A classificação Pro é documental e x-codechat-plan-enforced está como false ; não foi encontrado enforcement de plano ou produtor de 402 . Existe retry de webhook? Webhooks por instância não",
+    "description": "Respostas curtas para dúvidas confirmadas no código e no contrato. Qual credencial devo usar? Use apikey nas operações globais e Authorization: Bearer $INSTANCE TOKEN nas operações de uma instância. Consulte Autenticação. Posso usar x-api-key ou apiKey ? Sim, o middleware global aceita exatamente apikey , x-api-key e apiKey . Se enviar mais de um alias, todos precisam possuir o mesmo valor. A CodeChat oferece WebSocket? Sim. A API expõe /ws/instance/events para eventos por instância e /ws/global/events para eventos globais de Message Batch. Consulte WebSocket de eventos. Endpoints Pro retornam 402 ? Não atualmente. A classificação Pro é documental e x-codechat-plan-enforced está como false ; não foi encontrado enforcement de plano ou produtor de 402 . Exist",
     "href": "/docs/faq",
-    "search": "faq técnica respostas curtas para dúvidas confirmadas no código e no contrato. qual credencial devo usar? use apikey nas operações globais e authorization: bearer $instance token nas operações de uma instância. consulte autenticação. posso usar x-api-key ou apikey ? sim, o middleware global aceita exatamente apikey , x-api-key e apikey . se enviar mais de um alias, todos precisam possuir o mesmo valor. a codechat oferece websocket? não no runtime auditado. não existem rota de upgrade, websocket ou sse; tempo real é entregue por webhooks. endpoints pro retornam 402 ? não atualmente. a classificação pro é documental e x-codechat-plan-enforced está como false ; não foi encontrado enforcement de plano ou produtor de 402 . existe retry de webhook? webhooks por instância não  "
+    "search": "faq técnica respostas curtas para dúvidas confirmadas no código e no contrato. qual credencial devo usar? use apikey nas operações globais e authorization: bearer $instance token nas operações de uma instância. consulte autenticação. posso usar x-api-key ou apikey ? sim, o middleware global aceita exatamente apikey , x-api-key e apikey . se enviar mais de um alias, todos precisam possuir o mesmo valor. a codechat oferece websocket? sim. a api expõe /ws/instance/events para eventos por instância e /ws/global/events para eventos globais de message batch. consulte websocket de eventos. endpoints pro retornam 402 ? não atualmente. a classificação pro é documental e x-codechat-plan-enforced está como false ; não foi encontrado enforcement de plano ou produtor de 402 . exist  "
   },
   {
     "id": "heading:faq.mdx:qual-credencial-devo-usar",
@@ -987,9 +995,9 @@
     "id": "doc:migration.mdx",
     "type": "Guia",
     "title": "Migração de Node.js para Go",
-    "description": "Estratégia segura para migrar integrações legadas para o contrato atual da API Go. Use este roteiro ao substituir uma integração construída sobre as rotas legadas da API Node.js pelo contrato atual da CodeChat API Go. Os aliases antigos continuam registrados, mas ficam separados das rotas atuais na Referência da API e no mapa de endpoints legados. O que preservar - Mantenha separados o token global e o JWT da instância. A migração de rota não altera a finalidade de cada credencial. - Preserve os nomes, tipos e valores dos campos JSON até confirmar a operação equivalente no OpenAPI. - Não transforme aliases de headers, paths ou payloads em um contrato novo durante a troca de runtime. - Trate webhooks como o canal de eventos implementado. A API Go auditada não expõe WebSocke",
+    "description": "Estratégia segura para migrar integrações legadas para o contrato atual da API Go. Use este roteiro ao substituir uma integração construída sobre as rotas legadas da API Node.js pelo contrato atual da CodeChat API Go. Os aliases antigos continuam registrados, mas ficam separados das rotas atuais na Referência da API e no mapa de endpoints legados. O que preservar - Mantenha separados o token global e o JWT da instância. A migração de rota não altera a finalidade de cada credencial. - Preserve os nomes, tipos e valores dos campos JSON até confirmar a operação equivalente no OpenAPI. - Não transforme aliases de headers, paths ou payloads em um contrato novo durante a troca de runtime. - Trate webhooks e WebSocket como canais distintos: webhooks para entrega HTTP e WebSocket ",
     "href": "/docs/migration",
-    "search": "migração de node.js para go estratégia segura para migrar integrações legadas para o contrato atual da api go. use este roteiro ao substituir uma integração construída sobre as rotas legadas da api node.js pelo contrato atual da codechat api go. os aliases antigos continuam registrados, mas ficam separados das rotas atuais na referência da api e no mapa de endpoints legados. o que preservar - mantenha separados o token global e o jwt da instância. a migração de rota não altera a finalidade de cada credencial. - preserve os nomes, tipos e valores dos campos json até confirmar a operação equivalente no openapi. - não transforme aliases de headers, paths ou payloads em um contrato novo durante a troca de runtime. - trate webhooks como o canal de eventos implementado. a api go auditada não expõe websocke  "
+    "search": "migração de node.js para go estratégia segura para migrar integrações legadas para o contrato atual da api go. use este roteiro ao substituir uma integração construída sobre as rotas legadas da api node.js pelo contrato atual da codechat api go. os aliases antigos continuam registrados, mas ficam separados das rotas atuais na referência da api e no mapa de endpoints legados. o que preservar - mantenha separados o token global e o jwt da instância. a migração de rota não altera a finalidade de cada credencial. - preserve os nomes, tipos e valores dos campos json até confirmar a operação equivalente no openapi. - não transforme aliases de headers, paths ou payloads em um contrato novo durante a troca de runtime. - trate webhooks e websocket como canais distintos: webhooks para entrega http e websocket   "
   },
   {
     "id": "heading:migration.mdx:o-que-preservar",
@@ -1259,17 +1267,17 @@
     "id": "doc:realtime-events.mdx",
     "type": "Guia",
     "title": "Eventos em tempo real",
-    "description": "Como consumir os eventos existentes sem inventar um transporte WebSocket ou SSE. Não há catálogo separado de eventos WebSocket/SSE. O catálogo implementado reúne 41 eventos de webhook : 27 por instância e 14 globais de Message Batch, descritos em Webhooks. Uma arquitetura comum é: 1. CodeChat envia POST ao seu endpoint de webhook. 2. Seu backend valida, persiste e reconhece a entrega com 2xx . 3. Seu backend publica o evento aos clientes autorizados pelo canal interno escolhido. O terceiro passo pertence à sua aplicação; nomes de salas, URLs, autenticação e semântica de reconexão não fazem parte do contrato atual da CodeChat API.",
+    "description": "Como consumir os eventos por webhook ou WebSocket. O catálogo implementado reúne 41 eventos públicos : 27 por instância e 14 globais de Message Batch. Esses nomes são usados tanto nos Webhooks quanto no WebSocket de eventos. Uma arquitetura comum para entrega persistente é: 1. CodeChat envia POST ao seu endpoint de webhook. 2. Seu backend valida, persiste e reconhece a entrega com 2xx . 3. Seu backend publica o evento aos clientes autorizados pelo canal interno escolhido. Para consumo direto em tempo real, abra uma conexão WebSocket para /ws/instance/events ou /ws/global/events , informando exatamente um event e o token adequado na query string. O WebSocket é best-effort e não substitui persistência ou replay no seu backend.",
     "href": "/docs/realtime-events",
-    "search": "eventos em tempo real como consumir os eventos existentes sem inventar um transporte websocket ou sse. não há catálogo separado de eventos websocket/sse. o catálogo implementado reúne 41 eventos de webhook : 27 por instância e 14 globais de message batch, descritos em webhooks. uma arquitetura comum é: 1. codechat envia post ao seu endpoint de webhook. 2. seu backend valida, persiste e reconhece a entrega com 2xx . 3. seu backend publica o evento aos clientes autorizados pelo canal interno escolhido. o terceiro passo pertence à sua aplicação; nomes de salas, urls, autenticação e semântica de reconexão não fazem parte do contrato atual da codechat api.  "
+    "search": "eventos em tempo real como consumir os eventos por webhook ou websocket. o catálogo implementado reúne 41 eventos públicos : 27 por instância e 14 globais de message batch. esses nomes são usados tanto nos webhooks quanto no websocket de eventos. uma arquitetura comum para entrega persistente é: 1. codechat envia post ao seu endpoint de webhook. 2. seu backend valida, persiste e reconhece a entrega com 2xx . 3. seu backend publica o evento aos clientes autorizados pelo canal interno escolhido. para consumo direto em tempo real, abra uma conexão websocket para /ws/instance/events ou /ws/global/events , informando exatamente um event e o token adequado na query string. o websocket é best-effort e não substitui persistência ou replay no seu backend.  "
   },
   {
     "id": "doc:realtime.mdx",
     "type": "Guia",
     "title": "Tempo real",
-    "description": "O canal disponível hoje e o que não existe no runtime auditado. Estado atual A CodeChat API Go auditada não registra endpoint WebSocket nem Server-Sent Events (SSE) . Não existe URL de conexão, protocolo de inscrição ou cliente oficial para esses transportes no código atual. Eventos são entregues por webhooks HTTP. Para uma experiência em tempo real na sua aplicação, receba o webhook no seu backend e distribua o evento aos seus próprios clientes pelo transporte que você controla. Por que /websocket redireciona para cá URLs antigas ou esperadas como /websocket e /websocket/events são preservadas apenas como redirecionamentos informativos no portal. Elas não representam rotas da API e não devem ser usadas como endereço de conexão. Se um transporte em tempo",
+    "description": "Canais disponíveis para eventos HTTP e WebSocket. Estado atual A CodeChat API Go entrega eventos por webhooks HTTP e por WebSocket de eventos. Webhooks são a integração persistente por HTTP POST; WebSocket é um canal em tempo real, best-effort, para assinar um evento por conexão. Não há Server-Sent Events (SSE) documentado. Para integrações que exigem replay ou reconstrução de estado, combine WebSocket com os endpoints REST persistentes correspondentes. URLs principais - Eventos por instância: ws://localhost:8084/ws/instance/events?event=connection.update&token= - Eventos globais: ws://localhost:8084/ws/global/events?event=message.batch.progress&token= Consulte WebSocket de eventos para autenticação, allowlist de eventos, payloads, heartbea",
     "href": "/docs/realtime",
-    "search": "tempo real o canal disponível hoje e o que não existe no runtime auditado. estado atual a codechat api go auditada não registra endpoint websocket nem server-sent events (sse) . não existe url de conexão, protocolo de inscrição ou cliente oficial para esses transportes no código atual. eventos são entregues por webhooks http. para uma experiência em tempo real na sua aplicação, receba o webhook no seu backend e distribua o evento aos seus próprios clientes pelo transporte que você controla. por que /websocket redireciona para cá urls antigas ou esperadas como /websocket e /websocket/events são preservadas apenas como redirecionamentos informativos no portal. elas não representam rotas da api e não devem ser usadas como endereço de conexão. se um transporte em tempo  "
+    "search": "tempo real canais disponíveis para eventos http e websocket. estado atual a codechat api go entrega eventos por webhooks http e por websocket de eventos. webhooks são a integração persistente por http post; websocket é um canal em tempo real, best-effort, para assinar um evento por conexão. não há server-sent events (sse) documentado. para integrações que exigem replay ou reconstrução de estado, combine websocket com os endpoints rest persistentes correspondentes. urls principais - eventos por instância: ws://localhost:8084/ws/instance/events?event=connection.update&token= - eventos globais: ws://localhost:8084/ws/global/events?event=message.batch.progress&token= consulte websocket de eventos para autenticação, allowlist de eventos, payloads, heartbea  "
   },
   {
     "id": "heading:realtime.mdx:estado-atual",
@@ -1280,12 +1288,12 @@
     "search": "estado atual tempo real  "
   },
   {
-    "id": "heading:realtime.mdx:por-que-websocket-redireciona-para-ca",
+    "id": "heading:realtime.mdx:urls-principais",
     "type": "Seção",
-    "title": "Por que /websocket redireciona para cá",
+    "title": "URLs principais",
     "description": "Tempo real",
-    "href": "/docs/realtime#por-que-websocket-redireciona-para-ca",
-    "search": "por que /websocket redireciona para cá tempo real  "
+    "href": "/docs/realtime#urls-principais",
+    "search": "urls principais tempo real  "
   },
   {
     "id": "doc:retries.mdx",
@@ -1726,6 +1734,94 @@
     "description": "Webhooks",
     "href": "/docs/webhooks#eventos-nao-suportados-ou-ignorados",
     "search": "eventos não suportados ou ignorados webhooks  "
+  },
+  {
+    "id": "doc:websocket.mdx",
+    "type": "Guia",
+    "title": "WebSocket de eventos",
+    "description": "Assinatura em tempo real de eventos por instância e eventos globais de Message Batch. O WebSocket entrega, em tempo real e em modo best-effort, o mesmo JSON serializado para os webhooks. Headers HTTP de webhook nao sao enviados pelo WebSocket. URLs Local: Producao deve usar wss:// : Cada conexao assina exatamente um evento por query string. Nao ha wildcard, , multiplos eventos separados por virgula ou troca de assinatura depois do upgrade. Autenticacao /ws/instance/events aceita somente JWT de instancia. O token e validado com HS256 e AUTHENTICATION JWT SECRET , precisa conter instanceName , precisa pertencer ao registro Auth.token da instancia encontrada e entrega apenas eventos desse Instance.id . Quando AUTHENTICATION JWT EXPIRES IN 0 , a expiracao do token de instancia e ",
+    "href": "/docs/websocket",
+    "search": "websocket de eventos assinatura em tempo real de eventos por instância e eventos globais de message batch. o websocket entrega, em tempo real e em modo best-effort, o mesmo json serializado para os webhooks. headers http de webhook nao sao enviados pelo websocket. urls local: producao deve usar wss:// : cada conexao assina exatamente um evento por query string. nao ha wildcard, , multiplos eventos separados por virgula ou troca de assinatura depois do upgrade. autenticacao /ws/instance/events aceita somente jwt de instancia. o token e validado com hs256 e authentication jwt secret , precisa conter instancename , precisa pertencer ao registro auth.token da instancia encontrada e entrega apenas eventos desse instance.id . quando authentication jwt expires in 0 , a expiracao do token de instancia e   "
+  },
+  {
+    "id": "heading:websocket.mdx:urls",
+    "type": "Seção",
+    "title": "URLs",
+    "description": "WebSocket de eventos",
+    "href": "/docs/websocket#urls",
+    "search": "urls websocket de eventos  "
+  },
+  {
+    "id": "heading:websocket.mdx:autenticacao",
+    "type": "Seção",
+    "title": "Autenticacao",
+    "description": "WebSocket de eventos",
+    "href": "/docs/websocket#autenticacao",
+    "search": "autenticacao websocket de eventos  "
+  },
+  {
+    "id": "heading:websocket.mdx:parametros",
+    "type": "Seção",
+    "title": "Parametros",
+    "description": "WebSocket de eventos",
+    "href": "/docs/websocket#parametros",
+    "search": "parametros websocket de eventos  "
+  },
+  {
+    "id": "heading:websocket.mdx:eventos-de-instancia",
+    "type": "Seção",
+    "title": "Eventos de instancia",
+    "description": "WebSocket de eventos",
+    "href": "/docs/websocket#eventos-de-instancia",
+    "search": "eventos de instancia websocket de eventos  "
+  },
+  {
+    "id": "heading:websocket.mdx:eventos-globais",
+    "type": "Seção",
+    "title": "Eventos globais",
+    "description": "WebSocket de eventos",
+    "href": "/docs/websocket#eventos-globais",
+    "search": "eventos globais websocket de eventos  "
+  },
+  {
+    "id": "heading:websocket.mdx:payload",
+    "type": "Seção",
+    "title": "Payload",
+    "description": "WebSocket de eventos",
+    "href": "/docs/websocket#payload",
+    "search": "payload websocket de eventos  "
+  },
+  {
+    "id": "heading:websocket.mdx:cliente-javascript",
+    "type": "Seção",
+    "title": "Cliente JavaScript",
+    "description": "WebSocket de eventos",
+    "href": "/docs/websocket#cliente-javascript",
+    "search": "cliente javascript websocket de eventos  "
+  },
+  {
+    "id": "heading:websocket.mdx:heartbeat-e-fechamento",
+    "type": "Seção",
+    "title": "Heartbeat e fechamento",
+    "description": "WebSocket de eventos",
+    "href": "/docs/websocket#heartbeat-e-fechamento",
+    "search": "heartbeat e fechamento websocket de eventos  "
+  },
+  {
+    "id": "heading:websocket.mdx:configuracao",
+    "type": "Seção",
+    "title": "Configuracao",
+    "description": "WebSocket de eventos",
+    "href": "/docs/websocket#configuracao",
+    "search": "configuracao websocket de eventos  "
+  },
+  {
+    "id": "heading:websocket.mdx:seguranca-e-troubleshooting",
+    "type": "Seção",
+    "title": "Seguranca e troubleshooting",
+    "description": "WebSocket de eventos",
+    "href": "/docs/websocket#seguranca-e-troubleshooting",
+    "search": "seguranca e troubleshooting websocket de eventos  "
   },
   {
     "id": "operation:get:/health",

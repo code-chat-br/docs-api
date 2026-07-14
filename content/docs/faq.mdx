@@ -13,7 +13,7 @@ Sim, o middleware global aceita exatamente `apikey`, `x-api-key` e `apiKey`. Se 
 
 ## A CodeChat oferece WebSocket?
 
-Não no runtime auditado. Não existem rota de upgrade, WebSocket ou SSE; tempo real é entregue por [webhooks](/api-reference/webhooks).
+Sim. A API expõe `/ws/instance/events` para eventos por instância e `/ws/global/events` para eventos globais de Message Batch. Consulte [WebSocket de eventos](/docs/websocket).
 
 ## Endpoints Pro retornam `402`?
 

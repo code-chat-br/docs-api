@@ -23,6 +23,7 @@
     "---Eventos e entrega---",
     "events-overview",
     "webhooks",
+    "websocket",
     "envelope",
     "headers",
     "retries",

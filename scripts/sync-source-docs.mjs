@@ -26,6 +26,11 @@ const documents = {
   'media.md': ['media.mdx', 'Mídia', 'Download e upload antecipado de arquivos.'],
   'groups.md': ['groups.mdx', 'Grupos', 'Criação, participantes, convites, foto e saída.'],
   'webhooks.md': ['webhooks.mdx', 'Webhooks', 'Configuração, entrega e os 41 eventos implementados.'],
+  'websocket.md': [
+    'websocket.mdx',
+    'WebSocket de eventos',
+    'Assinatura em tempo real de eventos por instância e eventos globais de Message Batch.',
+  ],
   'pro-endpoints.md': [
     'pro-endpoints.mdx',
     'Recursos Pro',

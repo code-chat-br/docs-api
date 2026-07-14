@@ -92,7 +92,7 @@ export default async function ApiReferenceOverview() {
         <div>
           <span>Tempo real</span>
           <p>
-            <Radio size={15} /> Webhooks. WebSocket/SSE não existem no runtime atual.
+            <Radio size={15} /> Webhooks HTTP e WebSocket de eventos.
           </p>
         </div>
       </section>

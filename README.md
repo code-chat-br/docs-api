@@ -13,7 +13,7 @@ Portal oficial de documentação e referência técnica da CodeChat. Guias edito
 - Playground no navegador com cancelamento, timeout, resultado formatado e credenciais mascaradas.
 - Busca global por endpoint, rota, método, parâmetro, schema e evento (`Ctrl/Cmd + K`).
 - Catálogo de 41 webhooks reais: 27 por instância e 14 globais de Message Batch.
-- Guias editoriais existentes, changelog, migração e explicação explícita da ausência de WebSocket/SSE.
+- Guias editoriais existentes, changelog, migração e documentação do WebSocket de eventos.
 
 O relatório de consistência da referência fica em [`docs/api-reference-audit.md`](docs/api-reference-audit.md).
 

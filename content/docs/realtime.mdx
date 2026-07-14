@@ -1,16 +1,17 @@
 ---
 title: "Tempo real"
-description: "O canal disponível hoje e o que não existe no runtime auditado."
+description: "Canais disponíveis para eventos HTTP e WebSocket."
 ---
 
 ## Estado atual
 
-A CodeChat API Go auditada **não registra endpoint WebSocket nem Server-Sent Events (SSE)**. Não existe URL de conexão, protocolo de inscrição ou cliente oficial para esses transportes no código atual.
+A CodeChat API Go entrega eventos por [webhooks HTTP](/docs/webhooks) e por [WebSocket de eventos](/docs/websocket). Webhooks são a integração persistente por HTTP POST; WebSocket é um canal em tempo real, best-effort, para assinar um evento por conexão.
 
-Eventos são entregues por [webhooks HTTP](/docs/webhooks). Para uma experiência em tempo real na sua aplicação, receba o webhook no seu backend e distribua o evento aos seus próprios clientes pelo transporte que você controla.
+Não há Server-Sent Events (SSE) documentado. Para integrações que exigem replay ou reconstrução de estado, combine WebSocket com os endpoints REST persistentes correspondentes.
 
-## Por que `/websocket` redireciona para cá
+## URLs principais
 
-URLs antigas ou esperadas como `/websocket` e `/websocket/events` são preservadas apenas como redirecionamentos informativos no portal. Elas não representam rotas da API e não devem ser usadas como endereço de conexão.
+- Eventos por instância: `ws://localhost:8084/ws/instance/events?event=connection.update&token=<INSTANCE_JWT>`
+- Eventos globais: `ws://localhost:8084/ws/global/events?event=message.batch.progress&token=<USER_JWT>`
 
-Se um transporte em tempo real for adicionado ao runtime no futuro, esta página e o OpenAPI devem ser atualizados a partir da implementação antes de publicar exemplos.
+Consulte [WebSocket de eventos](/docs/websocket) para autenticação, allowlist de eventos, payloads, heartbeat, códigos de fechamento e exemplo de cliente JavaScript.

@@ -16,6 +16,8 @@ apikey: <token-global>
 
 Os aliases `x-api-key` e `apiKey` também são aceitos pelas mesmas regras do middleware global. O token global é administrativo e, no runtime atual, não existe ACL adicional por usuário/instância. Na criação, todas as instâncias são consultadas, precisam existir e possuir autenticação; seus IDs internos e um snapshot dos nomes são persistidos. Nomes vazios ou repetidos são rejeitados.
 
+`ownerUserId` e opcional na criacao. Quando omitido, o valor persistido e `global`. Esse campo isola os eventos de WebSocket em `/ws/global/events`: o `sub` do JWT de usuario precisa ser igual ao `ownerUserId` do lote.
+
 ## Arquitetura e persistência
 
 - `message_batches`: definição, estado, lease e contadores derivados.
@@ -38,6 +40,7 @@ apikey: <token-global>
 ```json
 {
   "name": "Aviso de manutenção",
+  "ownerUserId": "user-123",
   "instances": ["codechat-01", "codechat-02"],
   "recipients": ["5531999999999", "5531888888888"],
   "message": {

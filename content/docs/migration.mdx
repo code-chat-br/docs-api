@@ -10,7 +10,7 @@ Use este roteiro ao substituir uma integração construída sobre as rotas legad
 - Mantenha separados o token global e o JWT da instância. A migração de rota não altera a finalidade de cada credencial.
 - Preserve os nomes, tipos e valores dos campos JSON até confirmar a operação equivalente no OpenAPI.
 - Não transforme aliases de headers, paths ou payloads em um contrato novo durante a troca de runtime.
-- Trate webhooks como o canal de eventos implementado. A API Go auditada não expõe WebSocket nem SSE.
+- Trate webhooks e WebSocket como canais distintos: webhooks para entrega HTTP e WebSocket para assinatura best-effort em tempo real.
 
 ## Rotas atuais e aliases
 

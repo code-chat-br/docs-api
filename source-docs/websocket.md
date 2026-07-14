@@ -1,0 +1,299 @@
+# WebSocket de eventos
+
+O WebSocket entrega, em tempo real e em modo best-effort, o mesmo JSON serializado para os webhooks. Headers HTTP de webhook nao sao enviados pelo WebSocket.
+
+## URLs
+
+Local:
+
+```text
+ws://localhost:8084/ws/instance/events?event=connection.update&token=<INSTANCE_JWT>
+ws://localhost:8084/ws/global/events?event=message.batch.progress&token=<USER_JWT>
+```
+
+Producao deve usar `wss://`:
+
+```text
+wss://api.example.com/ws/instance/events
+wss://api.example.com/ws/global/events
+```
+
+Cada conexao assina exatamente um evento por query string. Nao ha wildcard, `*`, multiplos eventos separados por virgula ou troca de assinatura depois do upgrade.
+
+## Autenticacao
+
+`/ws/instance/events` aceita somente JWT de instancia. O token e validado com HS256 e `AUTHENTICATION_JWT_SECRET`, precisa conter `instanceName`, precisa pertencer ao registro `Auth.token` da instancia encontrada e entrega apenas eventos desse `Instance.id`.
+
+Quando `AUTHENTICATION_JWT_EXPIRES_IN > 0`, a expiracao do token de instancia e validada no handshake e a conexao e fechada no instante de `exp`. Quando `AUTHENTICATION_JWT_EXPIRES_IN=0`, a expiracao do token de instancia pode ser ignorada e nao ha timer artificial.
+
+`/ws/global/events` aceita somente JWT de usuario assinado com o mesmo segredo HS256. O claim `sub` e obrigatorio e identifica o dono dos eventos de lote. O claim `exp` e sempre obrigatorio e sempre validado, mesmo quando `AUTHENTICATION_JWT_EXPIRES_IN=0`.
+
+O runtime atual nao possui tabela de usuarios. Por isso, a validacao do usuario no WebSocket e criptografica e baseada em `sub`; a associacao do lote e feita por `ownerUserId`. Quando omitido na criacao do lote, `ownerUserId` assume `global`.
+
+## Parametros
+
+| Parametro | Obrigatorio | Descricao |
+| --- | ---: | --- |
+| `event` | Sim | Nome externo exato do evento. A comparacao e case-sensitive. |
+| `token` | Sim | JWT de instancia ou de usuario, conforme o endpoint. |
+
+Respostas antes do upgrade:
+
+| Status | Caso |
+| --- | --- |
+| `400` | `event` ou `token` ausente, evento malformado ou evento fora da allowlist. |
+| `401` | Token invalido, expirado ou assinatura incorreta. |
+| `403` | Token valido, mas do escopo errado, sem permissao, ou origem recusada. |
+| `404` | Instancia referenciada pelo token de instancia nao encontrada. |
+| `426` | Rota chamada sem upgrade WebSocket. |
+| `500` | Falha interna inesperada. |
+
+## Eventos de instancia
+
+| Flag | Evento |
+| --- | --- |
+| `callUpsert` | `call.upsert` |
+| `chatsDeleted` | `chats.delete` |
+| `chatsUpdated` | `chats.updated` |
+| `connectionUpdated` | `connection.update` |
+| `contactsUpdated` | `contacts.update` |
+| `contactsUpsert` | `contacts.upsert` |
+| `groupsParticipantsUpdated` | `groups.participants.update` |
+| `groupsUpdated` | `groups.update` |
+| `groupsUpsert` | `groups.upsert` |
+| `historySync` | `history.sync` |
+| `identityUpdated` | `identity.update` |
+| `labelsAssociation` | `labels.association` |
+| `labelsEdit` | `labels.edit` |
+| `mediaRetry` | `media.retry` |
+| `messagesDeleted` | `messages.delete` |
+| `messagesStarred` | `messages.star` |
+| `messagesUndecryptable` | `messages.undecryptable` |
+| `messagesUpdated` | `messages.update` |
+| `messagesUpsert` | `messages.upsert` |
+| `newsLetter` | `news.letter` |
+| `presenceUpdated` | `presence.updated` |
+| `profilePictureUpdated` | `profile.picture.update` |
+| `qrcodeUpdated` | `qrcode.updated` |
+| `sendMessage` | `send.message` |
+| `settingsUpdated` | `settings.update` |
+| `statusInstance` | `status.instance` |
+| `userAboutUpdated` | `user.about.update` |
+
+`messaging-history.set` nao e disponibilizado. `history.sync` e aceito normalmente.
+
+## Eventos globais
+
+| Evento |
+| --- |
+| `message.batch.created` |
+| `message.batch.started` |
+| `message.batch.progress` |
+| `message.batch.pause-requested` |
+| `message.batch.paused` |
+| `message.batch.waiting-instance` |
+| `message.batch.resumed` |
+| `message.batch.stop-requested` |
+| `message.batch.stopped` |
+| `message.batch.interrupted` |
+| `message.batch.completed` |
+| `message.batch.completed-with-errors` |
+| `message.batch.item.failed` |
+| `message.batch.item.unknown` |
+
+Eventos globais sao isolados por `ownerUserId == sub` do JWT de usuario.
+
+## Payload
+
+Eventos de instancia usam exatamente o envelope de `internal/webhook.WebhookPayload`:
+
+```json
+{
+  "event": "connection.update",
+  "instance": {"id": 1, "name": "minha-instancia", "connectionStatus": "online", "ownerJid": "5511999999999@s.whatsapp.net", "externalAttributes": {}},
+  "data": {"type": "connected", "connection": "open"},
+  "timestamp": "2026-07-14T12:00:00Z"
+}
+```
+
+`messages.upsert`:
+
+```json
+{
+  "event": "messages.upsert",
+  "instance": {"id": 1, "name": "minha-instancia", "connectionStatus": "online", "ownerJid": "5511999999999@s.whatsapp.net", "externalAttributes": {}},
+  "data": {
+    "id": 1001,
+    "keyRemoteJid": "5511888888888@s.whatsapp.net",
+    "keyLid": null,
+    "keyFromMe": false,
+    "keyParticipant": null,
+    "keyParticipantLid": null,
+    "pushName": "Contato",
+    "messageType": "text",
+    "content": {"text": "Ola"},
+    "messageTimestamp": 1784040000,
+    "device": "web",
+    "isGroup": false,
+    "metadata": {}
+  },
+  "timestamp": "2026-07-14T12:00:00Z"
+}
+```
+
+`qrcode.updated`:
+
+```json
+{
+  "event": "qrcode.updated",
+  "instance": {"id": 1, "name": "minha-instancia", "connectionStatus": "qr_code", "ownerJid": null, "externalAttributes": {}},
+  "data": {"count": 1, "code": "2@codigo-ficticio", "base64": "data:image/png;base64,iVBORw0KGgoAAA...", "expiresInSeconds": 30, "expiresAt": "2026-07-14T12:00:30Z"},
+  "timestamp": "2026-07-14T12:00:00Z"
+}
+```
+
+Eventos globais usam o envelope de lote:
+
+```json
+{
+  "event": "message.batch.progress",
+  "timestamp": "2026-07-14T12:00:00Z",
+  "data": {
+    "batch": {
+      "id": "019f6086-ce48-7ba3-83ca-02c15405d570",
+      "ownerUserId": "user-123",
+      "name": "campanha",
+      "status": "PROCESSING",
+      "instances": [{"id": 1, "name": "minha-instancia", "connectionStatus": "online"}],
+      "counts": {"total": 10, "processed": 5, "pending": 5, "sending": 0, "success": 5, "failed": 0, "skipped": 0, "unknown": 0},
+      "progress": 50,
+      "createdAt": "2026-07-14T11:59:00Z",
+      "updatedAt": "2026-07-14T12:00:00Z",
+      "currentItem": {"id": "019f6087-0000-7000-8000-000000000001", "position": 4, "recipient": "5511888888888", "instanceName": "minha-instancia"}
+    }
+  }
+}
+```
+
+`message.batch.completed`:
+
+```json
+{
+  "event": "message.batch.completed",
+  "timestamp": "2026-07-14T12:05:00Z",
+  "data": {
+    "batch": {
+      "id": "019f6086-ce48-7ba3-83ca-02c15405d570",
+      "ownerUserId": "user-123",
+      "name": "campanha",
+      "status": "COMPLETED",
+      "instances": [{"id": 1, "name": "minha-instancia", "connectionStatus": "online"}],
+      "counts": {"total": 10, "processed": 10, "pending": 0, "sending": 0, "success": 10, "failed": 0, "skipped": 0, "unknown": 0},
+      "progress": 100,
+      "completedAt": "2026-07-14T12:05:00Z",
+      "createdAt": "2026-07-14T11:59:00Z",
+      "updatedAt": "2026-07-14T12:05:00Z"
+    }
+  }
+}
+```
+
+`message.batch.item.failed`:
+
+```json
+{
+  "event": "message.batch.item.failed",
+  "timestamp": "2026-07-14T12:03:00Z",
+  "data": {
+    "batchId": "019f6086-ce48-7ba3-83ca-02c15405d570",
+    "itemId": "019f6087-0000-7000-8000-000000000009",
+    "recipient": "5511777777777",
+    "error": {"code": "SEND_MESSAGE_FAILED", "message": "Falha ao enviar a mensagem."},
+    "instance": {"id": 1, "name": "minha-instancia"}
+  }
+}
+```
+
+## Cliente JavaScript
+
+```js
+function createSocketClient({ url, token, reconnectInterval = 5000 }) {
+  return function socket(eventName, callback) {
+    let ws = null;
+    let reconnectTimer = null;
+    let stopped = false;
+
+    function connect() {
+      const query = new URLSearchParams({ event: eventName, token });
+      ws = new WebSocket(`${url}?${query.toString()}`);
+      ws.onmessage = (messageEvent) => callback?.(JSON.parse(messageEvent.data), messageEvent);
+      ws.onclose = () => {
+        if (!stopped) reconnectTimer = setTimeout(connect, reconnectInterval);
+      };
+    }
+
+    connect();
+
+    return {
+      close(code = 1000, reason = "Client closed connection") {
+        stopped = true;
+        if (reconnectTimer) clearTimeout(reconnectTimer);
+        if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) ws.close(code, reason);
+      },
+      get connection() {
+        return ws;
+      }
+    };
+  };
+}
+
+const instanceSocket = createSocketClient({url: "ws://localhost:8084/ws/instance/events", token: "jwt-da-instancia"});
+const connectionSubscription = instanceSocket("connection.update", (data) => console.log("connection.update", data));
+const messagesSubscription = instanceSocket("messages.upsert", (data) => console.log("messages.upsert", data));
+const qrcodeSubscription = instanceSocket("qrcode.updated", (data) => console.log("qrcode.updated", data));
+
+const globalSocket = createSocketClient({url: "ws://localhost:8084/ws/global/events", token: "jwt-do-usuario"});
+const progressSubscription = globalSocket("message.batch.progress", (data) => console.log("message.batch.progress", data));
+const completedSubscription = globalSocket("message.batch.completed", (data) => console.log("message.batch.completed", data));
+const failedItemSubscription = globalSocket("message.batch.item.failed", (data) => console.log("message.batch.item.failed", data));
+```
+
+## Heartbeat e fechamento
+
+O servidor envia ping periodico, atualiza o deadline ao receber pong e aplica write deadline. O browser responde aos frames ping automaticamente.
+
+| Codigo | Significado |
+| ---: | --- |
+| `1000` | Encerramento normal. |
+| `1001` | Servidor encerrando ou conexao removida. |
+| `1008` | Mensagem de aplicacao enviada pelo cliente ou violacao de politica. |
+| `1011` | Erro interno inesperado. |
+| `4001` | Token expirou durante a conexao. |
+| `4003` | Permissao revogada ou escopo nao permitido. |
+| `4008` | Cliente lento ou buffer de envio excedido. |
+
+## Configuracao
+
+| Variavel | Padrao | Descricao |
+| --- | --- | --- |
+| `WEBSOCKET_ENABLED` | `true` | Registra ou desabilita as rotas `/ws/...`. |
+| `WEBSOCKET_ALLOWED_ORIGINS` | vazio | Lista separada por virgula de origens aceitas. Use origens explicitas em producao. |
+| `WEBSOCKET_ALLOW_EMPTY_ORIGIN` | `true` | Permite clientes backend sem header `Origin`. |
+| `WEBSOCKET_PING_INTERVAL` | `25s` | Intervalo de ping do servidor. |
+| `WEBSOCKET_PONG_TIMEOUT` | `60s` | Prazo para receber pong. |
+| `WEBSOCKET_WRITE_TIMEOUT` | `10s` | Prazo de escrita por frame. |
+| `WEBSOCKET_SEND_BUFFER` | `256` | Buffer por cliente. Cliente lento e removido quando o buffer enche. |
+
+## Seguranca e troubleshooting
+
+O token vai na query string porque `WebSocket` nativo no browser nao permite header `Authorization` customizado. A API nao registra query string nas rotas WebSocket, nao devolve JWT no payload e nao inclui tokens em logs. Configure proxy e observabilidade para nao registrar a query completa.
+
+Nao ha replay automatico. Se o cliente estiver desconectado, eventos podem ser perdidos; use os endpoints REST para reconstruir estado persistente.
+
+| Sintoma | Causa provavel |
+| --- | --- |
+| `426` | A chamada nao fez upgrade WebSocket. |
+| `400` | Evento ausente, errado, com caixa incorreta ou fora da allowlist. |
+| `401` | JWT invalido, expirado ou sem `exp` no caso de usuario. |
+| `403` | Token de outro escopo, origem recusada ou token de instancia diferente do `Auth.token`. |
+| Fecha com `4001` | O token expirou depois da conexao estabelecida. |

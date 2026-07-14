@@ -145,9 +145,9 @@ export default async function HomePage() {
               <Link href="/docs/pro-endpoints">Entender recursos Pro</Link>
             </article>
             <article>
-              <strong>Eventos chegam por webhook</strong>
-              <p>A implementação auditada não expõe WebSocket nem SSE; o catálogo publicado reflete esse limite.</p>
-              <Link href="/docs/realtime">Entender tempo real</Link>
+              <strong>Eventos chegam por webhook e WebSocket</strong>
+              <p>Webhooks entregam HTTP POST e o WebSocket assina um evento por conexão em modo best-effort.</p>
+              <Link href="/docs/websocket">Entender WebSocket</Link>
             </article>
             <article>
               <strong>Legado continua visível</strong>
