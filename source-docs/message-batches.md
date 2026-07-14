@@ -1,20 +1,20 @@
 # Envio em lote (Message Batch)
 
-> **Recurso Pro:** todas as rotas `/message/batches...` são classificadas comercialmente como CodeChat API Go Pro. O runtime atual não aplica entitlement de plano nem retorna `402`; a autenticação executável continua sendo feita exclusivamente pelo token global.
+> **Recurso Pro:** todas as rotas `/message/batches...` são classificadas comercialmente como CodeChat API Go Pro. O runtime atual não aplica entitlement de plano nem retorna `402`; a autenticação executável é feita por JWT de usuário.
 
 O Envio em lote persiste no PostgreSQL uma mensagem, os destinatários individuais, as instâncias permitidas e cada tentativa de envio. A requisição HTTP apenas cria ou altera o estado do lote; o `MessageBatchWorker` consome os itens de forma assíncrona, com concorrência `1` por lote. A fila no banco é a fonte da verdade.
 
 ## Autenticação
 
-Todas as rotas abaixo usam o token global configurado por `AUTHENTICATION_GLOBAL_AUTH_TOKEN`:
+Todas as rotas abaixo usam JWT de usuário:
 
 ```http
-apikey: <token-global>
+Authorization: Bearer <jwt-do-usuario>
 ```
 
-Os aliases `x-api-key` e `apiKey` também são aceitos pelas mesmas regras do middleware global. O token global é administrativo e, no runtime atual, não existe ACL adicional por usuário/instância. Na criação, todas as instâncias são consultadas, precisam existir e possuir autenticação; seus IDs internos e um snapshot dos nomes são persistidos. Nomes vazios ou repetidos são rejeitados.
+O token precisa ser assinado com HS256, conter `userId` em formato UUID e conter `exp`. A expiração sempre é validada, mesmo quando `AUTHENTICATION_JWT_EXPIRES_IN=0`. `apikey`, `x-api-key` e `apiKey` não autenticam esse fluxo.
 
-`ownerUserId` e opcional na criacao. Quando omitido, o valor persistido e `global`. Esse campo isola os eventos de WebSocket em `/ws/global/events`: o `sub` do JWT de usuario precisa ser igual ao `ownerUserId` do lote.
+Na criação, `userId` é persistido como `owner_user_id` e retornado como `ownerUserId`. Consultas, itens, tentativas e ações (`start`, `pause`, `stop`) só acessam lotes desse mesmo usuário. O mesmo `userId` isola eventos de WebSocket em `/ws/global/events`.
 
 ## Arquitetura e persistência
 
@@ -32,13 +32,12 @@ Contadores são recalculados dos itens na mesma transação que conclui uma tent
 ```http
 POST /message/batches
 Content-Type: application/json
-apikey: <token-global>
+Authorization: Bearer <jwt-do-usuario>
 ```
 
 ```json
 {
   "name": "Aviso de manutenção",
-  "ownerUserId": "user-123",
   "instances": ["codechat-01", "codechat-02"],
   "recipients": ["5531999999999", "5531888888888"],
   "message": {
@@ -86,6 +85,7 @@ Resposta `201 Created`:
 ```json
 {
   "id": "01900000-0000-7000-8000-000000000001",
+  "ownerUserId": "11111111-1111-4111-8111-111111111111",
   "name": "Aviso de manutenção",
   "status": "DRAFT",
   "instances": [
@@ -198,21 +198,21 @@ O limite padrão é `50` e o máximo `200`. Não envie `nextCursor` e `previousC
 
 ```bash
 curl -X POST "http://localhost:8084/message/batches" \
-  -H "apikey: $GLOBAL_TOKEN" \
+  -H "Authorization: Bearer $USER_TOKEN" \
   -H "Content-Type: application/json" \
   --data-binary @batch.json
 
 curl -X POST "http://localhost:8084/message/batches/$BATCH_ID/start" \
-  -H "apikey: $GLOBAL_TOKEN"
+  -H "Authorization: Bearer $USER_TOKEN"
 
 curl "http://localhost:8084/message/batches/$BATCH_ID" \
-  -H "apikey: $GLOBAL_TOKEN"
+  -H "Authorization: Bearer $USER_TOKEN"
 
 curl "http://localhost:8084/message/batches/$BATCH_ID/items?status=FAILED&limit=50" \
-  -H "apikey: $GLOBAL_TOKEN"
+  -H "Authorization: Bearer $USER_TOKEN"
 
 curl -X POST "http://localhost:8084/message/batches/$BATCH_ID/pause" \
-  -H "apikey: $GLOBAL_TOKEN"
+  -H "Authorization: Bearer $USER_TOKEN"
 ```
 
 ## Recovery, leases e resultado desconhecido

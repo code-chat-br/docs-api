@@ -36,7 +36,7 @@ Validações, recursos ausentes, autorização de uma instância selecionada e t
 }
 ```
 
-Rejeições do middleware global (`400` por aliases divergentes e `401` por token ausente ou inválido) acontecem antes do handler de lote e continuam usando o envelope geral com `messages`. Falhas internas `500` também usam o envelope geral. O OpenAPI representa os dois formatos possíveis no `400` do Message Batch.
+Rejeições do middleware Bearer de usuário (`401` por token ausente, inválido, expirado ou sem `userId` UUID) acontecem antes do handler de lote e continuam usando o envelope geral com `messages`. Falhas internas `500` também usam o envelope geral. O OpenAPI representa os dois formatos possíveis no `400` do Message Batch.
 
 ## Status observados
 

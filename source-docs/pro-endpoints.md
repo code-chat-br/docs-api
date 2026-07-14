@@ -1,6 +1,6 @@
 # CodeChat API Go Pro
 
-Esta seção separa recursos comercialmente classificados como Pro. A classificação não é aplicada pelo runtime atual: não há claim de plano e nenhuma rota retorna `402`. As rotas por instância exigem o JWT da instância; `/message/batches...` usa o token global administrativo. No OpenAPI, isso aparece como `x-codechat-plan: pro` e `x-codechat-plan-enforced: false`.
+Esta seção separa recursos comercialmente classificados como Pro. A classificação não é aplicada pelo runtime atual: não há claim de plano e nenhuma rota retorna `402`. As rotas por instância exigem o JWT da instância; `/message/batches...` usa JWT de usuário com `userId` em formato UUID. No OpenAPI, isso aparece como `x-codechat-plan: pro` e `x-codechat-plan-enforced: false`.
 
 ## Matriz
 
@@ -17,9 +17,9 @@ A rota dinâmica é registrada depois das rotas explícitas. Assim, `payment-req
 
 ## Message Batch
 
-Todas as operações sob `/message/batches` são recursos Pro, incluindo criação, listagem, consulta de lote, itens e tentativas, além de `start`, `pause` e `stop`. Diferentemente dos recursos Pro por instância, elas exigem `apikey`, `x-api-key` ou `apiKey` com o valor de `AUTHENTICATION_GLOBAL_AUTH_TOKEN`.
+Todas as operacoes sob `/message/batches` sao recursos Pro, incluindo criacao, listagem, consulta de lote, itens e tentativas, alem de `start`, `pause` e `stop`. Elas exigem `Authorization: Bearer <jwt-do-usuario>`; `apikey`, `x-api-key` e `apiKey` nao autenticam esse fluxo.
 
-A classificação é apenas documental no runtime atual e não altera respostas nem adiciona `402`. Consulte [Envio em lote](./message-batches.md) para arquitetura, estados, payloads, recovery e webhooks.
+O JWT de usuario precisa conter `userId` em formato UUID e `exp`. A expiracao sempre e validada. A classificacao e apenas documental no runtime atual e nao altera respostas nem adiciona `402`. Consulte [Envio em lote](./message-batches.md) para arquitetura, estados, payloads, recovery e webhooks.
 
 ## Solicitação de pagamento
 

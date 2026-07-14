@@ -28,9 +28,9 @@ Cada conexao assina exatamente um evento por query string. Nao ha wildcard, `*`,
 
 Quando `AUTHENTICATION_JWT_EXPIRES_IN > 0`, a expiracao do token de instancia e validada no handshake e a conexao e fechada no instante de `exp`. Quando `AUTHENTICATION_JWT_EXPIRES_IN=0`, a expiracao do token de instancia pode ser ignorada e nao ha timer artificial.
 
-`/ws/global/events` aceita somente JWT de usuario assinado com o mesmo segredo HS256. O claim `sub` e obrigatorio e identifica o dono dos eventos de lote. O claim `exp` e sempre obrigatorio e sempre validado, mesmo quando `AUTHENTICATION_JWT_EXPIRES_IN=0`.
+`/ws/global/events` aceita somente JWT de usuario assinado com o mesmo segredo HS256. O claim `userId` em formato UUID e obrigatorio e identifica o dono dos eventos de lote. O claim `exp` e sempre obrigatorio e sempre validado, mesmo quando `AUTHENTICATION_JWT_EXPIRES_IN=0`.
 
-O runtime atual nao possui tabela de usuarios. Por isso, a validacao do usuario no WebSocket e criptografica e baseada em `sub`; a associacao do lote e feita por `ownerUserId`. Quando omitido na criacao do lote, `ownerUserId` assume `global`.
+O runtime atual nao possui tabela de usuarios. Por isso, a validacao do usuario no WebSocket e criptografica e baseada em `userId`; a associacao do lote e feita por `ownerUserId`, persistido a partir do mesmo claim na criacao do lote.
 
 ## Parametros
 
@@ -103,7 +103,7 @@ Respostas antes do upgrade:
 | `message.batch.item.failed` |
 | `message.batch.item.unknown` |
 
-Eventos globais sao isolados por `ownerUserId == sub` do JWT de usuario.
+Eventos globais sao isolados por `ownerUserId == userId` do JWT de usuario.
 
 ## Payload
 
@@ -163,7 +163,7 @@ Eventos globais usam o envelope de lote:
   "data": {
     "batch": {
       "id": "019f6086-ce48-7ba3-83ca-02c15405d570",
-      "ownerUserId": "user-123",
+      "ownerUserId": "11111111-1111-4111-8111-111111111111",
       "name": "campanha",
       "status": "PROCESSING",
       "instances": [{"id": 1, "name": "minha-instancia", "connectionStatus": "online"}],
@@ -186,7 +186,7 @@ Eventos globais usam o envelope de lote:
   "data": {
     "batch": {
       "id": "019f6086-ce48-7ba3-83ca-02c15405d570",
-      "ownerUserId": "user-123",
+      "ownerUserId": "11111111-1111-4111-8111-111111111111",
       "name": "campanha",
       "status": "COMPLETED",
       "instances": [{"id": 1, "name": "minha-instancia", "connectionStatus": "online"}],

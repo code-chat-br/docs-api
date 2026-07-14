@@ -4,7 +4,7 @@ Esta pasta descreve o contrato observado no código executável atual. A referê
 
 ## Comece aqui
 
-1. [Autenticação](./authentication.md): token global, token da instância e regras de correspondência.
+1. [Autenticação](./authentication.md): token global, token da instância, token de usuário e regras de correspondência.
 2. [Instâncias](./instances.md): criação, listagem, consulta, rotação de token e exclusão.
 3. [Conexões](./connections.md): QR Code, pairing code, passkey, estado e logout.
 4. [Mensagens](./messages.md): mensagens comuns, fila assíncrona e opções compartilhadas.
@@ -13,12 +13,13 @@ Esta pasta descreve o contrato observado no código executável atual. A referê
 7. [Mídia](./media.md): download de mídia e upload antecipado.
 8. [Grupos](./groups.md): criação, participantes, convite, foto e saída.
 9. [Webhooks](./webhooks.md): configuração, eventos, envelopes e entrega.
+10. [WebSocket](./websocket.md): eventos em tempo real por instancia e por dono de lote.
 
 ## CodeChat API Go Pro
 
 - [Endpoints Pro](./pro-endpoints.md): pagamento, PIX, revisão de pedido, formulário, mensagens interativas e Message Batch.
 
-`Pro` é uma classificação comercial solicitada para a documentação. O código auditado não possui claim, middleware, tabela ou feature flag de plano e não retorna `402 Payment Required`. Os recursos Pro por instância usam o JWT da instância; Message Batch usa o token global administrativo. O OpenAPI registra `x-codechat-plan: pro` e `x-codechat-plan-enforced: false` para não confundir classificação com bloqueio executável.
+`Pro` é uma classificação comercial solicitada para a documentação. O código auditado não possui claim, middleware, tabela ou feature flag de plano e não retorna `402 Payment Required`. Os recursos Pro por instância usam o JWT da instância; Message Batch usa JWT de usuário com `userId` em formato UUID. O OpenAPI registra `x-codechat-plan: pro` e `x-codechat-plan-enforced: false` para não confundir classificação com bloqueio executável.
 
 ## Compatibilidade
 

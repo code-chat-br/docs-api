@@ -176,7 +176,9 @@ volumes:
   - whatsmeow_sessions:/app/data
 ```
 
-`AUTHENTICATION_GLOBAL_AUTH_TOKEN` autentica `POST /instance`, `GET /instance` e todas as rotas `/message/batches...`, além dos aliases legados `POST /instance/create` e `GET /instance/fetchInstances`. Ele não autentica `GET /instance/:instance`, `GET /instance/fetchInstance/:instanceName` nem `PUT /instance/refreshToken/:instanceName`.
+`AUTHENTICATION_GLOBAL_AUTH_TOKEN` autentica `POST /instance`, `GET /instance` e os aliases legados `POST /instance/create` e `GET /instance/fetchInstances`. Ele não autentica `GET /instance/:instance`, `GET /instance/fetchInstance/:instanceName`, `PUT /instance/refreshToken/:instanceName` nem as rotas `/message/batches...`.
+
+As rotas `/message/batches...` usam `Authorization: Bearer <jwt-do-usuario>`. Esse JWT precisa conter `userId` em formato UUID e `exp`; a expiração não é ignorada nesse fluxo.
 
 O endpoint de refresh exige `Authorization: Bearer <token>` e o mesmo JWT atual no campo `oldToken` do corpo da requisição. Ele rotaciona o `Auth.token` armazenado para aquela instância, invalida imediatamente o token antigo e não representa um segundo tipo de refresh-token.
 
