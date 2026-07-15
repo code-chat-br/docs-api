@@ -11,7 +11,7 @@ Gerado exclusivamente a partir da especificação versionada em `source-docs/ope
 | Operações Pro | 14 |
 | Operações marcadas como deprecated | 37 |
 | Operações de webhook no OpenAPI | 1 |
-| Schemas em components.schemas | 100 |
+| Schemas em components.schemas | 101 |
 | Eventos de webhook por instância | 27 |
 | Eventos globais de Message Batch | 14 |
 

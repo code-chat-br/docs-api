@@ -60,16 +60,52 @@ A resposta inclui `id`, `instanceId`, `externalId`, `mediaType`, `mimeType`, `or
 
 ### Listar
 
-Filtros: `externalId`, `mediaType`, `expired=true|false`, `createdFrom` e `createdTo` em RFC3339, `limit` e `cursor`. `limit` usa 20 por padrão e é limitado a 100; cursor precisa ser inteiro positivo.
+Filtros: `externalId`, `mediaType`, `expired=true|false`, `createdFrom` e `createdTo` em RFC3339, `limit`, `nextCursor` e `previousCursor`. `limit` usa 20 por padrão e é limitado a 100. Os cursores precisam ser inteiros positivos e são mutuamente exclusivos.
+
+Na primeira página, não envie cursor. Para avançar, envie o `nextCursor` recebido na página atual; para voltar, envie o `previousCursor`. Mantenha os mesmos filtros e o mesmo `limit` entre as páginas.
+
+```http
+GET /instance/codechat/media/uploads?limit=20&nextCursor=42
+GET /instance/codechat/media/uploads?limit=20&previousCursor=63
+```
+
+O parâmetro `cursor` continua aceito como alias legado de `nextCursor`, mas não pode ser combinado com `nextCursor` nem `previousCursor`.
 
 ```json
 {
   "nextCursor": "42",
-  "previousCursor": null,
-  "totalRecords": 1,
-  "records": []
+  "previousCursor": "63",
+  "totalRecords": 80,
+  "records": [
+    {
+      "id": 1,
+      "instanceId": 1,
+      "mediaType": "image",
+      "mimeType": "image/png",
+      "originalFileName": "go-api.png",
+      "originalFileSize": 106344,
+      "originalFileSHA256": "string",
+      "upload": {
+          "url": "string",
+          "directPath": "string",
+          "mediaKey": "string",
+          "fileEncSHA256": "uxHh/string",
+          "fileSHA256": "string",
+          "fileLength": 106344,
+          "jpegThumbnail": "string"
+      },
+      "createdAt": "2026-07-12T19:08:45.043255Z",
+      "updatedAt": "2026-07-12T19:08:45.043255Z",
+      "expiresAt": "2026-07-22T19:08:45.043255Z",
+      "expired": false
+    }
+  ]
 }
 ```
+
+O exemplo é reduzido; cada item de `records` contém todos os campos do upload descritos acima.
+
+`nextCursor` é `null` na última página e `previousCursor` é `null` na primeira página.
 
 Consulta e exclusão sempre restringem o registro à instância autenticada. A exclusão não remove o objeto já hospedado pelo WhatsApp.
 

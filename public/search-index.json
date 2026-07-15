@@ -2137,11 +2137,11 @@
     "id": "operation:get:/instance/{instance}/media/uploads",
     "type": "ATUAL",
     "title": "Lista uploads antecipados",
-    "description": "Media listMediaUploads Instance ExternalID MediaTypeFilter Expired CreatedFrom CreatedTo Limit Cursor",
+    "description": "Lista uploads com paginação bidirecional. Use nextCursor para avançar ou previousCursor para voltar; eles são mutuamente exclusivos. O parâmetro cursor é um alias legado de nextCursor. Media listMediaUploads Instance ExternalID MediaTypeFilter Expired CreatedFrom CreatedTo Limit MediaUploadNextCursor MediaUploadPreviousCursor Cursor",
     "href": "/api-reference/listMediaUploads",
     "method": "GET",
     "path": "/instance/{instance}/media/uploads",
-    "search": "lista uploads antecipados media listmediauploads instance externalid mediatypefilter expired createdfrom createdto limit cursor get /instance/{instance}/media/uploads"
+    "search": "lista uploads antecipados lista uploads com paginação bidirecional. use nextcursor para avançar ou previouscursor para voltar; eles são mutuamente exclusivos. o parâmetro cursor é um alias legado de nextcursor. media listmediauploads instance externalid mediatypefilter expired createdfrom createdto limit mediauploadnextcursor mediauploadpreviouscursor cursor get /instance/{instance}/media/uploads"
   },
   {
     "id": "operation:post:/instance/{instance}/media/uploads",
@@ -3188,6 +3188,14 @@
     "description": "Schema OpenAPI id keyId keyRemoteJid keyLid keyFromMe keyParticipant keyParticipantLid pushName messageType content messageTimestamp device isGroup instanceId metadata externalAttributes",
     "href": "/api-reference",
     "search": "message schema openapi id keyid keyremotejid keylid keyfromme keyparticipant keyparticipantlid pushname messagetype content messagetimestamp device isgroup instanceid metadata externalattributes  "
+  },
+  {
+    "id": "schema:SendMessageResponse",
+    "type": "Schema",
+    "title": "SendMessageResponse",
+    "description": "Resposta síncrona dos endpoints de envio de mensagem. ",
+    "href": "/api-reference",
+    "search": "sendmessageresponse resposta síncrona dos endpoints de envio de mensagem.   "
   },
   {
     "id": "schema:AcceptedResponse",
