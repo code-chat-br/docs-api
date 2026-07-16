@@ -87,7 +87,11 @@ Respostas antes do upgrade:
 | Evento |
 | --- |
 | `message.batch.created` |
+| `message.batch.scheduled` |
 | `message.batch.started` |
+| `message.batch.window-started` |
+| `message.batch.waiting-window` |
+| `message.batch.recovered` |
 | `message.batch.progress` |
 | `message.batch.pause-requested` |
 | `message.batch.paused` |

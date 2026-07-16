@@ -93,7 +93,7 @@ const output = {
   events: [...instanceEvents, ...batchEvents],
 };
 
-if (instanceEvents.length !== 27 || batchEvents.length !== 14) {
+if (instanceEvents.length !== 27 || batchEvents.length !== 18) {
   throw new Error(
     `Catálogo de webhooks divergente: ${instanceEvents.length} por instância e ${batchEvents.length} de lote.`,
   );

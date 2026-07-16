@@ -1,8 +1,8 @@
 {
   "generatedFrom": "content/docs/webhooks.mdx + public/openapi.yml",
-  "total": 41,
+  "total": 45,
   "instanceCount": 27,
-  "batchCount": 14,
+  "batchCount": 18,
   "events": [
     {
       "name": "call.upsert",
@@ -1990,6 +1990,25 @@
       ]
     },
     {
+      "name": "message.batch.scheduled",
+      "kind": "batch",
+      "flag": "",
+      "description": "Lote aguarda a primeira janela permitida.",
+      "request": "POST /webhooks/codechat HTTP/1.1\nContent-Type: application/json\nUser-Agent: CodeChat-MessageBatch-Webhook/1.0\nx-webhook-event: message.batch.scheduled",
+      "example": {
+        "event": "message.batch.scheduled",
+        "timestamp": "2026-07-13T15:10:00Z",
+        "data": {
+          "batchId": "01900000-0000-7000-8000-000000000001"
+        }
+      },
+      "fields": [],
+      "notes": [
+        "Entregue somente ao WEBHOOK_GLOBAL_URL pela outbox PostgreSQL.",
+        "Respostas 2xx confirmam a entrega; falhas são reagendadas com backoff persistente."
+      ]
+    },
+    {
       "name": "message.batch.started",
       "kind": "batch",
       "flag": "",
@@ -1997,6 +2016,63 @@
       "request": "POST /webhooks/codechat HTTP/1.1\nContent-Type: application/json\nUser-Agent: CodeChat-MessageBatch-Webhook/1.0\nx-webhook-event: message.batch.started",
       "example": {
         "event": "message.batch.started",
+        "timestamp": "2026-07-13T15:10:00Z",
+        "data": {
+          "batchId": "01900000-0000-7000-8000-000000000001"
+        }
+      },
+      "fields": [],
+      "notes": [
+        "Entregue somente ao WEBHOOK_GLOBAL_URL pela outbox PostgreSQL.",
+        "Respostas 2xx confirmam a entrega; falhas são reagendadas com backoff persistente."
+      ]
+    },
+    {
+      "name": "message.batch.window-started",
+      "kind": "batch",
+      "flag": "",
+      "description": "Uma janela abriu e o lote voltou para QUEUED.",
+      "request": "POST /webhooks/codechat HTTP/1.1\nContent-Type: application/json\nUser-Agent: CodeChat-MessageBatch-Webhook/1.0\nx-webhook-event: message.batch.window-started",
+      "example": {
+        "event": "message.batch.window-started",
+        "timestamp": "2026-07-13T15:10:00Z",
+        "data": {
+          "batchId": "01900000-0000-7000-8000-000000000001"
+        }
+      },
+      "fields": [],
+      "notes": [
+        "Entregue somente ao WEBHOOK_GLOBAL_URL pela outbox PostgreSQL.",
+        "Respostas 2xx confirmam a entrega; falhas são reagendadas com backoff persistente."
+      ]
+    },
+    {
+      "name": "message.batch.waiting-window",
+      "kind": "batch",
+      "flag": "",
+      "description": "A janela terminou com itens PENDING.",
+      "request": "POST /webhooks/codechat HTTP/1.1\nContent-Type: application/json\nUser-Agent: CodeChat-MessageBatch-Webhook/1.0\nx-webhook-event: message.batch.waiting-window",
+      "example": {
+        "event": "message.batch.waiting-window",
+        "timestamp": "2026-07-13T15:10:00Z",
+        "data": {
+          "batchId": "01900000-0000-7000-8000-000000000001"
+        }
+      },
+      "fields": [],
+      "notes": [
+        "Entregue somente ao WEBHOOK_GLOBAL_URL pela outbox PostgreSQL.",
+        "Respostas 2xx confirmam a entrega; falhas são reagendadas com backoff persistente."
+      ]
+    },
+    {
+      "name": "message.batch.recovered",
+      "kind": "batch",
+      "flag": "",
+      "description": "Interrupcao operacional foi recuperada automaticamente.",
+      "request": "POST /webhooks/codechat HTTP/1.1\nContent-Type: application/json\nUser-Agent: CodeChat-MessageBatch-Webhook/1.0\nx-webhook-event: message.batch.recovered",
+      "example": {
+        "event": "message.batch.recovered",
         "timestamp": "2026-07-13T15:10:00Z",
         "data": {
           "batchId": "01900000-0000-7000-8000-000000000001"
@@ -2023,6 +2099,12 @@
             "ownerUserId": "11111111-1111-4111-8111-111111111111",
             "name": "Aviso de manutenção",
             "status": "PROCESSING",
+            "autoResume": true,
+            "schedule": null,
+            "nextRunAt": null,
+            "lastInterruptedAt": null,
+            "interruptionReason": null,
+            "lastRecoveredAt": null,
             "instances": [
               {
                 "id": 1,

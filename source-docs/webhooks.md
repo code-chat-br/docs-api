@@ -16,7 +16,7 @@ Documentação técnica dos webhooks implementados no código executável atual.
 
 ## Visão geral
 
-Webhooks são requisições HTTP `POST` assíncronas enviadas pela aplicação para uma URL configurada pelo consumidor. Os 27 eventos por instância usam um envelope com `event`, `instance`, `data` e `timestamp`. Os 14 eventos globais de Message Batch usam `event`, `data` e `timestamp`, sem o campo `instance`.
+Webhooks são requisições HTTP `POST` assíncronas enviadas pela aplicação para uma URL configurada pelo consumidor. Os 27 eventos por instância usam um envelope com `event`, `instance`, `data` e `timestamp`. Os 18 eventos globais de Message Batch usam `event`, `data` e `timestamp`, sem o campo `instance`.
 
 Para eventos por instância, existem dois destinos possíveis. O webhook da instância é configurado pela rota atual `PUT /instance/:instance/webhook`, fica no cache em memória e só recebe eventos cujas flags estejam habilitadas em `events`. Os aliases legados `PUT /webhook/set/:instanceName` e `GET /webhook/find/:instanceName` permanecem ativos. O webhook global é configurado por `WEBHOOK_GLOBAL_URL` e `WEBHOOK_GLOBAL_ENABLED`; quando habilitado, recebe todos esses eventos sem aplicar as flags da instância. Eventos de Message Batch são enviados exclusivamente ao webhook global.
 
@@ -25,7 +25,7 @@ O cache é carregado na inicialização a partir dos webhooks habilitados e é a
 Os eventos por instância entram em uma fila em memória e são processados por múltiplos workers. Nesse fluxo, respostas HTTP `2xx` são sucesso; erros de rede, timeout e respostas não `2xx` são registrados sem retry automático ou dead-letter queue. Eventos de Message Batch usam uma outbox PostgreSQL e falhas são reagendadas com backoff persistente. Nenhum dos fluxos garante ordenação.
 
 - Versão do documento: `1.0.0`.
-- Eventos oficiais documentados: `41` (`27` por instância e `14` globais do Message Batch).
+- Eventos oficiais documentados: `45` (`27` por instância e `18` globais do Message Batch).
 - Constantes por instância: `internal/database/types/webhook.go`.
 - Dispatcher por instância: `internal/webhook/manager.go`.
 - Constantes e outbox de lote: `internal/messagebatch/webhook.go` e `internal/messagebatch/outbox.go`.
@@ -129,7 +129,11 @@ Objeto de configuração da instância:
 | `statusInstance` | `status.instance` | Eventos de estado operacional ou avisos da instancia. |
 | `userAboutUpdated` | `user.about.update` | Atualizacao do recado/about de um usuario. |
 | `global only` | `message.batch.created` | Evento persistente do Envio em lote; nao possui flag por instancia. |
+| `global only` | `message.batch.scheduled` | Evento persistente do Envio em lote; nao possui flag por instancia. |
 | `global only` | `message.batch.started` | Evento persistente do Envio em lote; nao possui flag por instancia. |
+| `global only` | `message.batch.window-started` | Evento persistente do Envio em lote; nao possui flag por instancia. |
+| `global only` | `message.batch.waiting-window` | Evento persistente do Envio em lote; nao possui flag por instancia. |
+| `global only` | `message.batch.recovered` | Evento persistente do Envio em lote; nao possui flag por instancia. |
 | `global only` | `message.batch.progress` | Evento persistente do Envio em lote; nao possui flag por instancia. |
 | `global only` | `message.batch.pause-requested` | Evento persistente do Envio em lote; nao possui flag por instancia. |
 | `global only` | `message.batch.paused` | Evento persistente do Envio em lote; nao possui flag por instancia. |
@@ -252,7 +256,11 @@ Esses eventos sao enviados uma unica vez ao `WEBHOOK_GLOBAL_URL`; nao sao repeti
 | Evento | Quando e criado |
 | --- | --- |
 | `message.batch.created` | Lote, itens e instancias persistidos. |
+| `message.batch.scheduled` | Lote aguarda a primeira janela permitida. |
 | `message.batch.started` | Primeiro claim do lote em QUEUED. |
+| `message.batch.window-started` | Uma janela abriu e o lote voltou para QUEUED. |
+| `message.batch.waiting-window` | A janela terminou com itens PENDING. |
+| `message.batch.recovered` | Interrupcao operacional foi recuperada automaticamente. |
 | `message.batch.progress` | Percentual inteiro mudou ou chegou a 100. |
 | `message.batch.pause-requested` | API aceitou a solicitacao de pausa. |
 | `message.batch.paused` | Worker chegou a um ponto seguro e pausou. |

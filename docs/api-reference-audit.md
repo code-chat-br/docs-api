@@ -11,9 +11,9 @@ Gerado exclusivamente a partir da especificação versionada em `source-docs/ope
 | Operações Pro | 14 |
 | Operações marcadas como deprecated | 37 |
 | Operações de webhook no OpenAPI | 1 |
-| Schemas em components.schemas | 101 |
+| Schemas em components.schemas | 103 |
 | Eventos de webhook por instância | 27 |
-| Eventos globais de Message Batch | 14 |
+| Eventos globais de Message Batch | 18 |
 
 Resultado: **a especificação local está estruturalmente consistente e sincronizada com a cópia publicada.**
 
@@ -169,7 +169,7 @@ Os 37 endpoints abaixo continuam documentados, mas estão marcados como `depreca
 
 ## Schemas sem exemplos explícitos
 
-88 schemas não possuem `example` explícito. A interface gera exemplos a partir de tipos, enums, formatos, defaults e contexto da CodeChat:
+90 schemas não possuem `example` explícito. A interface gera exemplos a partir de tipos, enums, formatos, defaults e contexto da CodeChat:
 
 - `MessageBatchStatus`
 - `MessageBatchItemStatus`
@@ -181,6 +181,8 @@ Os 37 endpoints abaixo continuam documentados, mas estão marcados como `depreca
 - `MessageBatchOptionsInput`
 - `MessageBatchMessage`
 - `MessageBatchInteractivePayload`
+- `MessageBatchSchedule`
+- `MessageBatchScheduleInput`
 - `MessageBatchCounts`
 - `MessageBatchInstance`
 - `MessageBatch`

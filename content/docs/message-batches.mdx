@@ -77,7 +77,14 @@ Authorization: Bearer <jwt-do-usuario>
     "presence": "composing",
     "delay": {"minMs": 3000, "maxMs": 12000}
   },
-  "autoStart": false,
+  "autoStart": true,
+  "autoResume": true,
+  "schedule": {
+    "windowStartAt": "2026-07-16T00:00:00-03:00",
+    "windowEndAt": "2026-07-16T03:00:00-03:00",
+    "recurrence": "DAILY",
+    "timezone": "America/Sao_Paulo"
+  },
   "externalAttributes": {"origin": "admin-panel"}
 }
 ```
@@ -89,7 +96,18 @@ Resposta `201 Created`:
   "id": "01900000-0000-7000-8000-000000000001",
   "ownerUserId": "11111111-1111-4111-8111-111111111111",
   "name": "Aviso de manutenção",
-  "status": "DRAFT",
+  "status": "SCHEDULED",
+  "autoResume": true,
+  "schedule": {
+    "windowStartAt": "2026-07-16T00:00:00-03:00",
+    "windowEndAt": "2026-07-16T03:00:00-03:00",
+    "recurrence": "DAILY",
+    "timezone": "America/Sao_Paulo"
+  },
+  "nextRunAt": "2026-07-16T00:00:00-03:00",
+  "lastInterruptedAt": null,
+  "interruptionReason": null,
+  "lastRecoveredAt": null,
   "instances": [
     {"id": 1, "name": "codechat-01", "connectionStatus": "offline"},
     {"id": 2, "name": "codechat-02", "connectionStatus": "online"}
@@ -111,7 +129,17 @@ Resposta `201 Created`:
 }
 ```
 
-Com `autoStart: true`, lote, itens, instâncias, evento de criação e transição para `QUEUED` são gravados na mesma transação.
+Com `autoStart: true`, lote, itens, instâncias e eventos são gravados na mesma transação. Sem agenda, o estado inicial continua sendo `QUEUED`. Antes da primeira janela ele é `SCHEDULED`; dentro da janela é `QUEUED`; depois da janela diária é `WAITING_FOR_WINDOW`. Com `autoStart: false`, o estado permanece `DRAFT` e `/start` aplica a agenda antes de enfileirar.
+
+### Agenda diária e recuperação automática
+
+`schedule` é opcional. `windowStartAt` e `windowEndAt` usam RFC 3339 e precisam ser enviados juntos, com o fim posterior ao início. `recurrence` aceita `NONE` ou `DAILY`. `timezone` precisa ser um identificador IANA; quando omitido, usa `MESSAGE_BATCH_TIMEZONE`. A recorrência trabalha com `time.Location` e preserva o horário local, inclusive em mudanças de horário de verão. Janelas que atravessam a meia-noite são representadas normalmente, por exemplo, início às 22:00 e fim às 02:00 do dia seguinte.
+
+Com `recurrence: NONE`, existe somente a janela inicial. Se ela terminar com itens `PENDING`, o lote permanece `WAITING_FOR_WINDOW` sem `nextRunAt`; nesta tarefa não existe parâmetro `force` nem endpoint para editar a agenda, portanto o operador pode apenas pausar ou encerrar esse lote. Use `DAILY` quando os itens restantes precisarem continuar em outra janela.
+
+`autoResume` é opcional e assume `true`. Ele controla somente recovery após shutdown, crash ou lease expirado. Nunca ignora `PAUSED`: uma pausa manual só termina com `/start`. Lotes sem agenda preservam a execução contínua anterior e respondem com `schedule: null` e `nextRunAt: null`.
+
+Ao atingir o fim da janela, o worker não inicia outro envio. Um envio que já começou pode concluir durante o timeout de shutdown/contexto; timers de delay são cancelados, itens restantes continuam `PENDING`, o lote vai para `WAITING_FOR_WINDOW`, `nextRunAt` recebe a próxima abertura e o lease é liberado. Nenhuma goroutine fica dormindo até o dia seguinte. Se o delay foi interrompido pelo fim da janela, ele não é repetido integralmente na retomada.
 
 ### Destinatários
 
@@ -132,11 +160,174 @@ Qualquer valor terminado em `@g.us` ou normalizado como grupo rejeita o lote int
 
 ### Mensagens compatíveis
 
-Os tipos persistentes suportados são `text`, `link`, `media`, `audio` (incluindo os aliases `ptt`, `whatsapp-audio` e `whatsapp_audio`), `contact`, `location` e `interactive`. O `payload` usa o corpo interno dos endpoints individuais: por exemplo, `{"text":"..."}` para texto, o objeto `mediaMessage` para mídia, um array de contatos para `contact` e o objeto interativo mostrado acima para `interactive`.
+Os tipos persistentes suportados são `text`, `link`, `media`, `audio`, `contact`, `location` e `interactive`. Os aliases `ptt`, `whatsapp-audio` e `whatsapp_audio` são aceitos na criação e gravados internamente como `audio`.
 
-Em `interactive`, o worker reutiliza o modo interativo `buttons`: cada botão é inferido por `url`, `copyCode` ou `id`, permitindo misturar os três tipos no mesmo payload, até o limite de 10 botões. `title` e `footerText` são opcionais; `description` e `buttons` são obrigatórios. `mediaUploadId` também é opcional: omitido, `0` ou string vazia enviam sem mídia. Como o pré-upload pertence a uma única instância, um ID positivo exige que o lote tenha exatamente uma instância; em lotes com múltiplas instâncias, mantenha o campo omitido, `0` ou vazio.
+O `message.payload` não inclui `number`, `chat`, `recipient`, `options`, `textMessage`, `mediaMessage` ou nomes de wrapper dos endpoints individuais. Ele contém diretamente o objeto interno que seria colocado dentro desses campos no envio individual. O destinatário vem de `recipients[]`; as opções comuns vêm de `options`.
 
-`media` reutiliza URL ou `mediaUploadId` do pré-upload existente; bytes não são armazenados no lote. Upload multipart por requisição (`media-file` e `audio-file`), `reaction`, `form`, `payment-request`, `pix` e `review-order` são rejeitados explicitamente porque não formam um payload persistente e repetível neste worker. `mentionAll` é rejeitado por ser exclusivo de grupos.
+| `message.type` | Formato de `payload` | Observações |
+| --- | --- | --- |
+| `text` | objeto com `text` | Texto obrigatório, não vazio, até 65536 caracteres. |
+| `link` | objeto com `link`, `thumbnailUrl`, `title`, `description` | `link` é obrigatório e precisa ser HTTP(S). `thumbnailUrl`, quando enviado, também precisa ser HTTP(S). |
+| `media` | objeto com `mediatype`, `media` ou `mediaUploadId`, `fileName`, `caption` | `mediatype` aceita `image`, `document`, `video`, `audio` e `ptv`. Use URL HTTP(S) em `media` ou um pré-upload em `mediaUploadId`; os dois campos são mutuamente exclusivos. |
+| `audio`, `ptt`, `whatsapp-audio`, `whatsapp_audio` | objeto com `audio` ou `mediaUploadId`, e `ptt` opcional | Use URL HTTP(S) em `audio` ou um pré-upload de áudio em `mediaUploadId`; os dois campos são mutuamente exclusivos. `ptt`, quando enviado, precisa ser `true`. |
+| `contact` | array de contatos | Cada contato precisa de `fullName` e pelo menos um entre `phoneNumber`, `wuid` ou `vcard`. Com mais de um item, o envio usa mensagem de múltiplos contatos. |
+| `location` | objeto com `latitude`, `longitude`, `name`, `address`, `url` | `latitude` e `longitude` são obrigatórios. Latitude deve estar entre `-90` e `90`; longitude entre `-180` e `180`. |
+| `interactive` | objeto de botões | Usa o modo `buttons` persistente. `description` e `buttons` são obrigatórios; `title`, `footerText` e `mediaUploadId` são opcionais. |
+
+Exemplo `text`:
+
+```json
+{
+  "message": {
+    "type": "text",
+    "payload": {
+      "text": "Olá, esta é uma mensagem em lote."
+    }
+  }
+}
+```
+
+Exemplo `link`:
+
+```json
+{
+  "message": {
+    "type": "link",
+    "payload": {
+      "link": "https://example.com/oferta",
+      "thumbnailUrl": "https://example.com/thumb.jpg",
+      "title": "Oferta",
+      "description": "Confira os detalhes."
+    }
+  }
+}
+```
+
+Exemplo `media` por URL:
+
+```json
+{
+  "message": {
+    "type": "media",
+    "payload": {
+      "mediatype": "image",
+      "media": "https://example.com/banner.jpg",
+      "fileName": "banner.jpg",
+      "caption": "Banner da campanha"
+    }
+  }
+}
+```
+
+Exemplo `media` por pré-upload:
+
+```json
+{
+  "message": {
+    "type": "media",
+    "payload": {
+      "mediatype": "document",
+      "mediaUploadId": 42,
+      "fileName": "contrato.pdf",
+      "caption": "Contrato"
+    }
+  }
+}
+```
+
+`mediaUploadId` em `media` precisa pertencer à instância que fará o envio e o tipo salvo no pré-upload precisa bater com `mediatype`. Como a escolha de instância é feita item a item, use pré-upload em lote apenas quando o lote tiver uma única instância ou quando houver garantia operacional de que o ID é válido para a instância selecionada. Para várias instâncias, a forma mais portátil é usar URL em `media`.
+
+Exemplo `audio`:
+
+```json
+{
+  "message": {
+    "type": "audio",
+    "payload": {
+      "audio": "https://example.com/audio.ogg"
+    }
+  }
+}
+```
+
+Exemplo `audio` por pré-upload:
+
+```json
+{
+  "message": {
+    "type": "audio",
+    "payload": {
+      "mediaUploadId": 4,
+      "ptt": true
+    }
+  }
+}
+```
+
+`mediaUploadId` em `audio` precisa apontar para um pré-upload com `mediaType=audio`, pertencente à instância que fará o envio. Como o pré-upload pertence a uma única instância, lote de áudio com `mediaUploadId` exige exatamente uma instância. O campo `ptt` é opcional porque o envio de áudio do lote já é PTT/voz; se enviado, apenas `true` é aceito.
+
+Exemplo `contact`:
+
+```json
+{
+  "message": {
+    "type": "contact",
+    "payload": [
+      {
+        "fullName": "Alice Silva",
+        "phoneNumber": "+55 31 99999-9999",
+        "wuid": "5531999999999"
+      },
+      {
+        "fullName": "Suporte CodeChat",
+        "organization": "CodeChat",
+        "vcard": "BEGIN:VCARD\nVERSION:3.0\nFN:Suporte CodeChat\nTEL;type=CELL:+5531888888888\nEND:VCARD"
+      }
+    ]
+  }
+}
+```
+
+Exemplo `location`:
+
+```json
+{
+  "message": {
+    "type": "location",
+    "payload": {
+      "latitude": -23.55052,
+      "longitude": -46.633308,
+      "name": "São Paulo",
+      "address": "São Paulo, SP",
+      "url": "https://maps.google.com/?q=-23.55052,-46.633308"
+    }
+  }
+}
+```
+
+Exemplo `interactive`:
+
+```json
+{
+  "message": {
+    "type": "interactive",
+    "payload": {
+      "title": "Confirmação",
+      "description": "Deseja continuar?",
+      "footerText": "CodeChat",
+      "buttons": [
+        {"displayText": "Abrir site", "url": "https://example.com"},
+        {"displayText": "Copiar código", "copyCode": "ABC-123"},
+        {"displayText": "Sim", "id": "confirmar"}
+      ]
+    }
+  }
+}
+```
+
+Em `interactive`, cada botão precisa de `displayText` e de uma ação. A ação pode ser inferida por `url`, `copyCode` ou `id`; se usar `value` sem esses campos, envie também `type` com `url`, `copy` ou `reply`. É permitido misturar botões de URL, cópia e resposta no mesmo payload, até o limite de 10 botões. `title` e `footerText` são opcionais; `description` é obrigatória. `mediaUploadId` também é opcional: omitido, `0` ou string vazia enviam sem mídia. Como o pré-upload pertence a uma única instância, um ID positivo exige que o lote tenha exatamente uma instância; em lotes com múltiplas instâncias, mantenha o campo omitido, `0` ou vazio.
+
+Upload multipart por requisição (`media-file` e `audio-file`), `reaction`, `form`, `payment-request`, `pix` e `review-order` são rejeitados explicitamente porque não formam um payload persistente e repetível neste worker. `mentionAll` é rejeitado por ser exclusivo de grupos.
 
 `replicable` é aceito e preservado no JSON de opções. O código anterior não possuía comportamento executável para essa propriedade; portanto, o Message Batch não inventa uma nova semântica nem altera o envio individual.
 
@@ -144,7 +335,7 @@ O payload da mensagem tem limite de 1 MiB; cada objeto de atributos externos tem
 
 ## Delay e múltiplas instâncias
 
-`options.delay.minMs` deve ser `>= 0`, `maxMs >= minMs` e `maxMs <= MESSAGE_BATCH_MAX_DELAY_MS`. Depois de cada item concluído, o worker escolhe um valor inclusivo e criptograficamente aleatório, persiste em `selectedDelayMs` e usa timer cancelável. Pause, stop ou encerramento do processo interrompem a espera sem `time.Sleep` irrecuperável.
+`options.delay.minMs` deve ser `>= 0`, `maxMs >= minMs` e `maxMs <= MESSAGE_BATCH_MAX_DELAY_MS`. Depois de cada item concluído, o worker escolhe um valor inclusivo e criptograficamente aleatório, persiste em `selectedDelayMs` e usa timer cancelável. Pause, stop, fim da janela ou encerramento do processo interrompem a espera sem `time.Sleep` irrecuperável.
 
 Para cada item, o worker filtra as instâncias conectadas do lote, embaralha a lista e persiste a escolhida antes de enviar. Se ela cair antes do envio, a tentativa vira `INSTANCE_UNAVAILABLE` e outra instância conectada é tentada. Se nenhuma estiver disponível, o item volta para `PENDING` e o lote entra em `WAITING_FOR_INSTANCE`; a reavaliação ocorre no intervalo configurado e o lote volta automaticamente a `PROCESSING`.
 
@@ -152,16 +343,18 @@ Para cada item, o worker filtra as instâncias conectadas do lote, embaralha a l
 
 | Origem | Destino permitido |
 | --- | --- |
-| `DRAFT` | `QUEUED` |
-| `QUEUED` | `PROCESSING`, `WAITING_FOR_INSTANCE`, `INTERRUPTED` |
-| `PROCESSING` | `PAUSE_REQUESTED`, `STOP_REQUESTED`, `WAITING_FOR_INSTANCE`, `COMPLETED`, `COMPLETED_WITH_ERRORS`, `INTERRUPTED`, `FAILED` estrutural |
+| `DRAFT` | `SCHEDULED`, `QUEUED`, `WAITING_FOR_WINDOW` |
+| `SCHEDULED` | `QUEUED`, `PAUSED`, `STOPPED`, `INTERRUPTED` |
+| `QUEUED` | `PROCESSING`, `WAITING_FOR_INSTANCE`, `WAITING_FOR_WINDOW`, `INTERRUPTED` |
+| `PROCESSING` | `PAUSE_REQUESTED`, `STOP_REQUESTED`, `WAITING_FOR_INSTANCE`, `WAITING_FOR_WINDOW`, `COMPLETED`, `COMPLETED_WITH_ERRORS`, `INTERRUPTED`, `FAILED` estrutural |
 | `PAUSE_REQUESTED` | `PAUSED`, `INTERRUPTED` |
 | `PAUSED` | `QUEUED` |
-| `WAITING_FOR_INSTANCE` | `PROCESSING`, `PAUSE_REQUESTED`, `STOP_REQUESTED`, `INTERRUPTED` |
+| `WAITING_FOR_INSTANCE` | `PROCESSING`, `PAUSE_REQUESTED`, `STOP_REQUESTED`, `WAITING_FOR_WINDOW`, `INTERRUPTED` |
+| `WAITING_FOR_WINDOW` | `QUEUED`, `PAUSED`, `STOPPED`, `INTERRUPTED` |
 | `STOP_REQUESTED` | `STOPPED`, `INTERRUPTED` |
-| `INTERRUPTED` | `QUEUED` |
+| `INTERRUPTED` | `SCHEDULED`, `QUEUED`, `WAITING_FOR_WINDOW` quando `autoResume=true`; os mesmos destinos via `/start` quando falso |
 
-Transição inválida retorna `409 Conflict`. `start` é idempotente em `QUEUED` e `PROCESSING`; `pause` é idempotente em `PAUSE_REQUESTED` e `PAUSED`; `stop` é idempotente em `STOP_REQUESTED` e `STOPPED`.
+Transição inválida retorna `409 Conflict`. `start` é idempotente em `SCHEDULED`, `QUEUED`, `PROCESSING` e `WAITING_FOR_WINDOW`, sempre reavaliando a agenda quando necessário; `pause` é idempotente em `PAUSE_REQUESTED` e `PAUSED`; `stop` é idempotente em `STOP_REQUESTED` e `STOPPED`.
 
 Pause não inicia um novo item, deixa o envio já confirmado terminar, cancela o delay e chega a `PAUSED`. Um novo `start` continua do próximo `PENDING`. Stop chega a `STOPPED`, é terminal e conserva os itens não processados como `PENDING`.
 
@@ -219,11 +412,13 @@ curl -X POST "http://localhost:8084/message/batches/$BATCH_ID/pause" \
 
 ## Recovery, leases e resultado desconhecido
 
-Cada lote ativo possui `lease_owner` e `lease_expires_at`. Claim, item `SENDING` e tentativa são gravados com transações e `FOR UPDATE SKIP LOCKED`, impedindo dois workers/réplicas de confirmarem o mesmo item. Heartbeats renovam os leases. No encerramento gracioso, timers e novos claims são cancelados e lotes pertencentes ao processo ficam `INTERRUPTED`.
+Cada lote ativo possui `lease_owner` e `lease_expires_at`. Claim, item `SENDING` e tentativa são gravados com transações e `FOR UPDATE SKIP LOCKED`, impedindo dois workers/réplicas de confirmarem o mesmo item. A consulta de claim considera somente estados elegíveis e `next_run_at IS NULL OR next_run_at <= now()`, usando a hora do PostgreSQL. Heartbeats renovam os leases; lotes agendados permanecem no banco e não são carregados integralmente em memória.
 
-Na inicialização e em cada ciclo, leases expirados de `QUEUED`, `PROCESSING`, `PAUSE_REQUESTED`, `WAITING_FOR_INSTANCE` ou `STOP_REQUESTED` são recuperados. Itens e tentativas que estavam em `SENDING` viram `UNKNOWN`; o lote vira `INTERRUPTED` e não reinicia automaticamente. O operador precisa chamar `/start`.
+No encerramento gracioso por `SIGINT`, `SIGTERM`, cancelamento do contexto ou shutdown normal, o worker impede novos claims, interrompe polling e delays, aguarda envios em andamento por `MESSAGE_BATCH_SHUTDOWN_TIMEOUT_MS`, persiste `INTERRUPTED`, preenche `lastInterruptedAt` e `interruptionReason`, e libera leases. Se o envio não puder ser confirmado no timeout, item e tentativa viram `UNKNOWN`. `SIGKILL`, queda de energia, OOM fatal e crashes podem impedir qualquer escrita de shutdown; nesses casos, o lease persistido é o mecanismo de recuperação.
 
-O worker gera e persiste `clientMessageId` antes de chamar o WhatsApp e o reutiliza nas tentativas de troca de instância. Isso reduz duplicidade, mas não oferece garantia de exactly once: uma mensagem pode ter sido aceita pelo WhatsApp e o processo cair antes do commit local. `UNKNOWN` significa exatamente que o resultado externo não pôde ser confirmado; o sistema não reenvia esse item cegamente.
+Na inicialização e em cada ciclo, leases expirados são tomados com bloqueio concorrente seguro. Tentativas e itens abandonados em `SENDING` viram `UNKNOWN`, a interrupção recebe `LEASE_EXPIRED` e, quando `autoResume=true`, o lote volta automaticamente a `QUEUED`, `SCHEDULED` ou `WAITING_FOR_WINDOW` conforme a agenda. Sem agenda, volta a `QUEUED`. `lastRecoveredAt` registra a recuperação. Com `autoResume=false`, ele permanece `INTERRUPTED` até `/start`. `PAUSED`, `STOPPED`, estados concluídos e falhas estruturais nunca reiniciam sozinhos; `PAUSE_REQUESTED` abandonado chega a `PAUSED` e `STOP_REQUESTED` chega a `STOPPED`.
+
+O worker gera e persiste `clientMessageId` antes de chamar o WhatsApp e o reutiliza nas tentativas de troca de instância. Isso reduz duplicidade, mas não oferece garantia de exactly once: uma mensagem pode ter sido aceita pelo WhatsApp e o processo cair antes do commit local. `UNKNOWN` significa exatamente que o resultado externo não pôde ser confirmado; o sistema nunca o transforma automaticamente em `PENDING` nem o reenvia. A recuperação continua somente os itens `PENDING`; `SUCCESS`, `FAILED`, `SKIPPED` e `UNKNOWN` ficam intocados, e `UNKNOWN` conta como processado para conclusão com erros.
 
 ## Webhooks e outbox
 
@@ -238,5 +433,7 @@ Eventos de lote usam somente `WEBHOOK_GLOBAL_URL`. A mudança de item/estado e a
 | `MESSAGE_BATCH_INSTANCE_RECHECK_INTERVAL_MS` | `5000` |
 | `MESSAGE_BATCH_MAX_DELAY_MS` | `86400000` |
 | `MESSAGE_BATCH_MAX_RECIPIENTS` | `10000` |
+| `MESSAGE_BATCH_SHUTDOWN_TIMEOUT_MS` | `15000` |
+| `MESSAGE_BATCH_TIMEZONE` | `UTC` |
 
 Se o worker estiver desabilitado, criação, consulta e alterações de estado permanecem disponíveis, mas a fila não é consumida e a outbox não é entregue por este processo.

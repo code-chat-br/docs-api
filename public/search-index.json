@@ -824,6 +824,14 @@
     "search": "criar um lote envio em lote  "
   },
   {
+    "id": "heading:message-batches.mdx:agenda-diaria-e-recuperacao-automatica",
+    "type": "Seção",
+    "title": "Agenda diária e recuperação automática",
+    "description": "Envio em lote",
+    "href": "/docs/message-batches#agenda-diaria-e-recuperacao-automatica",
+    "search": "agenda diária e recuperação automática envio em lote  "
+  },
+  {
     "id": "heading:message-batches.mdx:destinatarios",
     "type": "Seção",
     "title": "Destinatários",
@@ -1379,9 +1387,9 @@
     "id": "doc:webhooks.mdx",
     "type": "Guia",
     "title": "Webhooks",
-    "description": "Configuração, entrega e os 41 eventos implementados. Documentação técnica dos webhooks implementados no código executável atual. Sumário - Visão geral - Configuração - Mapa de eventos - Headers HTTP - Envelope padrão - Estrutura da instância - Entrega e tratamento de erros - Eventos do Message Batch - Eventos - Eventos não suportados ou ignorados Visão geral Webhooks são requisições HTTP POST assíncronas enviadas pela aplicação para uma URL configurada pelo consumidor. Os 27 eventos por instância usam um envelope com event , instance , data e timestamp . Os 14 eventos globais de Message Batch usam event , data e timestamp , sem o campo instance . Para eventos por instância, existem dois destinos possíveis. O webhook da instância é configurado ",
+    "description": "Configuração, entrega e os 45 eventos implementados. Documentação técnica dos webhooks implementados no código executável atual. Sumário - Visão geral - Configuração - Mapa de eventos - Headers HTTP - Envelope padrão - Estrutura da instância - Entrega e tratamento de erros - Eventos do Message Batch - Eventos - Eventos não suportados ou ignorados Visão geral Webhooks são requisições HTTP POST assíncronas enviadas pela aplicação para uma URL configurada pelo consumidor. Os 27 eventos por instância usam um envelope com event , instance , data e timestamp . Os 18 eventos globais de Message Batch usam event , data e timestamp , sem o campo instance . Para eventos por instância, existem dois destinos possíveis. O webhook da instância é configurado ",
     "href": "/docs/webhooks",
-    "search": "webhooks configuração, entrega e os 41 eventos implementados. documentação técnica dos webhooks implementados no código executável atual. sumário - visão geral - configuração - mapa de eventos - headers http - envelope padrão - estrutura da instância - entrega e tratamento de erros - eventos do message batch - eventos - eventos não suportados ou ignorados visão geral webhooks são requisições http post assíncronas enviadas pela aplicação para uma url configurada pelo consumidor. os 27 eventos por instância usam um envelope com event , instance , data e timestamp . os 14 eventos globais de message batch usam event , data e timestamp , sem o campo instance . para eventos por instância, existem dois destinos possíveis. o webhook da instância é configurado   "
+    "search": "webhooks configuração, entrega e os 45 eventos implementados. documentação técnica dos webhooks implementados no código executável atual. sumário - visão geral - configuração - mapa de eventos - headers http - envelope padrão - estrutura da instância - entrega e tratamento de erros - eventos do message batch - eventos - eventos não suportados ou ignorados visão geral webhooks são requisições http post assíncronas enviadas pela aplicação para uma url configurada pelo consumidor. os 27 eventos por instância usam um envelope com event , instance , data e timestamp . os 18 eventos globais de message batch usam event , data e timestamp , sem o campo instance . para eventos por instância, existem dois destinos possíveis. o webhook da instância é configurado   "
   },
   {
     "id": "heading:webhooks.mdx:sumario",
@@ -2697,11 +2705,11 @@
     "id": "operation:post:/message/batches",
     "type": "PRO",
     "title": "Cria um lote persistente",
-    "description": "Persiste a definição, os destinatários normalizados e as instâncias permitidas. A requisição não envia mensagens; com autoStart=true, o lote já é gravado em QUEUED para consumo assíncrono pelo worker. Message Batches createMessageBatch",
+    "description": "Persiste a definição, os destinatários normalizados, as instâncias permitidas e a agenda opcional. Com autoStart=true, o estado inicial é QUEUED, SCHEDULED ou WAITING_FOR_WINDOW conforme a janela. Message Batches createMessageBatch",
     "href": "/api-reference/createMessageBatch",
     "method": "POST",
     "path": "/message/batches",
-    "search": "cria um lote persistente persiste a definição, os destinatários normalizados e as instâncias permitidas. a requisição não envia mensagens; com autostart=true, o lote já é gravado em queued para consumo assíncrono pelo worker. message batches createmessagebatch post /message/batches"
+    "search": "cria um lote persistente persiste a definição, os destinatários normalizados, as instâncias permitidas e a agenda opcional. com autostart=true, o estado inicial é queued, scheduled ou waiting_for_window conforme a janela. message batches createmessagebatch post /message/batches"
   },
   {
     "id": "operation:get:/message/batches/{batchId}",
@@ -2747,11 +2755,11 @@
     "id": "operation:post:/message/batches/{batchId}/start",
     "type": "PRO",
     "title": "Inicia ou continua o lote sem executar o loop na requisição",
-    "description": "Move DRAFT, PAUSED ou INTERRUPTED para QUEUED. É idempotente quando o lote já está QUEUED ou PROCESSING. Message Batches startMessageBatch MessageBatchID",
+    "description": "Inicia DRAFT, PAUSED ou INTERRUPTED respeitando a agenda: QUEUED dentro da janela, SCHEDULED antes da primeira ou WAITING_FOR_WINDOW fora dela. É idempotente nos estados já ativos ou agendados. Message Batches startMessageBatch MessageBatchID",
     "href": "/api-reference/startMessageBatch",
     "method": "POST",
     "path": "/message/batches/{batchId}/start",
-    "search": "inicia ou continua o lote sem executar o loop na requisição move draft, paused ou interrupted para queued. é idempotente quando o lote já está queued ou processing. message batches startmessagebatch messagebatchid post /message/batches/{batchid}/start"
+    "search": "inicia ou continua o lote sem executar o loop na requisição inicia draft, paused ou interrupted respeitando a agenda: queued dentro da janela, scheduled antes da primeira ou waiting_for_window fora dela. é idempotente nos estados já ativos ou agendados. message batches startmessagebatch messagebatchid post /message/batches/{batchid}/start"
   },
   {
     "id": "operation:post:/message/batches/{batchId}/pause",
@@ -2841,9 +2849,9 @@
     "id": "schema:MessageBatchMessage",
     "type": "Schema",
     "title": "MessageBatchMessage",
-    "description": "Schema OpenAPI type payload",
+    "description": "Mensagem persistida do lote. O payload é direto: não envie number/chat/recipient/options nem wrappers como textMessage, mediaMessage, audioMessage, contactMessage, locationMessage ou buttonMessage. Tipos aceitos: text, link, media, audio, contact, location e interactive; ptt, whatsapp-audio e whatsapp_audio são aliases de audio. type payload",
     "href": "/api-reference",
-    "search": "messagebatchmessage schema openapi type payload  "
+    "search": "messagebatchmessage mensagem persistida do lote. o payload é direto: não envie number/chat/recipient/options nem wrappers como textmessage, mediamessage, audiomessage, contactmessage, locationmessage ou buttonmessage. tipos aceitos: text, link, media, audio, contact, location e interactive; ptt, whatsapp-audio e whatsapp_audio são aliases de audio. type payload  "
   },
   {
     "id": "schema:MessageBatchInteractivePayload",
@@ -2854,12 +2862,28 @@
     "search": "messagebatchinteractivepayload payload direto de message.type=interactive no message batch. os botões podem misturar url, copycode e id. um mediauploadid positivo exige lote com exatamente uma instância.   "
   },
   {
+    "id": "schema:MessageBatchSchedule",
+    "type": "Schema",
+    "title": "MessageBatchSchedule",
+    "description": "Janela absoluta inicial. DAILY preserva os horários locais e aceita janelas que atravessam a meia-noite. windowStartAt windowEndAt recurrence timezone",
+    "href": "/api-reference",
+    "search": "messagebatchschedule janela absoluta inicial. daily preserva os horários locais e aceita janelas que atravessam a meia-noite. windowstartat windowendat recurrence timezone  "
+  },
+  {
+    "id": "schema:MessageBatchScheduleInput",
+    "type": "Schema",
+    "title": "MessageBatchScheduleInput",
+    "description": "Schema OpenAPI windowStartAt windowEndAt recurrence timezone",
+    "href": "/api-reference",
+    "search": "messagebatchscheduleinput schema openapi windowstartat windowendat recurrence timezone  "
+  },
+  {
     "id": "schema:CreateMessageBatchRequest",
     "type": "Schema",
     "title": "CreateMessageBatchRequest",
-    "description": "Schema OpenAPI name instances recipients message options autoStart externalAttributes",
+    "description": "Schema OpenAPI name instances recipients message options autoStart autoResume schedule externalAttributes",
     "href": "/api-reference",
-    "search": "createmessagebatchrequest schema openapi name instances recipients message options autostart externalattributes  "
+    "search": "createmessagebatchrequest schema openapi name instances recipients message options autostart autoresume schedule externalattributes  "
   },
   {
     "id": "schema:MessageBatchCounts",
@@ -2881,9 +2905,9 @@
     "id": "schema:MessageBatch",
     "type": "Schema",
     "title": "MessageBatch",
-    "description": "Schema OpenAPI id ownerUserId name status message options externalAttributes instances counts progress currentItem lastError createdAt startedAt pausedAt stoppedAt completedAt interruptedAt updatedAt",
+    "description": "Schema OpenAPI id ownerUserId name status message options externalAttributes instances counts progress autoResume schedule nextRunAt lastInterruptedAt interruptionReason lastRecoveredAt currentItem lastError createdAt startedAt pausedAt stoppedAt completedAt interruptedAt updatedAt",
     "href": "/api-reference",
-    "search": "messagebatch schema openapi id owneruserid name status message options externalattributes instances counts progress currentitem lasterror createdat startedat pausedat stoppedat completedat interruptedat updatedat  "
+    "search": "messagebatch schema openapi id owneruserid name status message options externalattributes instances counts progress autoresume schedule nextrunat lastinterruptedat interruptionreason lastrecoveredat currentitem lasterror createdat startedat pausedat stoppedat completedat interruptedat updatedat  "
   },
   {
     "id": "schema:MessageBatchAttempt",
@@ -3816,12 +3840,44 @@
     "search": "message.batch.created lote, itens e instancias persistidos.    "
   },
   {
+    "id": "webhook-event:message.batch.scheduled",
+    "type": "PRO",
+    "title": "message.batch.scheduled",
+    "description": "Lote aguarda a primeira janela permitida.  ",
+    "href": "/api-reference/webhooks/message.batch.scheduled",
+    "search": "message.batch.scheduled lote aguarda a primeira janela permitida.    "
+  },
+  {
     "id": "webhook-event:message.batch.started",
     "type": "PRO",
     "title": "message.batch.started",
     "description": "Primeiro claim do lote em QUEUED.  ",
     "href": "/api-reference/webhooks/message.batch.started",
     "search": "message.batch.started primeiro claim do lote em queued.    "
+  },
+  {
+    "id": "webhook-event:message.batch.window-started",
+    "type": "PRO",
+    "title": "message.batch.window-started",
+    "description": "Uma janela abriu e o lote voltou para QUEUED.  ",
+    "href": "/api-reference/webhooks/message.batch.window-started",
+    "search": "message.batch.window-started uma janela abriu e o lote voltou para queued.    "
+  },
+  {
+    "id": "webhook-event:message.batch.waiting-window",
+    "type": "PRO",
+    "title": "message.batch.waiting-window",
+    "description": "A janela terminou com itens PENDING.  ",
+    "href": "/api-reference/webhooks/message.batch.waiting-window",
+    "search": "message.batch.waiting-window a janela terminou com itens pending.    "
+  },
+  {
+    "id": "webhook-event:message.batch.recovered",
+    "type": "PRO",
+    "title": "message.batch.recovered",
+    "description": "Interrupcao operacional foi recuperada automaticamente.  ",
+    "href": "/api-reference/webhooks/message.batch.recovered",
+    "search": "message.batch.recovered interrupcao operacional foi recuperada automaticamente.    "
   },
   {
     "id": "webhook-event:message.batch.progress",

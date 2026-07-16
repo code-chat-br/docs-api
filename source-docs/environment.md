@@ -61,6 +61,8 @@
 | `MESSAGE_BATCH_INSTANCE_RECHECK_INTERVAL_MS` | Não | `5000` | Intervalo, em milissegundos, para reavaliar instâncias de lotes em `WAITING_FOR_INSTANCE`. |
 | `MESSAGE_BATCH_MAX_DELAY_MS` | Não | `86400000` | Maior `options.delay.maxMs` aceito na criação de um lote; o padrão equivale a 24 horas. |
 | `MESSAGE_BATCH_MAX_RECIPIENTS` | Não | `10000` | Limite de entradas recebidas em `recipients` por lote, antes da remoção de duplicidades. |
+| `MESSAGE_BATCH_SHUTDOWN_TIMEOUT_MS` | Não | `15000` | Tempo máximo, em milissegundos, para envios já iniciados terminarem durante o shutdown antes de serem tratados como `UNKNOWN`. |
+| `MESSAGE_BATCH_TIMEZONE` | Não | `UTC` | Timezone IANA padrão para agendas de lote que omitem `schedule.timezone`. |
 | `MEDIA_PRE_UPLOAD_MAX_FILE_SIZE` | Não | `100MB` | Tamanho máximo aceito em `POST /instance/:instance/media/uploads`. O padrão é `100MB`; valores maiores são rejeitados antes de carregar o arquivo inteiro em memória. |
 
 ## Execução local
@@ -165,6 +167,8 @@ environment:
   MESSAGE_BATCH_INSTANCE_RECHECK_INTERVAL_MS: "${MESSAGE_BATCH_INSTANCE_RECHECK_INTERVAL_MS:-5000}"
   MESSAGE_BATCH_MAX_DELAY_MS: "${MESSAGE_BATCH_MAX_DELAY_MS:-86400000}"
   MESSAGE_BATCH_MAX_RECIPIENTS: "${MESSAGE_BATCH_MAX_RECIPIENTS:-10000}"
+  MESSAGE_BATCH_SHUTDOWN_TIMEOUT_MS: "${MESSAGE_BATCH_SHUTDOWN_TIMEOUT_MS:-15000}"
+  MESSAGE_BATCH_TIMEZONE: "${MESSAGE_BATCH_TIMEZONE:-UTC}"
 ```
 
 Quando `DOCKER_ENV=true`, `.env` e `.env.dev` não são carregados.
