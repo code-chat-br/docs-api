@@ -2497,24 +2497,21 @@ paths:
         "404": {"$ref":"#/components/responses/MessageBatchError"}
         "422": {"$ref":"#/components/responses/MessageBatchError"}
         "500": {"$ref":"#/components/responses/Error500"}
-    get:
+  "/message/batches/list":
+    post:
       tags: ["Message Batches"]
       summary: "Lista lotes"
-      description: "Lista lotes por cursor opaco. nextCursor e previousCursor são mutuamente exclusivos; o limite padrão é 50 e o máximo é 200."
+      description: "Lista lotes por filtros enviados no body e cursor opaco. nextCursor e previousCursor são mutuamente exclusivos; o limite padrão é 50 e o máximo é 200."
       operationId: listMessageBatches
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
       security:
         - UserBearer: []
-      parameters:
-        - {"name":"status","in":"query","schema":{"$ref":"#/components/schemas/MessageBatchStatus"}}
-        - {"name":"instanceName","in":"query","schema":{"type":"string"}}
-        - {"$ref":"#/components/parameters/CreatedFrom"}
-        - {"$ref":"#/components/parameters/CreatedTo"}
-        - {"name":"query","in":"query","schema":{"type":"string"}}
-        - {"$ref":"#/components/parameters/MessageBatchLimit"}
-        - {"$ref":"#/components/parameters/NextCursor"}
-        - {"$ref":"#/components/parameters/PreviousCursor"}
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: {"$ref":"#/components/schemas/MessageBatchListRequest"}
       responses:
         "200":
           description: "Página de lotes"
@@ -2935,9 +2932,30 @@ components:
           recurrence: "DAILY"
           timezone: "America/Sao_Paulo"
         externalAttributes: {"origin":"admin-panel"}
+    MessageBatchListRequest:
+      type: object
+      description: "Filtros da listagem de lotes. Envie {} para usar os padrões."
+      properties:
+        status: {"$ref":"#/components/schemas/MessageBatchStatus"}
+        instanceName: {"type":"string"}
+        createdFrom: {"type":"string","format":"date-time"}
+        createdTo: {"type":"string","format":"date-time"}
+        query: {"type":"string"}
+        limit: {"type":"integer","default":50,"minimum":1,"maximum":200}
+        nextCursor: {"type":"string"}
+        previousCursor: {"type":"string"}
+      additionalProperties: false
+      example:
+        status: "SCHEDULED"
+        instanceName: "codechat-01"
+        createdFrom: "2026-07-16T00:00:00-03:00"
+        createdTo: "2026-07-17T00:00:00-03:00"
+        query: "Aviso"
+        limit: 50
+        nextCursor: "01900000-0000-7000-8000-000000000010"
     MessageBatchCounts: {"type":"object","properties":{"received":{"type":"integer","format":"int64","minimum":0},"total":{"type":"integer","format":"int64","minimum":0},"duplicatesIgnored":{"type":"integer","format":"int64","minimum":0},"processed":{"type":"integer","format":"int64","minimum":0},"pending":{"type":"integer","format":"int64","minimum":0},"sending":{"type":"integer","format":"int64","minimum":0},"success":{"type":"integer","format":"int64","minimum":0},"failed":{"type":"integer","format":"int64","minimum":0},"skipped":{"type":"integer","format":"int64","minimum":0},"unknown":{"type":"integer","format":"int64","minimum":0}},"required":["total","processed","pending","sending","success","failed","skipped","unknown"],"additionalProperties":false}
     MessageBatchInstance: {"type":"object","properties":{"id":{"type":"integer"},"name":{"type":"string"},"connectionStatus":{"type":"string"},"selectedCount":{"type":"integer","format":"int64"},"successCount":{"type":"integer","format":"int64"},"failedCount":{"type":"integer","format":"int64"}},"required":["id","name"],"additionalProperties":false}
-    MessageBatch: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"ownerUserId":{"type":"string","format":"uuid"},"name":{"type":"string"},"status":{"$ref":"#/components/schemas/MessageBatchStatus"},"message":{"$ref":"#/components/schemas/MessageBatchMessage","description":"Presente na consulta individual e nos eventos globais; omitido em criação, ações e listagem."},"options":{"$ref":"#/components/schemas/MessageBatchOptions","description":"Presente na consulta individual e nos eventos globais; omitido em criação, ações e listagem."},"externalAttributes":{"type":"object","additionalProperties":true},"instances":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatchInstance"}},"counts":{"$ref":"#/components/schemas/MessageBatchCounts"},"progress":{"type":"integer","minimum":0,"maximum":100,"description":"floor(processed * 100 / total)."},"autoResume":{"type":"boolean"},"schedule":{"oneOf":[{"$ref":"#/components/schemas/MessageBatchSchedule"},{"type":"null"}]},"nextRunAt":{"type":["string","null"],"format":"date-time"},"lastInterruptedAt":{"type":["string","null"],"format":"date-time"},"interruptionReason":{"type":["string","null"],"enum":["GRACEFUL_SHUTDOWN","LEASE_EXPIRED","PROCESS_CRASH","SEND_TIMEOUT_DURING_SHUTDOWN",null]},"lastRecoveredAt":{"type":["string","null"],"format":"date-time"},"currentItem":{"$ref":"#/components/schemas/MessageBatchWebhookCurrentItem","description":"Presente somente em eventos de lote associados a um item atual."},"lastError":{"type":"string"},"createdAt":{"type":"string","format":"date-time"},"startedAt":{"type":"string","format":"date-time"},"pausedAt":{"type":"string","format":"date-time"},"stoppedAt":{"type":"string","format":"date-time"},"completedAt":{"type":"string","format":"date-time"},"interruptedAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"}},"required":["id","ownerUserId","name","status","instances","counts","progress","autoResume","schedule","nextRunAt","lastInterruptedAt","interruptionReason","lastRecoveredAt","createdAt","updatedAt"],"additionalProperties":false}
+    MessageBatch: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"ownerUserId":{"type":"string","format":"uuid"},"name":{"type":"string"},"status":{"$ref":"#/components/schemas/MessageBatchStatus"},"message":{"$ref":"#/components/schemas/MessageBatchMessage","description":"Presente na consulta individual, na listagem e nos eventos globais; omitido em criação e ações."},"options":{"$ref":"#/components/schemas/MessageBatchOptions","description":"Presente na consulta individual e nos eventos globais; omitido em criação, ações e listagem."},"externalAttributes":{"type":"object","additionalProperties":true},"instances":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatchInstance"}},"counts":{"$ref":"#/components/schemas/MessageBatchCounts"},"progress":{"type":"integer","minimum":0,"maximum":100,"description":"floor(processed * 100 / total)."},"autoResume":{"type":"boolean"},"schedule":{"oneOf":[{"$ref":"#/components/schemas/MessageBatchSchedule"},{"type":"null"}]},"nextRunAt":{"type":["string","null"],"format":"date-time"},"lastInterruptedAt":{"type":["string","null"],"format":"date-time"},"interruptionReason":{"type":["string","null"],"enum":["GRACEFUL_SHUTDOWN","LEASE_EXPIRED","PROCESS_CRASH","SEND_TIMEOUT_DURING_SHUTDOWN",null]},"lastRecoveredAt":{"type":["string","null"],"format":"date-time"},"currentItem":{"$ref":"#/components/schemas/MessageBatchWebhookCurrentItem","description":"Presente somente em eventos de lote associados a um item atual."},"lastError":{"type":"string"},"createdAt":{"type":"string","format":"date-time"},"startedAt":{"type":"string","format":"date-time"},"pausedAt":{"type":"string","format":"date-time"},"stoppedAt":{"type":"string","format":"date-time"},"completedAt":{"type":"string","format":"date-time"},"interruptedAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"}},"required":["id","ownerUserId","name","status","instances","counts","progress","autoResume","schedule","nextRunAt","lastInterruptedAt","interruptionReason","lastRecoveredAt","createdAt","updatedAt"],"additionalProperties":false}
     MessageBatchAttempt: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"batchId":{"type":"string","format":"uuid"},"batchItemId":{"type":"string","format":"uuid"},"position":{"type":"integer"},"recipient":{"type":"string"},"instanceId":{"type":"integer"},"instanceName":{"type":"string"},"attemptNumber":{"type":"integer","minimum":1},"status":{"$ref":"#/components/schemas/MessageBatchAttemptStatus"},"clientMessageId":{"type":"string"},"whatsappMessageId":{"type":"string"},"errorCode":{"type":"string"},"errorMessage":{"type":"string"},"requestPayload":{"type":"object","additionalProperties":true},"responsePayload":{"type":"object","additionalProperties":true},"startedAt":{"type":"string","format":"date-time"},"finishedAt":{"type":"string","format":"date-time"},"createdAt":{"type":"string","format":"date-time"}},"required":["id","batchId","batchItemId","attemptNumber","status","startedAt","createdAt"],"additionalProperties":false}
     MessageBatchItem: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"batchId":{"type":"string","format":"uuid"},"position":{"type":"integer","minimum":0},"recipientInput":{"type":"string"},"normalizedRecipient":{"type":"string"},"recipientJid":{"type":"string"},"status":{"$ref":"#/components/schemas/MessageBatchItemStatus"},"selectedInstanceId":{"type":"integer"},"selectedInstanceName":{"type":"string"},"clientMessageId":{"type":"string"},"whatsappMessageId":{"type":"string"},"messageId":{"type":"integer"},"attemptCount":{"type":"integer","minimum":0},"selectedDelayMs":{"type":"integer","format":"int64","minimum":0},"lastErrorCode":{"type":"string"},"lastErrorMessage":{"type":"string"},"responsePayload":{"type":"object","additionalProperties":true},"createdAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"},"processingStartedAt":{"type":"string","format":"date-time"},"finishedAt":{"type":"string","format":"date-time"}},"required":["id","batchId","position","recipientInput","normalizedRecipient","recipientJid","status","attemptCount","createdAt","updatedAt"],"additionalProperties":false}
     MessageBatchItemDetail: {"allOf":[{"$ref":"#/components/schemas/MessageBatchItem"},{"type":"object","properties":{"attempts":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatchAttempt"}}},"required":["attempts"]}]}

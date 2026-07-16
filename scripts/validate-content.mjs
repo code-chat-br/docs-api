@@ -21,7 +21,7 @@ const docAliases = new Set(['/docs/installation', '/docs/plans', '/docs/legacy',
 const failures = [];
 const expectedBatchOperations = new Set([
   'POST /message/batches',
-  'GET /message/batches',
+  'POST /message/batches/list',
   'GET /message/batches/{batchId}',
   'GET /message/batches/{batchId}/items',
   'GET /message/batches/{batchId}/items/{itemId}',

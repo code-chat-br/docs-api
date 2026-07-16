@@ -13,7 +13,7 @@ Esta seção separa recursos comercialmente classificados como Pro. A classifica
 | `POST` | `/instance/:instance/send/pix` | PIX | `200` |
 | `POST` | `/instance/:instance/send/form` | Formulário nativo | `200` |
 | `POST` | `/instance/:instance/send/:type` | Interativo dinâmico | `200` |
-| `POST/GET` | `/message/batches...` | Envio em lote persistente | `200`/`201` |
+| `POST/GET` | `/message/batches...` | Envio em lote persistente, incluindo `POST /message/batches/list` para listagem | `200`/`201` |
 
 A rota dinâmica é registrada depois das rotas explícitas. Assim, `payment-request`, `review-order`, `pix`, `form`, `text`, `link`, `media`, `media-file`, `ppt`, `ppt-file`, `contact`, `location` e `reaction` não são capturados como `:type`.
 

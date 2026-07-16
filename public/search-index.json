@@ -2692,16 +2692,6 @@
     "search": "sai do grupo pelo alias legado legacy - groups legacyleavegroup legacyinstancename groupjid delete /group/leavegroup/{instancename}"
   },
   {
-    "id": "operation:get:/message/batches",
-    "type": "PRO",
-    "title": "Lista lotes",
-    "description": "Lista lotes por cursor opaco. nextCursor e previousCursor são mutuamente exclusivos; o limite padrão é 50 e o máximo é 200. Message Batches listMessageBatches status instanceName CreatedFrom CreatedTo query MessageBatchLimit NextCursor PreviousCursor",
-    "href": "/api-reference/listMessageBatches",
-    "method": "GET",
-    "path": "/message/batches",
-    "search": "lista lotes lista lotes por cursor opaco. nextcursor e previouscursor são mutuamente exclusivos; o limite padrão é 50 e o máximo é 200. message batches listmessagebatches status instancename createdfrom createdto query messagebatchlimit nextcursor previouscursor get /message/batches"
-  },
-  {
     "id": "operation:post:/message/batches",
     "type": "PRO",
     "title": "Cria um lote persistente",
@@ -2710,6 +2700,16 @@
     "method": "POST",
     "path": "/message/batches",
     "search": "cria um lote persistente persiste a definição, os destinatários normalizados, as instâncias permitidas e a agenda opcional. com autostart=true, o estado inicial é queued, scheduled ou waiting_for_window conforme a janela. message batches createmessagebatch post /message/batches"
+  },
+  {
+    "id": "operation:post:/message/batches/list",
+    "type": "PRO",
+    "title": "Lista lotes",
+    "description": "Lista lotes por filtros enviados no body e cursor opaco. nextCursor e previousCursor são mutuamente exclusivos; o limite padrão é 50 e o máximo é 200. Message Batches listMessageBatches",
+    "href": "/api-reference/listMessageBatches",
+    "method": "POST",
+    "path": "/message/batches/list",
+    "search": "lista lotes lista lotes por filtros enviados no body e cursor opaco. nextcursor e previouscursor são mutuamente exclusivos; o limite padrão é 50 e o máximo é 200. message batches listmessagebatches post /message/batches/list"
   },
   {
     "id": "operation:get:/message/batches/{batchId}",
@@ -2884,6 +2884,14 @@
     "description": "Schema OpenAPI name instances recipients message options autoStart autoResume schedule externalAttributes",
     "href": "/api-reference",
     "search": "createmessagebatchrequest schema openapi name instances recipients message options autostart autoresume schedule externalattributes  "
+  },
+  {
+    "id": "schema:MessageBatchListRequest",
+    "type": "Schema",
+    "title": "MessageBatchListRequest",
+    "description": "Filtros da listagem de lotes. Envie {} para usar os padrões. status instanceName createdFrom createdTo query limit nextCursor previousCursor",
+    "href": "/api-reference",
+    "search": "messagebatchlistrequest filtros da listagem de lotes. envie {} para usar os padrões. status instancename createdfrom createdto query limit nextcursor previouscursor  "
   },
   {
     "id": "schema:MessageBatchCounts",

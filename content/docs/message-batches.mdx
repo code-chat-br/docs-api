@@ -363,7 +363,7 @@ Pause não inicia um novo item, deixa o envio já confirmado terminar, cancela o
 | Método | Rota | Operação |
 | --- | --- | --- |
 | `POST` | `/message/batches` | Cria o lote (`201`). |
-| `GET` | `/message/batches` | Lista lotes. |
+| `POST` | `/message/batches/list` | Lista lotes com filtros no body. |
 | `GET` | `/message/batches/:batchId` | Detalhes sem incorporar milhares de itens. |
 | `GET` | `/message/batches/:batchId/items` | Lista itens. |
 | `GET` | `/message/batches/:batchId/items/:itemId` | Item e todas as suas tentativas. |
@@ -372,7 +372,7 @@ Pause não inicia um novo item, deixa o envio já confirmado terminar, cancela o
 | `POST` | `/message/batches/:batchId/pause` | Solicita pausa. |
 | `POST` | `/message/batches/:batchId/stop` | Solicita encerramento terminal. |
 
-Filtros de lotes: `status`, `instanceName`, `createdFrom`, `createdTo`, `query`, `limit`, `nextCursor`, `previousCursor`. Datas usam RFC 3339.
+Filtros de lotes são enviados no body de `POST /message/batches/list`: `status`, `instanceName`, `createdFrom`, `createdTo`, `query`, `limit`, `nextCursor`, `previousCursor`. Envie `{}` para usar os padrões. Datas usam RFC 3339.
 
 Filtros de itens: `status`, `recipient`, `instanceName`, `limit`, `nextCursor`, `previousCursor`. Estados: `PENDING`, `SENDING`, `SUCCESS`, `FAILED`, `SKIPPED`, `INTERRUPTED`, `UNKNOWN`.
 
@@ -396,6 +396,11 @@ curl -X POST "http://localhost:8084/message/batches" \
   -H "Authorization: Bearer $USER_TOKEN" \
   -H "Content-Type: application/json" \
   --data-binary @batch.json
+
+curl -X POST "http://localhost:8084/message/batches/list" \
+  -H "Authorization: Bearer $USER_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"status":"SCHEDULED","limit":50}'
 
 curl -X POST "http://localhost:8084/message/batches/$BATCH_ID/start" \
   -H "Authorization: Bearer $USER_TOKEN"

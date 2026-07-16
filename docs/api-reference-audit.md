@@ -11,7 +11,7 @@ Gerado exclusivamente a partir da especificação versionada em `source-docs/ope
 | Operações Pro | 14 |
 | Operações marcadas como deprecated | 37 |
 | Operações de webhook no OpenAPI | 1 |
-| Schemas em components.schemas | 103 |
+| Schemas em components.schemas | 104 |
 | Eventos de webhook por instância | 27 |
 | Eventos globais de Message Batch | 18 |
 
@@ -115,8 +115,8 @@ Resultado: **a especificação local está estruturalmente consistente e sincron
 | `PUT` | `/group/revokeInviteCode/{instanceName}` | `legacyRevokeGroupInviteCode` | Legado |
 | `PUT` | `/group/updateParticipant/{instanceName}` | `legacyUpdateGroupParticipants` | Legado |
 | `DELETE` | `/group/leaveGroup/{instanceName}` | `legacyLeaveGroup` | Legado |
-| `GET` | `/message/batches` | `listMessageBatches` | Pro |
 | `POST` | `/message/batches` | `createMessageBatch` | Pro |
+| `POST` | `/message/batches/list` | `listMessageBatches` | Pro |
 | `GET` | `/message/batches/{batchId}` | `getMessageBatch` | Pro |
 | `GET` | `/message/batches/{batchId}/items` | `listMessageBatchItems` | Pro |
 | `GET` | `/message/batches/{batchId}/items/{itemId}` | `getMessageBatchItem` | Pro |
