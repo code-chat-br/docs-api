@@ -365,6 +365,7 @@ Pause não inicia um novo item, deixa o envio já confirmado terminar, cancela o
 | `POST` | `/message/batches` | Cria o lote (`201`). |
 | `POST` | `/message/batches/list` | Lista lotes com filtros no body. |
 | `GET` | `/message/batches/:batchId` | Detalhes sem incorporar milhares de itens. |
+| `GET` | `/message/batches/:batchId/processing` | Resumo completo, com todos os destinatários e tentativas. |
 | `GET` | `/message/batches/:batchId/items` | Lista itens. |
 | `GET` | `/message/batches/:batchId/items/:itemId` | Item e todas as suas tentativas. |
 | `GET` | `/message/batches/:batchId/attempts` | Lista tentativas. |
@@ -372,7 +373,9 @@ Pause não inicia um novo item, deixa o envio já confirmado terminar, cancela o
 | `POST` | `/message/batches/:batchId/pause` | Solicita pausa. |
 | `POST` | `/message/batches/:batchId/stop` | Solicita encerramento terminal. |
 
-Filtros de lotes são enviados no body de `POST /message/batches/list`: `status`, `instanceName`, `createdFrom`, `createdTo`, `query`, `limit`, `nextCursor`, `previousCursor`. Envie `{}` para usar os padrões. Datas usam RFC 3339.
+`GET /message/batches/:batchId/processing` não usa paginação. A resposta combina a definição completa do lote com `recipients`, ordenado pela posição original. Cada destinatário expõe o estado final ou atual em `status`, os dados persistidos do envio e `attempts` com todas as tentativas, payloads, respostas e erros disponíveis. Assim, destinatários enviados e com falha são identificados por `SUCCESS` e `FAILED`, enquanto os demais estados permanecem visíveis. Em lotes grandes, prefira os endpoints paginados de itens e tentativas quando não for necessário carregar o processamento inteiro.
+
+Filtros de lotes são enviados no body de `POST /message/batches/list`: `status`, `instanceName`, `createdFrom`, `createdTo`, `name`, `query`, `limit`, `nextCursor`, `previousCursor`. `name` pesquisa pelo nome do lote com correspondência parcial e sem diferenciar maiúsculas de minúsculas. Envie `{}` para usar os padrões. Datas usam RFC 3339.
 
 Filtros de itens: `status`, `recipient`, `instanceName`, `limit`, `nextCursor`, `previousCursor`. Estados: `PENDING`, `SENDING`, `SUCCESS`, `FAILED`, `SKIPPED`, `INTERRUPTED`, `UNKNOWN`.
 
@@ -408,7 +411,7 @@ curl -X POST "http://localhost:8084/message/batches/$BATCH_ID/start" \
 curl "http://localhost:8084/message/batches/$BATCH_ID" \
   -H "Authorization: Bearer $USER_TOKEN"
 
-curl "http://localhost:8084/message/batches/$BATCH_ID/items?status=FAILED&limit=50" \
+curl "http://localhost:8084/message/batches/$BATCH_ID/processing" \
   -H "Authorization: Bearer $USER_TOKEN"
 
 curl -X POST "http://localhost:8084/message/batches/$BATCH_ID/pause" \

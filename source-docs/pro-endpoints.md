@@ -11,13 +11,13 @@ Esta seção separa recursos comercialmente classificados como Pro. A classifica
 | `POST` | `/instance/:instance/send/pix` | PIX | `200` |
 | `POST` | `/instance/:instance/send/form` | Formulário nativo | `200` |
 | `POST` | `/instance/:instance/send/:type` | Interativo dinâmico | `200` |
-| `POST/GET` | `/message/batches...` | Envio em lote persistente, incluindo `POST /message/batches/list` para listagem | `200`/`201` |
+| `POST/GET` | `/message/batches...` | Envio em lote persistente, incluindo listagem e resumo completo em `GET /message/batches/{batchId}/processing` | `200`/`201` |
 
 A rota dinâmica é registrada depois das rotas explícitas. Assim, `payment-request`, `review-order`, `pix`, `form`, `text`, `link`, `media`, `media-file`, `ppt`, `ppt-file`, `contact`, `location` e `reaction` não são capturados como `:type`.
 
 ## Message Batch
 
-Todas as operacoes sob `/message/batches` sao recursos Pro, incluindo criacao, listagem, consulta de lote, itens e tentativas, alem de `start`, `pause` e `stop`. Elas exigem `Authorization: Bearer <jwt-do-usuario>`; `apikey`, `x-api-key` e `apiKey` nao autenticam esse fluxo.
+Todas as operacoes sob `/message/batches` sao recursos Pro, incluindo criacao, listagem, consulta de lote, processamento completo, itens e tentativas, alem de `start`, `pause` e `stop`. Elas exigem `Authorization: Bearer <jwt-do-usuario>`; `apikey`, `x-api-key` e `apiKey` nao autenticam esse fluxo.
 
 O JWT de usuario precisa conter `userId` em formato UUID e `exp`. A expiracao sempre e validada. A classificacao e apenas documental no runtime atual e nao altera respostas nem adiciona `402`. Consulte [Envio em lote](./message-batches.md) para arquitetura, estados, payloads, recovery e webhooks.
 

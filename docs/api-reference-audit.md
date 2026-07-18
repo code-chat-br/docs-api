@@ -6,12 +6,12 @@ Gerado exclusivamente a partir da especificação versionada em `source-docs/ope
 
 | Item | Quantidade |
 | --- | ---: |
-| Operações HTTP no OpenAPI | 95 |
+| Operações HTTP no OpenAPI | 96 |
 | Operações atuais, sem classificação Pro | 43 |
-| Operações Pro | 14 |
+| Operações Pro | 15 |
 | Operações marcadas como deprecated | 37 |
 | Operações de webhook no OpenAPI | 1 |
-| Schemas em components.schemas | 104 |
+| Schemas em components.schemas | 105 |
 | Eventos de webhook por instância | 27 |
 | Eventos globais de Message Batch | 18 |
 
@@ -118,6 +118,7 @@ Resultado: **a especificação local está estruturalmente consistente e sincron
 | `POST` | `/message/batches` | `createMessageBatch` | Pro |
 | `POST` | `/message/batches/list` | `listMessageBatches` | Pro |
 | `GET` | `/message/batches/{batchId}` | `getMessageBatch` | Pro |
+| `GET` | `/message/batches/{batchId}/processing` | `getMessageBatchProcessing` | Pro |
 | `GET` | `/message/batches/{batchId}/items` | `listMessageBatchItems` | Pro |
 | `GET` | `/message/batches/{batchId}/items/{itemId}` | `getMessageBatchItem` | Pro |
 | `GET` | `/message/batches/{batchId}/attempts` | `listMessageBatchAttempts` | Pro |
@@ -169,7 +170,7 @@ Os 37 endpoints abaixo continuam documentados, mas estão marcados como `depreca
 
 ## Schemas sem exemplos explícitos
 
-90 schemas não possuem `example` explícito. A interface gera exemplos a partir de tipos, enums, formatos, defaults e contexto da CodeChat:
+92 schemas não possuem `example` explícito. A interface gera exemplos a partir de tipos, enums, formatos, defaults e contexto da CodeChat:
 
 - `MessageBatchStatus`
 - `MessageBatchItemStatus`
@@ -189,6 +190,8 @@ Os 37 endpoints abaixo continuam documentados, mas estão marcados como `depreca
 - `MessageBatchAttempt`
 - `MessageBatchItem`
 - `MessageBatchItemDetail`
+- `MessageBatchProcessingRecipient`
+- `MessageBatchProcessing`
 - `MessageBatchPage`
 - `MessageBatchItemPage`
 - `MessageBatchAttemptPage`
@@ -267,7 +270,7 @@ Os 37 endpoints abaixo continuam documentados, mas estão marcados como `depreca
 - Operações sem `summary` e sem `description`: 0.
 - Operações sem tag: 0.
 - Operações sem resposta: 0.
-- Operações sem exemplo explícito no nível da operação: 95. A referência prioriza exemplos de mídia/schema e usa o gerador como fallback.
+- Operações sem exemplo explícito no nível da operação: 96. A referência prioriza exemplos de mídia/schema e usa o gerador como fallback.
 - Parâmetros de caminho inconsistentes: 0.
 - `operationId` ausente ou duplicado: 0.
 

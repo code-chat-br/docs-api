@@ -562,7 +562,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -598,7 +598,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -634,7 +634,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -670,7 +670,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -706,7 +706,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -742,7 +742,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -778,7 +778,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -814,7 +814,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -850,7 +850,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -1218,7 +1218,7 @@ paths:
           description: "Solicitação enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -1282,7 +1282,7 @@ paths:
           description: "PIX enviado"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -1315,7 +1315,7 @@ paths:
           description: "Formulário enviado"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -1350,7 +1350,7 @@ paths:
           description: "Interativo enviado"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -1734,7 +1734,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -1771,7 +1771,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -1808,7 +1808,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -1845,7 +1845,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -1882,7 +1882,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -1919,7 +1919,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -1956,7 +1956,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -1993,7 +1993,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "202":
           description: "Envio assíncrono aceito"
           content:
@@ -2030,7 +2030,7 @@ paths:
           description: "Mensagem enviada"
           content:
             application/json:
-              schema: {"$ref":"#/components/schemas/SendMessageResponse"}
+              schema: {"$ref":"#/components/schemas/Message"}
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -2543,6 +2543,28 @@ paths:
         "401": {"$ref":"#/components/responses/Error401"}
         "404": {"$ref":"#/components/responses/MessageBatchError"}
         "500": {"$ref":"#/components/responses/Error500"}
+  "/message/batches/{batchId}/processing":
+    get:
+      tags: ["Message Batches"]
+      summary: "Consulta o processamento completo de um lote"
+      description: "Retorna a definição do lote, mensagem, opções, instâncias, contadores e todos os destinatários sem paginação. Cada destinatário inclui seu resultado e o histórico ordenado de tentativas, com payloads, IDs e erros persistidos. A resposta pode ser grande em lotes com muitos destinatários."
+      operationId: getMessageBatchProcessing
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
+      security:
+        - UserBearer: []
+      parameters:
+        - {"$ref":"#/components/parameters/MessageBatchID"}
+      responses:
+        "200":
+          description: "Resumo completo do processamento do lote"
+          content:
+            application/json:
+              schema: {"$ref":"#/components/schemas/MessageBatchProcessing"}
+        "400": {"$ref":"#/components/responses/MessageBatchBadRequest"}
+        "401": {"$ref":"#/components/responses/Error401"}
+        "404": {"$ref":"#/components/responses/MessageBatchError"}
+        "500": {"$ref":"#/components/responses/Error500"}
   "/message/batches/{batchId}/items":
     get:
       tags: ["Message Batches"]
@@ -2940,6 +2962,7 @@ components:
         instanceName: {"type":"string"}
         createdFrom: {"type":"string","format":"date-time"}
         createdTo: {"type":"string","format":"date-time"}
+        name: {"type":"string","description":"Pesquisa parcial pelo nome do lote, sem diferenciar maiúsculas de minúsculas."}
         query: {"type":"string"}
         limit: {"type":"integer","default":50,"minimum":1,"maximum":200}
         nextCursor: {"type":"string"}
@@ -2950,6 +2973,7 @@ components:
         instanceName: "codechat-01"
         createdFrom: "2026-07-16T00:00:00-03:00"
         createdTo: "2026-07-17T00:00:00-03:00"
+        name: "Campanha"
         query: "Aviso"
         limit: 50
         nextCursor: "01900000-0000-7000-8000-000000000010"
@@ -2959,6 +2983,8 @@ components:
     MessageBatchAttempt: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"batchId":{"type":"string","format":"uuid"},"batchItemId":{"type":"string","format":"uuid"},"position":{"type":"integer"},"recipient":{"type":"string"},"instanceId":{"type":"integer"},"instanceName":{"type":"string"},"attemptNumber":{"type":"integer","minimum":1},"status":{"$ref":"#/components/schemas/MessageBatchAttemptStatus"},"clientMessageId":{"type":"string"},"whatsappMessageId":{"type":"string"},"errorCode":{"type":"string"},"errorMessage":{"type":"string"},"requestPayload":{"type":"object","additionalProperties":true},"responsePayload":{"type":"object","additionalProperties":true},"startedAt":{"type":"string","format":"date-time"},"finishedAt":{"type":"string","format":"date-time"},"createdAt":{"type":"string","format":"date-time"}},"required":["id","batchId","batchItemId","attemptNumber","status","startedAt","createdAt"],"additionalProperties":false}
     MessageBatchItem: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"batchId":{"type":"string","format":"uuid"},"position":{"type":"integer","minimum":0},"recipientInput":{"type":"string"},"normalizedRecipient":{"type":"string"},"recipientJid":{"type":"string"},"status":{"$ref":"#/components/schemas/MessageBatchItemStatus"},"selectedInstanceId":{"type":"integer"},"selectedInstanceName":{"type":"string"},"clientMessageId":{"type":"string"},"whatsappMessageId":{"type":"string"},"messageId":{"type":"integer"},"attemptCount":{"type":"integer","minimum":0},"selectedDelayMs":{"type":"integer","format":"int64","minimum":0},"lastErrorCode":{"type":"string"},"lastErrorMessage":{"type":"string"},"responsePayload":{"type":"object","additionalProperties":true},"createdAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"},"processingStartedAt":{"type":"string","format":"date-time"},"finishedAt":{"type":"string","format":"date-time"}},"required":["id","batchId","position","recipientInput","normalizedRecipient","recipientJid","status","attemptCount","createdAt","updatedAt"],"additionalProperties":false}
     MessageBatchItemDetail: {"allOf":[{"$ref":"#/components/schemas/MessageBatchItem"},{"type":"object","properties":{"attempts":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatchAttempt"}}},"required":["attempts"]}]}
+    MessageBatchProcessingRecipient: {"allOf":[{"$ref":"#/components/schemas/MessageBatchItem"},{"type":"object","properties":{"attempts":{"type":"array","description":"Histórico completo e ordenado das tentativas deste destinatário.","items":{"$ref":"#/components/schemas/MessageBatchAttempt"}}},"required":["attempts"]}]}
+    MessageBatchProcessing: {"allOf":[{"$ref":"#/components/schemas/MessageBatch"},{"type":"object","properties":{"recipients":{"type":"array","description":"Todos os destinatários do lote. O campo status identifica sucessos, falhas e demais estados do processamento.","items":{"$ref":"#/components/schemas/MessageBatchProcessingRecipient"}}},"required":["recipients"]}]}
     MessageBatchPage: {"type":"object","properties":{"nextCursor":{"type":["string","null"]},"previousCursor":{"type":["string","null"]},"totalRecords":{"type":"integer","format":"int64"},"records":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatch"}}},"required":["nextCursor","previousCursor","totalRecords","records"],"additionalProperties":false}
     MessageBatchItemPage: {"type":"object","properties":{"nextCursor":{"type":["string","null"]},"previousCursor":{"type":["string","null"]},"totalRecords":{"type":"integer","format":"int64"},"records":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatchItem"}}},"required":["nextCursor","previousCursor","totalRecords","records"],"additionalProperties":false}
     MessageBatchAttemptPage: {"type":"object","properties":{"nextCursor":{"type":["string","null"]},"previousCursor":{"type":["string","null"]},"totalRecords":{"type":"integer","format":"int64"},"records":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatchAttempt"}}},"required":["nextCursor","previousCursor","totalRecords","records"],"additionalProperties":false}
@@ -2994,7 +3020,6 @@ components:
     MessageOptions: {"type":"object","properties":{"delay":{"type":"integer","minimum":0,"maximum":120000},"presence":{"type":"string","enum":["composing","recording","paused"]},"quotedMessageId":{"type":"string"},"quotedMessage":{"type":"object","properties":{},"additionalProperties":true},"externalAttributes":{"type":"object","properties":{},"additionalProperties":true},"mentionAll":{"type":"boolean","default":false}},"additionalProperties":false}
     PTTMessageOptions: {"type":"object","properties":{"delay":{"type":"integer","minimum":0,"maximum":300000},"presence":{"type":"string","enum":["recording","paused"]},"quotedMessageId":{"type":"string"},"quotedMessage":{"type":"object","additionalProperties":true},"externalAttributes":{"type":"object","additionalProperties":true},"mentionAll":{"type":"boolean","default":false}},"additionalProperties":false}
     Message: {"type":"object","properties":{"id":{"type":"integer"},"keyId":{"type":"string"},"keyRemoteJid":{"type":["string","null"]},"keyLid":{"type":["string","null"]},"keyFromMe":{"type":"boolean"},"keyParticipant":{"type":["string","null"]},"keyParticipantLid":{"type":["string","null"]},"pushName":{"type":["string","null"]},"messageType":{"type":"string"},"content":{},"messageTimestamp":{"type":"integer"},"device":{"type":"string","enum":["ios","android","web","unknown","desktop"]},"isGroup":{"type":["boolean","null"]},"instanceId":{"type":"integer"},"metadata":{},"externalAttributes":{"type":"object","additionalProperties":true}},"required":["id","keyId","keyRemoteJid","keyLid","keyFromMe","keyParticipant","keyParticipantLid","pushName","messageType","content","messageTimestamp","device","isGroup","instanceId"],"additionalProperties":false}
-    SendMessageResponse: {"description":"Resposta síncrona dos endpoints de envio de mensagem.","allOf":[{"$ref":"#/components/schemas/Message"},{"type":"object","properties":{"messageType":{"type":"string","enum":["imageMessage","audioMessage","videoMessage","documentMessage","stickerMessage","extendedTextMessage","interactiveMessage","contactMessage","contactArrayMessage","locationMessage","reactionMessage"]},"content":{"type":"object","description":"Objeto relativo ao messageType retornado.","additionalProperties":true},"metadata":{"oneOf":[{"type":"object","additionalProperties":true},{"type":"string"},{"type":"null"}]}},"required":["content"]}],"example":{"id":1,"keyId":"string","keyRemoteJid":"5511999999999@s.whatsapp.net","keyLid":"string","keyFromMe":true,"keyParticipant":"string","keyParticipantLid":"string","pushName":"CodeChat","messageType":"extendedTextMessage","content":{},"messageTimestamp":1,"device":"ios","isGroup":true,"instanceId":1,"metadata":"string","externalAttributes":{}}}
     AcceptedResponse: {"type":"object","properties":{"statusCode":{"type":"integer","const":202},"status":{"type":"string","const":"processing"},"message":{"type":"string"},"processId":{"type":"string"},"instanceName":{"type":"string"}},"required":["statusCode","status","message","processId","instanceName"],"additionalProperties":false}
     SendTextRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatário"},"chat":{"type":"string","description":"Alias de destinatário"},"recipient":{"type":"string","description":"Alias de destinatário"},"textMessage":{"type":"object","properties":{"text":{"type":"string","minLength":1,"maxLength":65536}},"required":["text"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["textMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}],"example":{"number":"5511999999999","textMessage":{"text":"Olá!"}}}
     SendLinkRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatário"},"chat":{"type":"string","description":"Alias de destinatário"},"recipient":{"type":"string","description":"Alias de destinatário"},"linkMessage":{"type":"object","properties":{"link":{"type":"string","format":"uri","pattern":"^https?://"},"title":{"type":"string"},"description":{"type":"string"},"thumbnailUrl":{"type":"string","format":"uri","pattern":"^https?://"}},"required":["link"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["linkMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}

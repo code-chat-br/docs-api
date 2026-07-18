@@ -23,6 +23,7 @@ const expectedBatchOperations = new Set([
   'POST /message/batches',
   'POST /message/batches/list',
   'GET /message/batches/{batchId}',
+  'GET /message/batches/{batchId}/processing',
   'GET /message/batches/{batchId}/items',
   'GET /message/batches/{batchId}/items/{itemId}',
   'GET /message/batches/{batchId}/attempts',

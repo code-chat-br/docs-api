@@ -3,9 +3,9 @@
     "id": "doc:auth-reference.mdx",
     "type": "Guia",
     "title": "Referência de autenticação",
-    "description": "Resumo operacional dos dois esquemas de segurança do OpenAPI. GlobalApiKey Envie apikey: $GLOBAL TOKEN em POST /instance , GET /instance e nas nove operações /message/batches... . Os aliases x-api-key e apiKey também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor. InstanceBearer Envie Authorization: Bearer $INSTANCE TOKEN nas operações da instância. O JWT usa HS256 e contém instanceName , comparado com o nome da rota. Referência interativa A referência própria da CodeChat lê os dois esquemas diretamente do OpenAPI. Credenciais são enviadas somente para a Base URL escolhida. O playground usa sessionStorage por padrão e só usa localStorage quando a pessoa marca explicitamente a opção de persistência; o portal não usa ",
+    "description": "Resumo operacional dos dois esquemas de segurança do OpenAPI. GlobalApiKey Envie apikey: $GLOBAL TOKEN em POST /instance , GET /instance e nas dez operações /message/batches... . Os aliases x-api-key e apiKey também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor. InstanceBearer Envie Authorization: Bearer $INSTANCE TOKEN nas operações da instância. O JWT usa HS256 e contém instanceName , comparado com o nome da rota. Referência interativa A referência própria da CodeChat lê os dois esquemas diretamente do OpenAPI. Credenciais são enviadas somente para a Base URL escolhida. O playground usa sessionStorage por padrão e só usa localStorage quando a pessoa marca explicitamente a opção de persistência; o portal não usa p",
     "href": "/docs/auth-reference",
-    "search": "referência de autenticação resumo operacional dos dois esquemas de segurança do openapi. globalapikey envie apikey: $global token em post /instance , get /instance e nas nove operações /message/batches... . os aliases x-api-key e apikey também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor. instancebearer envie authorization: bearer $instance token nas operações da instância. o jwt usa hs256 e contém instancename , comparado com o nome da rota. referência interativa a referência própria da codechat lê os dois esquemas diretamente do openapi. credenciais são enviadas somente para a base url escolhida. o playground usa sessionstorage por padrão e só usa localstorage quando a pessoa marca explicitamente a opção de persistência; o portal não usa   "
+    "search": "referência de autenticação resumo operacional dos dois esquemas de segurança do openapi. globalapikey envie apikey: $global token em post /instance , get /instance e nas dez operações /message/batches... . os aliases x-api-key e apikey também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor. instancebearer envie authorization: bearer $instance token nas operações da instância. o jwt usa hs256 e contém instancename , comparado com o nome da rota. referência interativa a referência própria da codechat lê os dois esquemas diretamente do openapi. credenciais são enviadas somente para a base url escolhida. o playground usa sessionstorage por padrão e só usa localstorage quando a pessoa marca explicitamente a opção de persistência; o portal não usa p  "
   },
   {
     "id": "heading:auth-reference.mdx:globalapikey",
@@ -2722,6 +2722,16 @@
     "search": "consulta um lote sem incorporar seus itens retorna a definição completa do lote, incluindo message e options, mas mantém os itens em recursos paginados separados. message batches getmessagebatch messagebatchid get /message/batches/{batchid}"
   },
   {
+    "id": "operation:get:/message/batches/{batchId}/processing",
+    "type": "PRO",
+    "title": "Consulta o processamento completo de um lote",
+    "description": "Retorna a definição do lote, mensagem, opções, instâncias, contadores e todos os destinatários sem paginação. Cada destinatário inclui seu resultado e o histórico ordenado de tentativas, com payloads, IDs e erros persistidos. A resposta pode ser grande em lotes com muitos destinatários. Message Batches getMessageBatchProcessing MessageBatchID",
+    "href": "/api-reference/getMessageBatchProcessing",
+    "method": "GET",
+    "path": "/message/batches/{batchId}/processing",
+    "search": "consulta o processamento completo de um lote retorna a definição do lote, mensagem, opções, instâncias, contadores e todos os destinatários sem paginação. cada destinatário inclui seu resultado e o histórico ordenado de tentativas, com payloads, ids e erros persistidos. a resposta pode ser grande em lotes com muitos destinatários. message batches getmessagebatchprocessing messagebatchid get /message/batches/{batchid}/processing"
+  },
+  {
     "id": "operation:get:/message/batches/{batchId}/items",
     "type": "PRO",
     "title": "Lista itens do lote",
@@ -2889,9 +2899,9 @@
     "id": "schema:MessageBatchListRequest",
     "type": "Schema",
     "title": "MessageBatchListRequest",
-    "description": "Filtros da listagem de lotes. Envie {} para usar os padrões. status instanceName createdFrom createdTo query limit nextCursor previousCursor",
+    "description": "Filtros da listagem de lotes. Envie {} para usar os padrões. status instanceName createdFrom createdTo name query limit nextCursor previousCursor",
     "href": "/api-reference",
-    "search": "messagebatchlistrequest filtros da listagem de lotes. envie {} para usar os padrões. status instancename createdfrom createdto query limit nextcursor previouscursor  "
+    "search": "messagebatchlistrequest filtros da listagem de lotes. envie {} para usar os padrões. status instancename createdfrom createdto name query limit nextcursor previouscursor  "
   },
   {
     "id": "schema:MessageBatchCounts",
@@ -2940,6 +2950,22 @@
     "description": "Schema OpenAPI ",
     "href": "/api-reference",
     "search": "messagebatchitemdetail schema openapi   "
+  },
+  {
+    "id": "schema:MessageBatchProcessingRecipient",
+    "type": "Schema",
+    "title": "MessageBatchProcessingRecipient",
+    "description": "Schema OpenAPI ",
+    "href": "/api-reference",
+    "search": "messagebatchprocessingrecipient schema openapi   "
+  },
+  {
+    "id": "schema:MessageBatchProcessing",
+    "type": "Schema",
+    "title": "MessageBatchProcessing",
+    "description": "Schema OpenAPI ",
+    "href": "/api-reference",
+    "search": "messagebatchprocessing schema openapi   "
   },
   {
     "id": "schema:MessageBatchPage",
@@ -3220,14 +3246,6 @@
     "description": "Schema OpenAPI id keyId keyRemoteJid keyLid keyFromMe keyParticipant keyParticipantLid pushName messageType content messageTimestamp device isGroup instanceId metadata externalAttributes",
     "href": "/api-reference",
     "search": "message schema openapi id keyid keyremotejid keylid keyfromme keyparticipant keyparticipantlid pushname messagetype content messagetimestamp device isgroup instanceid metadata externalattributes  "
-  },
-  {
-    "id": "schema:SendMessageResponse",
-    "type": "Schema",
-    "title": "SendMessageResponse",
-    "description": "Resposta síncrona dos endpoints de envio de mensagem. ",
-    "href": "/api-reference",
-    "search": "sendmessageresponse resposta síncrona dos endpoints de envio de mensagem.   "
   },
   {
     "id": "schema:AcceptedResponse",
