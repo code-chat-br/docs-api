@@ -1,9 +1,11 @@
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
+import { EnvironmentVariablesSection } from './environment/environment-variables-section';
 
 export function getMDXComponents(components?: MDXComponents) {
   return {
     ...defaultMdxComponents,
+    EnvironmentVariablesSection,
     ...components,
   } satisfies MDXComponents;
 }
