@@ -32,7 +32,7 @@ tags:
   - name: "Media"
     description: "Download e upload antecipado de mÃ­dia."
   - name: "Calls"
-    description: "Chamadas WhatsApp 1:1 experimentais, incluindo reconciliacao multi-device."
+    description: "Recurso CodeChat API Go Pro: chamadas WhatsApp 1:1 experimentais, incluindo reconciliacao multi-device. A classificacao Pro nao e aplicada pelo runtime atual."
   - name: "Groups"
     description: "OperaÃ§Ãµes atuais de grupo."
   - name: "Webhooks"
@@ -2775,6 +2775,8 @@ paths:
   "/call/{instanceName}":
     post:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "Start an outbound WhatsApp call"
       operationId: startCall
       parameters:
@@ -2793,6 +2795,8 @@ paths:
         "409": {$ref: "#/components/responses/Error409"}
     get:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "List calls"
       operationId: listCalls
       parameters:
@@ -2819,6 +2823,8 @@ paths:
   "/call/{instanceName}/config":
     get:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "Get per-instance call settings"
       description: "Returns stored instance settings and effective settings after global master flags are applied."
       operationId: getInstanceCallSettings
@@ -2833,6 +2839,8 @@ paths:
         "404": {$ref: "#/components/responses/Error404"}
     put:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "Replace per-instance call settings"
       description: "Updates settings stored by instance_id. Global CALLS_* flags remain master locks and may keep effective fields disabled."
       operationId: updateInstanceCallSettings
@@ -2869,6 +2877,8 @@ paths:
   "/call/{instanceName}/{callId}":
     get:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "Get one call"
       operationId: getCall
       parameters:
@@ -2884,6 +2894,8 @@ paths:
   "/call/{instanceName}/{callId}/events":
     get:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "List call events"
       operationId: listCallEvents
       parameters:
@@ -2905,6 +2917,8 @@ paths:
   "/call/{instanceName}/{callId}/answer":
     post:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "Answer an inbound call through the API"
       operationId: answerCall
       parameters:
@@ -2924,6 +2938,8 @@ paths:
   "/call/{instanceName}/{callId}/reject":
     post:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "Reject an inbound call through the API"
       operationId: rejectManagedCall
       parameters:
@@ -2947,6 +2963,8 @@ paths:
   "/call/{instanceName}/{callId}/hangup":
     post:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "Hang up a call through the API"
       operationId: hangupCall
       parameters:
@@ -2970,6 +2988,8 @@ paths:
   "/call/{instanceName}/{callId}/recordings":
     get:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "List call recordings"
       operationId: listCallRecordings
       parameters:
@@ -2990,6 +3010,8 @@ paths:
   "/call/{instanceName}/{callId}/recording/start":
     post:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "Start local disk recording for a managed call"
       description: "Records only media that is available in the API runtime. Calls answered on another linked device return 409 and do not create media files."
       operationId: startCallRecording
@@ -3017,6 +3039,8 @@ paths:
   "/call/{instanceName}/{callId}/recording/stop":
     post:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "Stop local disk recording"
       operationId: stopCallRecording
       parameters:
@@ -3042,6 +3066,8 @@ paths:
   "/call/{instanceName}/{callId}/recordings/{recordingId}":
     get:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "Get call recording metadata"
       operationId: getCallRecording
       parameters:
@@ -3057,6 +3083,8 @@ paths:
         "404": {$ref: "#/components/responses/Error404"}
     delete:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "Delete a local call recording"
       operationId: deleteCallRecording
       parameters:
@@ -3069,6 +3097,8 @@ paths:
   "/call/{instanceName}/{callId}/recordings/{recordingId}/download":
     get:
       tags: ["Calls"]
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       summary: "Download a completed local call recording"
       operationId: downloadCallRecording
       parameters:

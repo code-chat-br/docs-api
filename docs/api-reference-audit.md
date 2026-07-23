@@ -7,8 +7,8 @@ Gerado exclusivamente a partir da especificação versionada em `source-docs/ope
 | Item | Quantidade |
 | --- | ---: |
 | Operações HTTP no OpenAPI | 113 |
-| Operações atuais, sem classificação Pro | 59 |
-| Operações Pro | 15 |
+| Operações atuais, sem classificação Pro | 44 |
+| Operações Pro | 30 |
 | Operações marcadas como deprecated | 38 |
 | Operações de webhook no OpenAPI | 1 |
 | Schemas em components.schemas | 136 |
@@ -127,21 +127,21 @@ Resultado: **a especificação local está estruturalmente consistente e sincron
 | `POST` | `/message/batches/{batchId}/start` | `startMessageBatch` | Pro |
 | `POST` | `/message/batches/{batchId}/pause` | `pauseMessageBatch` | Pro |
 | `POST` | `/message/batches/{batchId}/stop` | `stopMessageBatch` | Pro |
-| `GET` | `/call/{instanceName}` | `listCalls` | Atual |
-| `POST` | `/call/{instanceName}` | `startCall` | Atual |
-| `GET` | `/call/{instanceName}/config` | `getInstanceCallSettings` | Atual |
-| `PUT` | `/call/{instanceName}/config` | `updateInstanceCallSettings` | Atual |
-| `GET` | `/call/{instanceName}/{callId}` | `getCall` | Atual |
-| `GET` | `/call/{instanceName}/{callId}/events` | `listCallEvents` | Atual |
-| `POST` | `/call/{instanceName}/{callId}/answer` | `answerCall` | Atual |
-| `POST` | `/call/{instanceName}/{callId}/reject` | `rejectManagedCall` | Atual |
-| `POST` | `/call/{instanceName}/{callId}/hangup` | `hangupCall` | Atual |
-| `GET` | `/call/{instanceName}/{callId}/recordings` | `listCallRecordings` | Atual |
-| `POST` | `/call/{instanceName}/{callId}/recording/start` | `startCallRecording` | Atual |
-| `POST` | `/call/{instanceName}/{callId}/recording/stop` | `stopCallRecording` | Atual |
-| `GET` | `/call/{instanceName}/{callId}/recordings/{recordingId}` | `getCallRecording` | Atual |
-| `DELETE` | `/call/{instanceName}/{callId}/recordings/{recordingId}` | `deleteCallRecording` | Atual |
-| `GET` | `/call/{instanceName}/{callId}/recordings/{recordingId}/download` | `downloadCallRecording` | Atual |
+| `GET` | `/call/{instanceName}` | `listCalls` | Pro |
+| `POST` | `/call/{instanceName}` | `startCall` | Pro |
+| `GET` | `/call/{instanceName}/config` | `getInstanceCallSettings` | Pro |
+| `PUT` | `/call/{instanceName}/config` | `updateInstanceCallSettings` | Pro |
+| `GET` | `/call/{instanceName}/{callId}` | `getCall` | Pro |
+| `GET` | `/call/{instanceName}/{callId}/events` | `listCallEvents` | Pro |
+| `POST` | `/call/{instanceName}/{callId}/answer` | `answerCall` | Pro |
+| `POST` | `/call/{instanceName}/{callId}/reject` | `rejectManagedCall` | Pro |
+| `POST` | `/call/{instanceName}/{callId}/hangup` | `hangupCall` | Pro |
+| `GET` | `/call/{instanceName}/{callId}/recordings` | `listCallRecordings` | Pro |
+| `POST` | `/call/{instanceName}/{callId}/recording/start` | `startCallRecording` | Pro |
+| `POST` | `/call/{instanceName}/{callId}/recording/stop` | `stopCallRecording` | Pro |
+| `GET` | `/call/{instanceName}/{callId}/recordings/{recordingId}` | `getCallRecording` | Pro |
+| `DELETE` | `/call/{instanceName}/{callId}/recordings/{recordingId}` | `deleteCallRecording` | Pro |
+| `GET` | `/call/{instanceName}/{callId}/recordings/{recordingId}/download` | `downloadCallRecording` | Pro |
 
 ## Endpoints possivelmente obsoletos
 

@@ -90,17 +90,26 @@ for (const required of [
 
 const spec = YAML.parse(await readFile(path.join(root, 'public', 'openapi.yml'), 'utf8'));
 const batchOperations = new Set();
+const callOperations = new Set();
 for (const [route, pathItem] of Object.entries(spec.paths || {})) {
-  if (!route.startsWith('/message/batches')) continue;
   for (const method of ['get', 'post', 'put', 'patch', 'delete']) {
     const operation = pathItem?.[method];
     if (!operation) continue;
     const operationKey = `${method.toUpperCase()} ${route}`;
-    batchOperations.add(operationKey);
-    if (operation['x-codechat-plan'] !== 'pro')
-      failures.push(`operação de lote sem classificação Pro: ${operationKey}`);
-    if (operation['x-codechat-plan-enforced'] !== false)
-      failures.push(`operação de lote com enforcement Pro divergente: ${operationKey}`);
+    if (route.startsWith('/message/batches')) {
+      batchOperations.add(operationKey);
+      if (operation['x-codechat-plan'] !== 'pro')
+        failures.push(`operação de lote sem classificação Pro: ${operationKey}`);
+      if (operation['x-codechat-plan-enforced'] !== false)
+        failures.push(`operação de lote com enforcement Pro divergente: ${operationKey}`);
+    }
+    if (route.startsWith('/call')) {
+      callOperations.add(operationKey);
+      if (operation['x-codechat-plan'] !== 'pro')
+        failures.push(`operação de chamada sem classificação Pro: ${operationKey}`);
+      if (operation['x-codechat-plan-enforced'] !== false)
+        failures.push(`operação de chamada com enforcement Pro divergente: ${operationKey}`);
+    }
   }
 }
 for (const operation of expectedBatchOperations) {
@@ -109,6 +118,7 @@ for (const operation of expectedBatchOperations) {
 for (const operation of batchOperations) {
   if (!expectedBatchOperations.has(operation)) failures.push(`operação de lote não catalogada: ${operation}`);
 }
+if (!callOperations.size) failures.push('operações de chamada ausentes no OpenAPI');
 
 const batchEvents = new Set(spec.components?.schemas?.MessageBatchWebhookEvent?.enum || []);
 for (const event of expectedBatchEvents) {

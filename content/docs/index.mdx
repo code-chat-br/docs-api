@@ -20,9 +20,9 @@ Esta pasta descreve o contrato observado no código executável atual. A referê
 
 ## CodeChat API Go Pro
 
-- [Endpoints Pro](/docs/pro-endpoints): pagamento, PIX, revisão de pedido, formulário, mensagens interativas e Message Batch.
+- [Endpoints Pro](/docs/pro-endpoints): pagamento, PIX, revisão de pedido, formulário, mensagens interativas, Message Batch e Chamadas.
 
-`Pro` é uma classificação comercial solicitada para a documentação. O código auditado não possui claim, middleware, tabela ou feature flag de plano e não retorna `402 Payment Required`. Os recursos Pro por instância usam o JWT da instância; Message Batch usa JWT de usuário com `userId` em formato UUID. O OpenAPI registra `x-codechat-plan: pro` e `x-codechat-plan-enforced: false` para não confundir classificação com bloqueio executável.
+`Pro` é uma classificação comercial solicitada para a documentação. O código auditado não possui claim, middleware, tabela ou feature flag de plano e não retorna `402 Payment Required`. Os recursos Pro por instância, incluindo Chamadas, usam o JWT da instância; Message Batch usa JWT de usuário com `userId` em formato UUID. O OpenAPI registra `x-codechat-plan: pro` e `x-codechat-plan-enforced: false` para não confundir classificação com bloqueio executável.
 
 ## Compatibilidade
 

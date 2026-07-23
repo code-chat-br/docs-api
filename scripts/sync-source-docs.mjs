@@ -26,7 +26,7 @@ const documents = {
   'calls.md': [
     'calls.mdx',
     'Chamadas WhatsApp',
-    'Chamadas individuais experimentais com áudio, vídeo, reações, gravações e eventos.',
+    'Recurso Pro experimental para chamadas individuais com áudio, vídeo, reações, gravações e eventos.',
   ],
   'media.md': ['media.mdx', 'Mídia', 'Download e upload antecipado de arquivos.'],
   'groups.md': ['groups.mdx', 'Grupos', 'Criação, participantes, convites, foto e saída.'],

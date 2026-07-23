@@ -14,6 +14,7 @@ Esta seção separa recursos comercialmente classificados como Pro. A classifica
 | `POST` | `/instance/:instance/send/form` | Formulário nativo | `200` |
 | `POST` | `/instance/:instance/send/:type` | Interativo dinâmico | `200` |
 | `POST/GET` | `/message/batches...` | Envio em lote persistente, incluindo listagem e resumo completo em `GET /message/batches/{batchId}/processing` | `200`/`201` |
+| `POST/GET/PUT/DELETE` | `/call...` | Chamadas WhatsApp experimentais, incluindo configuração, controle, eventos e gravações | `200`/`201`/`202`/`204` |
 
 A rota dinâmica é registrada depois das rotas explícitas. Assim, `payment-request`, `review-order`, `pix`, `form`, `text`, `link`, `media`, `media-file`, `ppt`, `ppt-file`, `contact`, `location` e `reaction` não são capturados como `:type`.
 
@@ -22,6 +23,12 @@ A rota dinâmica é registrada depois das rotas explícitas. Assim, `payment-req
 Todas as operacoes sob `/message/batches` sao recursos Pro, incluindo criacao, listagem, consulta de lote, processamento completo, itens e tentativas, alem de `start`, `pause` e `stop`. Elas exigem `Authorization: Bearer <jwt-do-usuario>`; `apikey`, `x-api-key` e `apiKey` nao autenticam esse fluxo.
 
 O JWT de usuario precisa conter `userId` em formato UUID e `exp`. A expiracao sempre e validada. A classificacao e apenas documental no runtime atual e nao altera respostas nem adiciona `402`. Consulte [Envio em lote](/docs/message-batches) para arquitetura, estados, payloads, recovery e webhooks.
+
+## Chamadas
+
+Todas as operacoes sob `/call` sao recursos Pro, incluindo inicio de chamada, listagem, configuracao por instancia, consulta de chamada, eventos, atendimento, rejeicao, encerramento, reacoes, video e gravacoes. Elas exigem `Authorization: Bearer <jwt-da-instancia>`; `apikey`, `x-api-key`, `apiKey` e JWT de usuario nao autenticam esse fluxo.
+
+A classificacao e apenas documental no runtime atual e nao altera respostas nem adiciona `402`. Consulte [Chamadas](/docs/calls) para arquitetura, flags globais, configuracao por instancia, comportamento multi-device, gravacao e eventos.
 
 ## Solicitação de pagamento
 

@@ -3,9 +3,9 @@
     "id": "doc:auth-reference.mdx",
     "type": "Guia",
     "title": "Referência de autenticação",
-    "description": "Resumo operacional dos esquemas de segurança do OpenAPI. GlobalApiKey Envie apikey: $GLOBAL TOKEN em POST /instance , GET /instance e nos aliases administrativos legados. Os aliases x-api-key e apiKey também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor. InstanceBearer Envie Authorization: Bearer $INSTANCE TOKEN nas operações da instância. O JWT usa HS256 e contém instanceName , comparado com o nome da rota. UserBearer Envie Authorization: Bearer $USER TOKEN nas operações /message/batches... e no WebSocket global. O JWT usa HS256, contém userId em formato UUID e precisa ter exp . Referência interativa A referência própria da CodeChat lê os dois esquemas diretamente do OpenAPI. Credenciais são enviadas somente ",
+    "description": "Resumo operacional dos esquemas de segurança do OpenAPI. GlobalApiKey Envie apikey: $GLOBAL TOKEN em POST /instance , GET /instance e nos aliases administrativos legados. Os aliases x-api-key e apiKey também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor. InstanceBearer Envie Authorization: Bearer $INSTANCE TOKEN nas operações da instância. O JWT usa HS256 e contém instanceName , comparado com o nome da rota. UserBearer Envie Authorization: Bearer $USER TOKEN nas operações /message/batches... e no WebSocket global. O JWT usa HS256, contém userId em formato UUID e precisa ter exp . Referência interativa A referência própria da CodeChat lê os esquemas diretamente do OpenAPI. Credenciais são enviadas somente para ",
     "href": "/docs/auth-reference",
-    "search": "referência de autenticação resumo operacional dos esquemas de segurança do openapi. globalapikey envie apikey: $global token em post /instance , get /instance e nos aliases administrativos legados. os aliases x-api-key e apikey também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor. instancebearer envie authorization: bearer $instance token nas operações da instância. o jwt usa hs256 e contém instancename , comparado com o nome da rota. userbearer envie authorization: bearer $user token nas operações /message/batches... e no websocket global. o jwt usa hs256, contém userid em formato uuid e precisa ter exp . referência interativa a referência própria da codechat lê os dois esquemas diretamente do openapi. credenciais são enviadas somente   "
+    "search": "referência de autenticação resumo operacional dos esquemas de segurança do openapi. globalapikey envie apikey: $global token em post /instance , get /instance e nos aliases administrativos legados. os aliases x-api-key e apikey também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor. instancebearer envie authorization: bearer $instance token nas operações da instância. o jwt usa hs256 e contém instancename , comparado com o nome da rota. userbearer envie authorization: bearer $user token nas operações /message/batches... e no websocket global. o jwt usa hs256, contém userid em formato uuid e precisa ter exp . referência interativa a referência própria da codechat lê os esquemas diretamente do openapi. credenciais são enviadas somente para   "
   },
   {
     "id": "heading:auth-reference.mdx:globalapikey",
@@ -91,9 +91,9 @@
     "id": "doc:calls.mdx",
     "type": "Guia",
     "title": "Chamadas WhatsApp",
-    "description": "Chamadas individuais experimentais com áudio, vídeo, reações, gravações e eventos. Este documento consolida a documentação do subsistema experimental de chamadas WhatsApp da API. Sumário - Visão Geral - Arquitetura - Dependências - Configuração - Configuração Por Instância - Ciclo de Vida - Comportamento Multi-Device - API - Eventos - WebSocket - Mídia - Vídeo - Gravação - Armazenamento de Gravações - Retenção de Gravações - Recuperação de Gravações - Segurança - Validação Manual - Solução de Problemas Visão Geral O suporte a chamadas 1:1 do WhatsApp é experimental, não oficial e só fica disponível quando CALLS ENABLED=true e a instância também habilita chamadas na configuração própria. A implementação usa instâncias já existentes, autenticação JWT da instância, migrations",
+    "description": "Recurso Pro experimental para chamadas individuais com áudio, vídeo, reações, gravações e eventos. Recurso Pro: todas as rotas /call... são classificadas comercialmente como CodeChat API Go Pro. O runtime atual não aplica entitlement de plano nem retorna 402 ; a autenticação executável é feita por JWT da instância. Este documento consolida a documentação do subsistema experimental de chamadas WhatsApp da API. Sumário - Visão Geral - Arquitetura - Dependências - Configuração - Configuração Por Instância - Ciclo de Vida - Comportamento Multi-Device - API - Eventos - WebSocket - Mídia - Vídeo - Gravação - Armazenamento de Gravações - Retenção de Gravações - Recuperação de Gravações - Segurança - Validação Manual - Solução de Problemas Visão Geral O suporte a chamadas 1:1 do WhatsApp é experi",
     "href": "/docs/calls",
-    "search": "chamadas whatsapp chamadas individuais experimentais com áudio, vídeo, reações, gravações e eventos. este documento consolida a documentação do subsistema experimental de chamadas whatsapp da api. sumário - visão geral - arquitetura - dependências - configuração - configuração por instância - ciclo de vida - comportamento multi-device - api - eventos - websocket - mídia - vídeo - gravação - armazenamento de gravações - retenção de gravações - recuperação de gravações - segurança - validação manual - solução de problemas visão geral o suporte a chamadas 1:1 do whatsapp é experimental, não oficial e só fica disponível quando calls enabled=true e a instância também habilita chamadas na configuração própria. a implementação usa instâncias já existentes, autenticação jwt da instância, migrations  "
+    "search": "chamadas whatsapp recurso pro experimental para chamadas individuais com áudio, vídeo, reações, gravações e eventos. recurso pro: todas as rotas /call... são classificadas comercialmente como codechat api go pro. o runtime atual não aplica entitlement de plano nem retorna 402 ; a autenticação executável é feita por jwt da instância. este documento consolida a documentação do subsistema experimental de chamadas whatsapp da api. sumário - visão geral - arquitetura - dependências - configuração - configuração por instância - ciclo de vida - comportamento multi-device - api - eventos - websocket - mídia - vídeo - gravação - armazenamento de gravações - retenção de gravações - recuperação de gravações - segurança - validação manual - solução de problemas visão geral o suporte a chamadas 1:1 do whatsapp é experi  "
   },
   {
     "id": "heading:calls.mdx:sumario",
@@ -1555,9 +1555,9 @@
     "id": "doc:openapi.mdx",
     "type": "Guia",
     "title": "OpenAPI",
-    "description": "Como o portal consome e valida o contrato OpenAPI 3.1. O arquivo publicado em /openapi.yml é uma cópia sincronizada de source-docs/openapi.yml , versionado neste repositório. Ele é validado com Redocly antes do build e alimenta a referência própria da CodeChat, a busca global e o resumo de operações. Separação visível - Operações atuais usam as tags funcionais Instances , Connections , Messages , Message Batches , Chats , Media , Groups e Webhooks . - Os 14 eventos globais de lote aparecem no objeto webhooks do OpenAPI 3.1, com headers, envelopes e exemplos próprios. - As operações Pro, incluindo as nove rotas de Message Batches, usam x-codechat-plan: pro e x-codechat-plan-enforced: false . - Aliases antigos ficam em tags Legacy - … ; deprecated",
+    "description": "Como o portal consome e valida o contrato OpenAPI 3.1. O arquivo publicado em /openapi.yml é uma cópia sincronizada de source-docs/openapi.yml , versionado neste repositório. Ele é validado com Redocly antes do build e alimenta a referência própria da CodeChat, a busca global e o resumo de operações. Separação visível - Operações atuais usam as tags funcionais Instances , Connections , Messages , Message Batches , Chats , Calls , Media , Groups e Webhooks . - Os 14 eventos globais de lote aparecem no objeto webhooks do OpenAPI 3.1, com headers, envelopes e exemplos próprios. - As operações Pro, incluindo Message Batches e Chamadas, usam x-codechat-plan: pro e x-codechat-plan-enforced: false . - Aliases antigos ficam em tags Legacy - … ; deprecat",
     "href": "/docs/openapi",
-    "search": "openapi como o portal consome e valida o contrato openapi 3.1. o arquivo publicado em /openapi.yml é uma cópia sincronizada de source-docs/openapi.yml , versionado neste repositório. ele é validado com redocly antes do build e alimenta a referência própria da codechat, a busca global e o resumo de operações. separação visível - operações atuais usam as tags funcionais instances , connections , messages , message batches , chats , media , groups e webhooks . - os 14 eventos globais de lote aparecem no objeto webhooks do openapi 3.1, com headers, envelopes e exemplos próprios. - as operações pro, incluindo as nove rotas de message batches, usam x-codechat-plan: pro e x-codechat-plan-enforced: false . - aliases antigos ficam em tags legacy - … ; deprecated  "
+    "search": "openapi como o portal consome e valida o contrato openapi 3.1. o arquivo publicado em /openapi.yml é uma cópia sincronizada de source-docs/openapi.yml , versionado neste repositório. ele é validado com redocly antes do build e alimenta a referência própria da codechat, a busca global e o resumo de operações. separação visível - operações atuais usam as tags funcionais instances , connections , messages , message batches , chats , calls , media , groups e webhooks . - os 14 eventos globais de lote aparecem no objeto webhooks do openapi 3.1, com headers, envelopes e exemplos próprios. - as operações pro, incluindo message batches e chamadas, usam x-codechat-plan: pro e x-codechat-plan-enforced: false . - aliases antigos ficam em tags legacy - … ; deprecat  "
   },
   {
     "id": "heading:openapi.mdx:separacao-visivel",
@@ -1710,6 +1710,14 @@
     "description": "Recursos Pro",
     "href": "/docs/pro-endpoints#message-batch",
     "search": "message batch recursos pro  "
+  },
+  {
+    "id": "heading:pro-endpoints.mdx:chamadas",
+    "type": "Seção",
+    "title": "Chamadas",
+    "description": "Recursos Pro",
+    "href": "/docs/pro-endpoints#chamadas",
+    "search": "chamadas recursos pro  "
   },
   {
     "id": "heading:pro-endpoints.mdx:solicitacao-de-pagamento",
@@ -3325,7 +3333,7 @@
   },
   {
     "id": "operation:get:/call/{instanceName}",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "List calls",
     "description": "Calls listCalls InstanceName status direction peer video externalId cursor limit",
     "href": "/api-reference/listCalls",
@@ -3335,7 +3343,7 @@
   },
   {
     "id": "operation:post:/call/{instanceName}",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "Start an outbound WhatsApp call",
     "description": "Calls startCall InstanceName",
     "href": "/api-reference/startCall",
@@ -3345,7 +3353,7 @@
   },
   {
     "id": "operation:get:/call/{instanceName}/config",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "Get per-instance call settings",
     "description": "Returns stored instance settings and effective settings after global master flags are applied. Calls getInstanceCallSettings InstanceName",
     "href": "/api-reference/getInstanceCallSettings",
@@ -3355,7 +3363,7 @@
   },
   {
     "id": "operation:put:/call/{instanceName}/config",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "Replace per-instance call settings",
     "description": "Updates settings stored by instance_id. Global CALLS_* flags remain master locks and may keep effective fields disabled. Calls updateInstanceCallSettings InstanceName",
     "href": "/api-reference/updateInstanceCallSettings",
@@ -3365,7 +3373,7 @@
   },
   {
     "id": "operation:get:/call/{instanceName}/{callId}",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "Get one call",
     "description": "Calls getCall InstanceName CallId",
     "href": "/api-reference/getCall",
@@ -3375,7 +3383,7 @@
   },
   {
     "id": "operation:get:/call/{instanceName}/{callId}/events",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "List call events",
     "description": "Calls listCallEvents InstanceName CallId limit",
     "href": "/api-reference/listCallEvents",
@@ -3385,7 +3393,7 @@
   },
   {
     "id": "operation:post:/call/{instanceName}/{callId}/answer",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "Answer an inbound call through the API",
     "description": "Calls answerCall InstanceName CallId",
     "href": "/api-reference/answerCall",
@@ -3395,7 +3403,7 @@
   },
   {
     "id": "operation:post:/call/{instanceName}/{callId}/reject",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "Reject an inbound call through the API",
     "description": "Calls rejectManagedCall InstanceName CallId",
     "href": "/api-reference/rejectManagedCall",
@@ -3405,7 +3413,7 @@
   },
   {
     "id": "operation:post:/call/{instanceName}/{callId}/hangup",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "Hang up a call through the API",
     "description": "Calls hangupCall InstanceName CallId",
     "href": "/api-reference/hangupCall",
@@ -3415,7 +3423,7 @@
   },
   {
     "id": "operation:get:/call/{instanceName}/{callId}/recordings",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "List call recordings",
     "description": "Calls listCallRecordings InstanceName CallId",
     "href": "/api-reference/listCallRecordings",
@@ -3425,7 +3433,7 @@
   },
   {
     "id": "operation:post:/call/{instanceName}/{callId}/recording/start",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "Start local disk recording for a managed call",
     "description": "Records only media that is available in the API runtime. Calls answered on another linked device return 409 and do not create media files. Calls startCallRecording InstanceName CallId",
     "href": "/api-reference/startCallRecording",
@@ -3435,7 +3443,7 @@
   },
   {
     "id": "operation:post:/call/{instanceName}/{callId}/recording/stop",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "Stop local disk recording",
     "description": "Calls stopCallRecording InstanceName CallId",
     "href": "/api-reference/stopCallRecording",
@@ -3445,7 +3453,7 @@
   },
   {
     "id": "operation:get:/call/{instanceName}/{callId}/recordings/{recordingId}",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "Get call recording metadata",
     "description": "Calls getCallRecording InstanceName CallId RecordingId",
     "href": "/api-reference/getCallRecording",
@@ -3455,7 +3463,7 @@
   },
   {
     "id": "operation:delete:/call/{instanceName}/{callId}/recordings/{recordingId}",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "Delete a local call recording",
     "description": "Calls deleteCallRecording InstanceName CallId RecordingId",
     "href": "/api-reference/deleteCallRecording",
@@ -3465,7 +3473,7 @@
   },
   {
     "id": "operation:get:/call/{instanceName}/{callId}/recordings/{recordingId}/download",
-    "type": "ATUAL",
+    "type": "PRO",
     "title": "Download a completed local call recording",
     "description": "Calls downloadCallRecording InstanceName CallId RecordingId",
     "href": "/api-reference/downloadCallRecording",

@@ -1,5 +1,7 @@
 # Chamadas WhatsApp
 
+> **Recurso Pro:** todas as rotas `/call...` são classificadas comercialmente como CodeChat API Go Pro. O runtime atual não aplica entitlement de plano nem retorna `402`; a autenticação executável é feita por JWT da instância.
+
 Este documento consolida a documentação do subsistema experimental de chamadas WhatsApp da API.
 
 ## Sumário
