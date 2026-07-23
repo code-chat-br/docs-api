@@ -70,6 +70,7 @@ for (const required of [
   'index.mdx',
   'getting-started.mdx',
   'environment.mdx',
+  'calls.mdx',
   'message-batches.mdx',
   'pro-endpoints.mdx',
   'legacy-endpoints.mdx',

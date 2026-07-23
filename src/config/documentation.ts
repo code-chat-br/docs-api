@@ -8,6 +8,7 @@ export const documentationConfig = {
     'Connections',
     'Messages',
     'Chats',
+    'Calls',
     'Media',
     'Groups',
     'Webhooks',

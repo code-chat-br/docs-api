@@ -6,10 +6,12 @@ describe('normalizeOpenApi', () => {
   it('indexa operações, categorias e navegação na ordem configurada', () => {
     const spec = normalizeOpenApi(minimalDocument);
 
-    expect(spec.operations.map((operation) => operation.id)).toEqual(['listInstances', 'sendMessage']);
+    expect(spec.operations.map((operation) => operation.id)).toEqual(['listInstances', 'sendMessage', 'listBatches']);
     expect(spec.tags.map((tag) => tag.name)).toEqual(['Instance', 'Message']);
     expect(spec.operations[0].nextId).toBe('sendMessage');
     expect(spec.operations[1].previousId).toBe('listInstances');
+    expect(spec.operations[1].nextId).toBe('listBatches');
+    expect(spec.operations[2].previousId).toBe('sendMessage');
     expect(spec.operations[1].parameters).toHaveLength(1);
   });
 

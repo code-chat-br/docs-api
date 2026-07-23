@@ -2,151 +2,260 @@
 title: "Instalação e ambiente"
 description: "Variáveis de ambiente e configuração do servidor."
 ---
-<a className="installation-video-card" href="https://youtu.be/DrgExUydhl8" target="_blank" rel="noreferrer">
-  <span className="installation-video-cover">
-    <img
-      src="https://i.ytimg.com/vi/DrgExUydhl8/maxresdefault.jpg"
-      alt="Capa da aula Como Instalar a CodeChat API WhatsApp em Go"
-    />
-  </span>
-  <span className="installation-video-copy">
-    <strong>Como Instalar a CodeChat API WhatsApp em Go | Guia Completo</strong>
-    <span>Neste vídeo, você vai aprender a instalar e executar a CodeChat API WhatsApp em Go.</span>
-    <span className="installation-video-host">youtu.be</span>
-  </span>
-</a>
+Este documento descreve as variaveis de ambiente usadas pela API no estado atual do codigo.
 
-<EnvironmentVariablesSection />
+Quando `DOCKER_ENV` esta ausente ou definido como `false`, a aplicacao carrega o arquivo `.env` do diretorio de execucao e depois le os valores do ambiente do processo. Variaveis ja definidas no processo tem prioridade sobre os valores do arquivo `.env`.
 
-## Execução local
+Quando `DOCKER_ENV=true`, `.env` e `.env.dev` nao sao carregados; todas as variaveis precisam ser fornecidas diretamente ao container.
+
+`.env.dev` e `.env.docker.example` sao arquivos de referencia. A aplicacao nao carrega esses arquivos automaticamente.
+
+## Variaveis obrigatorias
+
+| Variavel | Exemplo | Descricao |
+| --- | --- | --- |
+| `DATABASE_URL` | `postgres://postgres:postgres@localhost:5432/whatsapp?sslmode=disable` | String de conexao do PostgreSQL principal da API. |
+| `AUTHENTICATION_JWT_EXPIRES_IN` | `3600` | Expiracao do JWT em segundos. Use `0` para gerar tokens sem claim `exp`. Valores negativos sao invalidos. |
+| `AUTHENTICATION_JWT_SECRET` | `change-me` | Chave secreta usada para assinar JWTs HS256. Nao pode ser vazia. |
+| `AUTHENTICATION_GLOBAL_AUTH_TOKEN` | `change-me-global-token` | Token global usado para criar/listar instancias e rotas administrativas que aceitam chave global. Nao pode ser vazio. |
+| `QRCODE_LIMIT` | `5` | Numero maximo de QR codes servidos durante uma tentativa de pareamento. Deve ser inteiro positivo. |
+| `QRCODE_EXPIRATION_TIME` | `30` | Tempo de vida de cada QR code, em segundos. Deve ser inteiro positivo. |
+| `QRCODE_LIGHT_COLOR` | `#ffffff` | Cor clara do QR PNG. Deve estar no formato `#RRGGBB`. |
+| `QRCODE_DARK_COLOR` | `#198754` | Cor escura do QR PNG. Deve estar no formato `#RRGGBB`. |
+| `WHATSAPP_AUTO_RECONNECT` | `true` | Habilita restauracao automatica das sessoes que deveriam estar online. Valor aceito: `true` ou `false`. |
+| `WHATSAPP_STARTUP_RECONNECT_CONCURRENCY` | `5` | Numero maximo de sessoes WhatsApp restauradas em paralelo. Deve ser inteiro positivo. |
+| `WHATSAPP_CONNECT_TIMEOUT` | `30` | Timeout inicial da conexao WhatsApp, em segundos. Deve ser inteiro positivo. |
+| `WHATSAPP_RECONNECT_INITIAL_DELAY` | `2` | Backoff inicial de reconexao, em segundos. Deve ser inteiro positivo. |
+| `WHATSAPP_RECONNECT_MAX_DELAY` | `60` | Backoff maximo de reconexao, em segundos. Deve ser maior ou igual a `WHATSAPP_RECONNECT_INITIAL_DELAY`. |
+| `WHATSAPP_PROFILE_PICTURE_TIMEOUT` | `15` | Timeout para buscar foto de perfil, em segundos. Deve ser inteiro positivo. |
+
+## Servidor e execucao
+
+| Variavel | Obrigatoria | Default | Exemplo | Descricao |
+| --- | ---: | --- | --- | --- |
+| `DOCKER_ENV` | Nao | `false` | `true` | Quando `true`, impede o carregamento automatico de `.env`. Valores aceitos: vazio, `false`, `true`. |
+| `SERVER_PORT` | Nao | `8084` | `8084` | Porta do listener HTTP. Informe apenas o numero, sem `:`. |
+| `LOG_LEVEL` | Nao | `info` | `trace` | Nivel do Zerolog. Valores aceitos pelo Zerolog: `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `panic`, `disabled`. |
+| `TZ` | Nao | controlado pelo SO/container | `America/Sao_Paulo` | Nao e lida diretamente por `internal/config`; e usada pelo ambiente/container para timezone do processo. |
+| `TMPDIR` | Nao | controlado pelo SO/container | `/app/tmp` | Nao e lida diretamente por `internal/config`; pode ser usada pelo SO e bibliotecas para arquivos temporarios. |
+
+## Banco de dados
+
+| Variavel | Obrigatoria | Default | Exemplo | Descricao |
+| --- | ---: | --- | --- | --- |
+| `DATABASE_URL` | Sim | nenhum | `postgres://...` | Banco principal da API. Repositorios e migrations usam sempre este banco. |
+| `DATABASE_SAVE_DATA_NEW_MESSAGE` | Nao | `true` | `true` | Persiste mensagens recebidas em `Message`. |
+| `DATABASE_SAVE_MESSAGE_UPDATE` | Nao | `false` | `false` | Persiste recibos/eventos de atualizacao em `MessageUpdate`. |
+| `DATABASE_SAVE_DATA_CONTACTS` | Nao | `false` | `false` | Persiste sincronizacao e eventos de contatos em `Contact`. |
+
+## Sessoes do Whatsmeow
+
+| Variavel | Obrigatoria | Default | Exemplo | Descricao |
+| --- | ---: | --- | --- | --- |
+| `WHATSAPP_SESSION_STORE` | Nao | `postgres` | `sqlite` | Backend usado pelo whatsmeow para sessoes/dispositivos. Valores aceitos: `sqlite`, `postgres`. |
+| `WHATSAPP_SESSION_SQLITE_DSN` | Nao | `file:./data/whatsmeow.db?_foreign_keys=on` | `file:./data/whatsmeow.db?_foreign_keys=on` | DSN do SQLite quando `WHATSAPP_SESSION_STORE=sqlite`. |
+| `WHATSAPP_SESSION_POSTGRES_URL` | Nao | vazio | `postgres://sessions:...` | URL PostgreSQL dedicada para sessoes do whatsmeow. Quando vazia e o store e `postgres`, usa `DATABASE_URL`. |
+
+`DATABASE_URL` continua sendo o banco principal da API. Se `WHATSAPP_SESSION_POSTGRES_URL` estiver preenchida, as sessoes do whatsmeow sao inicializadas e migradas somente no banco dedicado.
+
+Alterar `WHATSAPP_SESSION_STORE` nao migra sessoes automaticamente. Migre os dados antes ou pareie as instancias novamente.
+
+## Autenticacao
+
+| Variavel | Obrigatoria | Default | Exemplo | Descricao |
+| --- | ---: | --- | --- | --- |
+| `AUTHENTICATION_JWT_EXPIRES_IN` | Sim | nenhum | `3600` | Expiracao do JWT em segundos. `0` remove a claim `exp`. |
+| `AUTHENTICATION_JWT_SECRET` | Sim | nenhum | `strong-secret` | Segredo para assinar JWTs HS256. |
+| `AUTHENTICATION_GLOBAL_AUTH_TOKEN` | Sim | nenhum | `admin-token` | Token global administrativo. |
+
+Nao use segredos de desenvolvimento em producao. JWTs, chaves de API, tokens globais, URLs de banco e segredos nao devem ser escritos em logs.
+
+## WhatsApp e pareamento
+
+| Variavel | Obrigatoria | Default | Exemplo | Descricao |
+| --- | ---: | --- | --- | --- |
+| `QRCODE_LIMIT` | Sim | nenhum | `5` | Maximo de QR codes por tentativa de pareamento. |
+| `QRCODE_EXPIRATION_TIME` | Sim | nenhum | `30` | Validade de cada QR code, em segundos. |
+| `QRCODE_LIGHT_COLOR` | Sim | nenhum | `#ffffff` | Cor clara do QR PNG. |
+| `QRCODE_DARK_COLOR` | Sim | nenhum | `#198754` | Cor escura do QR PNG. |
+| `CONFIG_SESSION_PHONE_CLIENT` | Nao | `DESKTOP` | `CHROME` | Tipo de plataforma exibido nos dispositivos vinculados do WhatsApp. |
+| `CONFIG_SESSION_PHONE_NAME` | Nao | `CodeChat` | `CodeChat` | Nome exibido nos dispositivos vinculados do WhatsApp. |
+| `WHATSAPP_PAIRING_TIMEOUT` | Nao | `3m` | `3m` | Timeout total do contexto de pareamento. Usa formato de duracao Go, como `30s`, `3m`, `1h`. |
+| `WHATSAPP_AUTO_RECONNECT` | Sim | nenhum | `true` | Habilita restauracao automatica no startup. |
+| `WHATSAPP_STARTUP_RECONNECT_CONCURRENCY` | Sim | nenhum | `5` | Quantidade maxima de restauracoes paralelas. |
+| `WHATSAPP_CONNECT_TIMEOUT` | Sim | nenhum | `30` | Timeout inicial de conexao, em segundos. |
+| `WHATSAPP_RECONNECT_INITIAL_DELAY` | Sim | nenhum | `2` | Delay inicial de reconexao, em segundos. |
+| `WHATSAPP_RECONNECT_MAX_DELAY` | Sim | nenhum | `60` | Delay maximo de reconexao, em segundos. |
+| `WHATSAPP_PROFILE_PICTURE_TIMEOUT` | Sim | nenhum | `15` | Timeout para buscar foto de perfil, em segundos. |
+| `WHATSAPP_ADDRESS_CACHE_TTL` | Nao | `168h` | `168h` | TTL do cache de mapeamento entre endereco WhatsApp e JID canonico. Usa formato de duracao Go. |
+
+`CONFIG_SESSION_PHONE_CLIENT` e `CONFIG_SESSION_PHONE_NAME` sao aplicados uma vez durante a inicializacao, antes da criacao do SQL Store e dos clientes do Whatsmeow. Eles afetam novos vinculos; dispositivos ja vinculados nao sao reescritos automaticamente.
+
+## Webhooks
+
+| Variavel | Obrigatoria | Default | Exemplo | Descricao |
+| --- | ---: | --- | --- | --- |
+| `WEBHOOK_GLOBAL_URL` | Condicional | vazio | `https://example.com/webhook` | URL global de webhook. Deve ser HTTP(S) absoluta. Obrigatoria quando `WEBHOOK_GLOBAL_ENABLED=true`. |
+| `WEBHOOK_GLOBAL_ENABLED` | Nao | `false` | `false` | Envia eventos reconhecidos de todas as instancias para `WEBHOOK_GLOBAL_URL`. |
+
+## WebSocket
+
+| Variavel | Obrigatoria | Default | Exemplo | Descricao |
+| --- | ---: | --- | --- | --- |
+| `WEBSOCKET_ENABLED` | Nao | `true` | `true` | Habilita rotas WebSocket de eventos. |
+| `WEBSOCKET_ALLOWED_ORIGINS` | Nao | vazio | `http://localhost:3000,http://localhost:5173` | Lista separada por virgulas de origens aceitas para browsers. |
+| `WEBSOCKET_ALLOW_EMPTY_ORIGIN` | Nao | `true` | `true` | Permite clientes backend sem header `Origin`. |
+| `WEBSOCKET_PING_INTERVAL` | Nao | `25s` | `25s` | Intervalo de ping. Usa formato de duracao Go. |
+| `WEBSOCKET_PONG_TIMEOUT` | Nao | `60s` | `60s` | Prazo maximo para receber pong. Usa formato de duracao Go. |
+| `WEBSOCKET_WRITE_TIMEOUT` | Nao | `10s` | `10s` | Timeout de escrita de frames. Usa formato de duracao Go. |
+| `WEBSOCKET_SEND_BUFFER` | Nao | `256` | `256` | Tamanho do buffer por cliente WebSocket. Deve ser inteiro positivo. |
+
+## Processamento de mensagens
+
+| Variavel | Obrigatoria | Default | Exemplo | Descricao |
+| --- | ---: | --- | --- | --- |
+| `MESSAGE_PROCESSING_WORKERS` | Nao | `4` | `4` | Maximo de jobs assincronos processados em paralelo. |
+| `MESSAGE_PROCESSING_QUEUE_SIZE` | Nao | `100` | `100` | Tamanho maximo da fila em memoria. |
+| `MESSAGE_PROCESSING_TIMEOUT` | Nao | `60s` | `60s` | Timeout total de um job. Usa formato de duracao Go. |
+| `MESSAGE_GROUP_INFO_TIMEOUT` | Nao | `30s` | `30s` | Timeout para carregar informacoes de grupo durante `mentionAll`. |
+| `MESSAGE_SEND_TIMEOUT` | Nao | `30s` | `30s` | Timeout para presenca/delay/envio final pelo WhatsApp. |
+
+## Message Batch
+
+| Variavel | Obrigatoria | Default | Exemplo | Descricao |
+| --- | ---: | --- | --- | --- |
+| `MESSAGE_BATCH_WORKER_ENABLED` | Nao | `true` | `true` | Habilita o worker persistente de envio em lote. |
+| `MESSAGE_BATCH_WORKER_POLL_INTERVAL_MS` | Nao | `1000` | `1000` | Intervalo de polling do worker/outbox, em milissegundos. |
+| `MESSAGE_BATCH_INSTANCE_RECHECK_INTERVAL_MS` | Nao | `5000` | `5000` | Intervalo para reavaliar instancias em `WAITING_FOR_INSTANCE`. |
+| `MESSAGE_BATCH_MAX_DELAY_MS` | Nao | `86400000` | `86400000` | Maior `options.delay.maxMs` aceito em lotes. Default: 24 horas. |
+| `MESSAGE_BATCH_MAX_RECIPIENTS` | Nao | `10000` | `10000` | Limite de entradas em `recipients` antes de remover duplicidades. |
+| `MESSAGE_BATCH_SHUTDOWN_TIMEOUT_MS` | Nao | `15000` | `15000` | Tempo maximo para envios iniciados terminarem durante shutdown. |
+| `MESSAGE_BATCH_TIMEZONE` | Nao | `UTC` | `America/Sao_Paulo` | Timezone IANA default para agendas sem `schedule.timezone`. |
+
+## Media pre-upload
+
+| Variavel | Obrigatoria | Default | Exemplo | Descricao |
+| --- | ---: | --- | --- | --- |
+| `MEDIA_PRE_UPLOAD_MAX_FILE_SIZE` | Nao | `100MB` | `100MB` | Tamanho maximo aceito em `POST /instance/:instance/media/uploads`. Aceita inteiros com sufixos `B`, `KB`, `MB`, `GB`; sem sufixo, bytes. |
+
+## Calls
+
+Chamadas sao desligadas por padrao e tambem dependem da configuracao por instancia em `GET/PUT /call/{instanceName}/config`.
+
+`CALLS_ENABLED=true` apenas libera o subsistema globalmente. Uma instancia sem configuracao de chamadas, ou com `callsEnabled=false`, fica em modo passivo: a API nao registra o provider de chamadas para a instancia, nao persiste historico, nao emite eventos e nao envia `Answer`, `Reject` ou `Hangup`. Nessa condicao, chamadas de voz/video continuam tocando e sendo atendidas normalmente no smartphone vinculado.
+
+| Variavel | Obrigatoria | Default | Exemplo | Descricao |
+| --- | ---: | --- | --- | --- |
+| `CALLS_ENABLED` | Nao | `false` | `false` | Bloqueio mestre do subsistema de chamadas. Precisa estar `true` junto com `callsEnabled=true` na instancia para a API gerenciar chamadas. |
+| `CALLS_AUDIO_ENABLED` | Nao | `true` | `true` | Bloqueio global para recursos de audio de chamadas. |
+| `CALLS_VIDEO_ENABLED` | Nao | `false` | `false` | Bloqueio global para recursos de video de chamadas. |
+| `CALLS_REACTIONS_ENABLED` | Nao | `true` | `true` | Bloqueio global para reacoes em chamadas. |
+| `CALLS_DIAGNOSTICS_ENABLED` | Nao | `false` | `false` | Habilita diagnosticos do provider quando a instancia tambem permite. |
+| `CALLS_MAX_CONCURRENT_GLOBAL` | Nao | `20` | `20` | Limite global de chamadas ativas. |
+| `CALLS_MAX_CONCURRENT_PER_INSTANCE` | Nao | `1` | `1` | Limite de chamadas ativas por instancia. |
+| `CALLS_MAX_DURATION_SECONDS` | Nao | `3600` | `3600` | Duracao maxima de chamada, em segundos. |
+| `CALLS_MEDIA_MAX_SIZE_MB` | Nao | `100` | `100` | Tamanho maximo de midia baixada para playback, em MB. |
+| `CALLS_MEDIA_DOWNLOAD_TIMEOUT_SECONDS` | Nao | `60` | `60` | Timeout de download de midia de chamada, em segundos. |
+| `CALLS_DIAGNOSTICS_DIRECTORY` | Nao | `./data/call-diagnostics` | `./data/call-diagnostics` | Diretorio base dos diagnosticos do provider. |
+| `CALLS_ALLOW_PRIVATE_MEDIA_DOWNLOADS` | Nao | `false` | `false` | Permite downloads de midia a partir de hosts privados/loopback/link-local. Deixe `false` em producao. |
+
+## Calls recording
+
+Gravacao local e desligada por padrao. Mesmo com `CALLS_RECORDING_ENABLED=true`, cada instancia ainda precisa habilitar `settings.recording.enabled=true`.
+
+| Variavel | Obrigatoria | Default | Exemplo | Descricao |
+| --- | ---: | --- | --- | --- |
+| `CALLS_RECORDING_ENABLED` | Nao | `false` | `false` | Bloqueio mestre global para gravacao de chamadas. |
+| `CALLS_RECORDING_DIRECTORY` | Nao | `./data/calls` | `./data/calls` | Diretorio base para arquivos de gravacao. A aplicacao cria, rejeita symlink e testa escrita no startup. |
+| `CALLS_RECORDING_DEFAULT_RETENTION_DAYS` | Nao | `30` | `30` | Retencao default aplicada quando a instancia nao define `recording.retentionDays`. |
+| `CALLS_RECORDING_MAX_RETENTION_DAYS` | Nao | `365` | `365` | Valor maximo aceito para `recording.retentionDays` por instancia. |
+| `CALLS_RECORDING_MAX_DISK_MB` | Nao | `51200` | `51200` | Limite global de uso do diretorio de gravacao, em MB. |
+| `CALLS_RECORDING_MIN_FREE_DISK_MB` | Nao | `2048` | `2048` | Reserva minima de disco configurada para o subsistema de gravacao, em MB. |
+| `CALLS_RECORDING_MAX_FILE_MB` | Nao | `2048` | `2048` | Tamanho maximo de cada arquivo de gravacao, em MB. |
+| `CALLS_RECORDING_WORKER_BUFFER_FRAMES` | Nao | `256` | `256` | Tamanho do buffer interno por gravador de trilha. |
+| `CALLS_RECORDING_CLOSE_TIMEOUT_SECONDS` | Nao | `15` | `15` | Timeout alvo para fechamento/finalizacao controlada, em segundos. |
+| `CALLS_RECORDING_PROCESSING_TIMEOUT_SECONDS` | Nao | `300` | `300` | Timeout alvo para processamento/finalizacao, em segundos. |
+| `CALLS_RECORDING_GENERATE_SHA256` | Nao | `true` | `true` | Gera checksum SHA-256 dos arquivos finalizados. |
+| `CALLS_RECORDING_GENERATE_FINAL_FILES` | Nao | `true` | `true` | Habilita geracao de arquivos finais quando o pipeline suportar. |
+| `CALLS_RECORDING_KEEP_RAW_FILES` | Nao | `true` | `true` | Preserva arquivos brutos quando arquivos finais forem gerados. |
+| `CALLS_RECORDING_FFMPEG_ENABLED` | Nao | `true` | `true` | Habilita uso de FFmpeg para processamento final quando aplicavel. |
+| `CALLS_RECORDING_FFMPEG_PATH` | Nao | `ffmpeg` | `/usr/bin/ffmpeg` | Executavel FFmpeg. Validado com `LookPath` somente quando gravacao, arquivos finais e FFmpeg estao habilitados. |
+| `CALLS_RECORDING_FFPROBE_PATH` | Nao | `ffprobe` | `/usr/bin/ffprobe` | Executavel FFprobe. Validado nas mesmas condicoes do FFmpeg. |
+| `CALLS_RECORDING_FFMPEG_MAX_CONCURRENT` | Nao | `2` | `2` | Maximo de processamentos FFmpeg concorrentes. |
+| `CALLS_RECORDING_RETENTION_DAYS` | Nao | `7` | `7` | Variavel legada ainda lida pelo codigo para compatibilidade. Para novas configuracoes, use `CALLS_RECORDING_DEFAULT_RETENTION_DAYS` e `CALLS_RECORDING_MAX_RETENTION_DAYS`. |
+
+Observacoes:
+
+- A gravacao cria arquivos apenas quando a API participa da midia da chamada.
+- Chamadas atendidas no smartphone ou em outro dispositivo vinculado ficam com `recordingStatus=UNAVAILABLE` e motivo `media_owned_by_another_device`.
+- Audio local e gravado como WAV PCM 16 kHz.
+- Video local e gravado como H.264 Annex-B bruto.
+
+## Variaveis auxiliares do Docker/Compose
+
+As variaveis abaixo aparecem em `.env.docker.example` para build, imagem, Traefik ou ferramentas externas. Elas nao sao lidas por `internal/config` como configuracao da API:
+
+| Variavel | Exemplo | Uso |
+| --- | --- | --- |
+| `GO_VERSION` | `1.26` | Build/container. |
+| `APP_NAME` | `whatsapp-go-api` | Metadados da imagem/documentacao. |
+| `APP_VERSION` | `dev` | Metadados da imagem/documentacao. |
+| `APP_DESCRIPTION` | `API HTTP em Go...` | Metadados da imagem/documentacao. |
+| `APP_DEVELOPER` | `CodeChat` | Metadados da imagem/documentacao. |
+| `APP_REPOSITORY` | vazio | Metadados da imagem/documentacao. |
+| `BUILD_DATE` | vazio | Metadados de build. |
+| `VCS_REF` | vazio | Metadados de build. |
+| `VCS_URL` | vazio | Metadados de build. |
+| `DOCKER_IMAGE` | `codechatbr/whatsapp-go-api` | Nome da imagem no Compose/build. |
+| `IMAGE_TAG` | `latest` | Tag da imagem no Compose/build. |
+| `FFMPEG_PATH` | `/usr/bin/ffmpeg` | Variavel auxiliar legada de ambiente/container. O subsistema de chamadas usa `CALLS_RECORDING_FFMPEG_PATH`. |
+| `FFPROBE_PATH` | `/usr/bin/ffprobe` | Variavel auxiliar legada de ambiente/container. O subsistema de chamadas usa `CALLS_RECORDING_FFPROBE_PATH`. |
+| `API_HOST` | `api.codechat.local` | Host usado por configuracoes Traefik/Compose. |
+| `TRAEFIK_NETWORK` | `traefik_public` | Rede Traefik. |
+| `TRAEFIK_ENTRYPOINT` | `websecure` | Entrypoint Traefik. |
+| `TRAEFIK_TLS` | `true` | TLS no Traefik. |
+| `TRAEFIK_CERT_RESOLVER` | `letsencrypt` | Resolver de certificados do Traefik. |
+| `TRAEFIK_MIDDLEWARES` | vazio | Middlewares Traefik. |
+| `TRAEFIK_SERVER_TRANSPORT` | vazio | Server transport Traefik. |
+
+## Execucao local
 
 ```bash
 cp .env.dev .env
-go run ./cmd/...
+go run ./cmd/api
 ```
 
-Quando `DOCKER_ENV` está ausente ou definido como `false`, a aplicação carrega `.env` e depois lê os valores do ambiente do processo. Variáveis já definidas no processo têm prioridade sobre os valores em `.env`.
+## Docker
 
-`.env.dev` é um arquivo de referência para desenvolvimento local e não é carregado automaticamente.
-
-## Store de sessão do Whatsmeow
-
-`DATABASE_URL` continua sendo o banco principal da API. `WHATSAPP_SESSION_POSTGRES_URL` é opcional e é usado somente pelo SQL store do whatsmeow quando estiver preenchido. Os repositórios da API e as migrations sempre usam `DATABASE_URL`.
-
-O SQLite armazena sessões em um arquivo local e exige armazenamento persistente em containers. O DSN padrão mantém as chaves estrangeiras do SQLite habilitadas:
-
-```dotenv
-WHATSAPP_SESSION_STORE="sqlite"
-WHATSAPP_SESSION_SQLITE_DSN="file:./data/whatsmeow.db?_foreign_keys=on"
-WHATSAPP_SESSION_POSTGRES_URL=""
-```
-
-Quando Postgres é selecionado e `WHATSAPP_SESSION_POSTGRES_URL` está vazio, o whatsmeow usa o mesmo servidor/banco PostgreSQL configurado em `DATABASE_URL`, mas ainda com sua própria conexão SQL e seu próprio ciclo de vida:
-
-```dotenv
-DATABASE_URL="postgresql://api:password@postgres:5432/codechat"
-
-WHATSAPP_SESSION_STORE="postgres"
-WHATSAPP_SESSION_POSTGRES_URL=""
-```
-
-Quando `WHATSAPP_SESSION_POSTGRES_URL` está preenchido, as sessões do whatsmeow são inicializadas e migradas somente nesse banco dedicado. A aplicação não volta para `DATABASE_URL` se a URL dedicada estiver inválida ou indisponível:
-
-```dotenv
-DATABASE_URL="postgresql://api:password@postgres:5432/codechat"
-
-WHATSAPP_SESSION_STORE="postgres"
-WHATSAPP_SESSION_POSTGRES_URL="postgresql://sessions:password@postgres:5432/codechat_sessions"
-```
-
-Alterar `WHATSAPP_SESSION_STORE` não migra sessões existentes automaticamente. Os dispositivos só ficam disponíveis no novo backend se os dados do whatsmeow tiverem sido migrados antes; caso contrário, pode ser necessário parear as instâncias novamente. O backend anterior não é apagado.
-
-## Instalação com Docker
-
-As imagens oficiais estão disponíveis no [Docker Hub](https://hub.docker.com/r/codechat/whatsapp-go-api):
-
-- Imagem padrão: **codechat/whatsapp-go-api**
-- Imagem Pro: **codechat/whatsapp-go-api:pro-1.0.0**
-
-A partir do diretório que contém a pasta `whatsapp-go-api`, inicie a API com o arquivo Compose do projeto:
-
-```bash
-docker compose -f whatsapp-go-api/docker-compose.yml up -d
-```
-
-Para usar a imagem Pro, altere o campo `image` do serviço em `whatsapp-go-api/docker-compose.yml` para `codechat/whatsapp-go-api:pro-1.0.0` antes de executar o comando.
-
-### Variáveis do container
-
-As variáveis precisam ser fornecidas diretamente ao container:
+Exemplo minimo de ambiente no Compose:
 
 ```yaml
 environment:
-  SERVER_PORT: "${SERVER_PORT}"
-  LOG_LEVEL: "${LOG_LEVEL}"
+  DOCKER_ENV: "true"
+  SERVER_PORT: "${SERVER_PORT:-8084}"
+  LOG_LEVEL: "${LOG_LEVEL:-info}"
   DATABASE_URL: "${DATABASE_URL}"
-  DATABASE_SAVE_DATA_NEW_MESSAGE: "${DATABASE_SAVE_DATA_NEW_MESSAGE:-true}"
-  DATABASE_SAVE_MESSAGE_UPDATE: "${DATABASE_SAVE_MESSAGE_UPDATE:-false}"
-  DATABASE_SAVE_DATA_CONTACTS: "${DATABASE_SAVE_DATA_CONTACTS:-false}"
-  WHATSAPP_SESSION_STORE: "${WHATSAPP_SESSION_STORE:-postgres}"
-  WHATSAPP_SESSION_SQLITE_DSN: "${WHATSAPP_SESSION_SQLITE_DSN:-file:./data/whatsmeow.db?_foreign_keys=on}"
-  WHATSAPP_SESSION_POSTGRES_URL: "${WHATSAPP_SESSION_POSTGRES_URL:-}"
-  WEBHOOK_GLOBAL_URL: "${WEBHOOK_GLOBAL_URL:-}"
-  WEBHOOK_GLOBAL_ENABLED: "${WEBHOOK_GLOBAL_ENABLED:-false}"
-  AUTHENTICATION_JWT_EXPIRES_IN: "${AUTHENTICATION_JWT_EXPIRES_IN}"
+  AUTHENTICATION_JWT_EXPIRES_IN: "${AUTHENTICATION_JWT_EXPIRES_IN:-3600}"
   AUTHENTICATION_JWT_SECRET: "${AUTHENTICATION_JWT_SECRET}"
   AUTHENTICATION_GLOBAL_AUTH_TOKEN: "${AUTHENTICATION_GLOBAL_AUTH_TOKEN}"
-  QRCODE_LIMIT: "${QRCODE_LIMIT}"
-  QRCODE_EXPIRATION_TIME: "${QRCODE_EXPIRATION_TIME}"
-  QRCODE_LIGHT_COLOR: "${QRCODE_LIGHT_COLOR}"
-  QRCODE_DARK_COLOR: "${QRCODE_DARK_COLOR}"
-  CONFIG_SESSION_PHONE_CLIENT: "${CONFIG_SESSION_PHONE_CLIENT:-DESKTOP}"
-  CONFIG_SESSION_PHONE_NAME: "${CONFIG_SESSION_PHONE_NAME:-CodeChat}"
-  WHATSAPP_PAIRING_TIMEOUT: "${WHATSAPP_PAIRING_TIMEOUT}"
-  WHATSAPP_AUTO_RECONNECT: "${WHATSAPP_AUTO_RECONNECT}"
-  WHATSAPP_STARTUP_RECONNECT_CONCURRENCY: "${WHATSAPP_STARTUP_RECONNECT_CONCURRENCY}"
-  WHATSAPP_CONNECT_TIMEOUT: "${WHATSAPP_CONNECT_TIMEOUT}"
-  WHATSAPP_RECONNECT_INITIAL_DELAY: "${WHATSAPP_RECONNECT_INITIAL_DELAY}"
-  WHATSAPP_RECONNECT_MAX_DELAY: "${WHATSAPP_RECONNECT_MAX_DELAY}"
-  WHATSAPP_PROFILE_PICTURE_TIMEOUT: "${WHATSAPP_PROFILE_PICTURE_TIMEOUT}"
-  WHATSAPP_ADDRESS_CACHE_TTL: "${WHATSAPP_ADDRESS_CACHE_TTL:-168h}"
-  MESSAGE_PROCESSING_WORKERS: "${MESSAGE_PROCESSING_WORKERS:-4}"
-  MESSAGE_PROCESSING_QUEUE_SIZE: "${MESSAGE_PROCESSING_QUEUE_SIZE:-100}"
-  MESSAGE_PROCESSING_TIMEOUT: "${MESSAGE_PROCESSING_TIMEOUT:-60s}"
-  MESSAGE_GROUP_INFO_TIMEOUT: "${MESSAGE_GROUP_INFO_TIMEOUT:-30s}"
-  MESSAGE_SEND_TIMEOUT: "${MESSAGE_SEND_TIMEOUT:-30s}"
-  MESSAGE_BATCH_WORKER_ENABLED: "${MESSAGE_BATCH_WORKER_ENABLED:-true}"
-  MESSAGE_BATCH_WORKER_POLL_INTERVAL_MS: "${MESSAGE_BATCH_WORKER_POLL_INTERVAL_MS:-1000}"
-  MESSAGE_BATCH_INSTANCE_RECHECK_INTERVAL_MS: "${MESSAGE_BATCH_INSTANCE_RECHECK_INTERVAL_MS:-5000}"
-  MESSAGE_BATCH_MAX_DELAY_MS: "${MESSAGE_BATCH_MAX_DELAY_MS:-86400000}"
-  MESSAGE_BATCH_MAX_RECIPIENTS: "${MESSAGE_BATCH_MAX_RECIPIENTS:-10000}"
-  MESSAGE_BATCH_SHUTDOWN_TIMEOUT_MS: "${MESSAGE_BATCH_SHUTDOWN_TIMEOUT_MS:-15000}"
-  MESSAGE_BATCH_TIMEZONE: "${MESSAGE_BATCH_TIMEZONE:-UTC}"
+  QRCODE_LIMIT: "${QRCODE_LIMIT:-5}"
+  QRCODE_EXPIRATION_TIME: "${QRCODE_EXPIRATION_TIME:-30}"
+  QRCODE_LIGHT_COLOR: "${QRCODE_LIGHT_COLOR:-#ffffff}"
+  QRCODE_DARK_COLOR: "${QRCODE_DARK_COLOR:-#198754}"
+  WHATSAPP_AUTO_RECONNECT: "${WHATSAPP_AUTO_RECONNECT:-true}"
+  WHATSAPP_STARTUP_RECONNECT_CONCURRENCY: "${WHATSAPP_STARTUP_RECONNECT_CONCURRENCY:-5}"
+  WHATSAPP_CONNECT_TIMEOUT: "${WHATSAPP_CONNECT_TIMEOUT:-30}"
+  WHATSAPP_RECONNECT_INITIAL_DELAY: "${WHATSAPP_RECONNECT_INITIAL_DELAY:-2}"
+  WHATSAPP_RECONNECT_MAX_DELAY: "${WHATSAPP_RECONNECT_MAX_DELAY:-60}"
+  WHATSAPP_PROFILE_PICTURE_TIMEOUT: "${WHATSAPP_PROFILE_PICTURE_TIMEOUT:-15}"
 ```
 
-Quando `DOCKER_ENV=true`, `.env` e `.env.dev` não são carregados.
+Se `WHATSAPP_SESSION_STORE=sqlite`, monte volume persistente para o diretorio do SQLite. Para o DSN default, persista `/app/data` ou o caminho equivalente `data` do diretorio de trabalho usado pela imagem.
 
-Se `WHATSAPP_SESSION_STORE=sqlite`, monte um volume persistente para o diretório do SQLite. Para o DSN padrão, persista `/app/data` ou o caminho equivalente `data` do diretório de trabalho usado pela imagem:
+## Notas de seguranca
 
-```yaml
-volumes:
-  - whatsmeow_sessions:/app/data
-```
-
-`AUTHENTICATION_GLOBAL_AUTH_TOKEN` autentica `POST /instance`, `GET /instance` e os aliases legados `POST /instance/create` e `GET /instance/fetchInstances`. Ele não autentica `GET /instance/:instance`, `GET /instance/fetchInstance/:instanceName`, `PUT /instance/refreshToken/:instanceName` nem as rotas `/message/batches...`.
-
-As rotas `/message/batches...` usam `Authorization: Bearer <jwt-do-usuario>`. Esse JWT precisa conter `userId` em formato UUID e `exp`; a expiração não é ignorada nesse fluxo.
-
-O endpoint de refresh exige `Authorization: Bearer <token>` e o mesmo JWT atual no campo `oldToken` do corpo da requisição. Ele rotaciona o `Auth.token` armazenado para aquela instância, invalida imediatamente o token antigo e não representa um segundo tipo de refresh-token.
-
-`AUTHENTICATION_JWT_EXPIRES_IN=0` remove completamente a claim `exp`. Ele não gera `exp: 0`.
-
-Não use segredos de desenvolvimento em produção. JWTs, chaves de API, tokens globais, URLs de banco e segredos não devem ser escritos em logs.
-
-`GET /instance/:instance/connect` retorna o primeiro QR code do WhatsApp como código bruto mais um PNG `data:image/png;base64,...` gerado com as cores de QR configuradas. O alias legado `GET /instance/connect/:instanceName` permanece ativo. O processo de pareamento continua depois da resposta HTTP e usa `WHATSAPP_PAIRING_TIMEOUT` como deadline total do contexto.
-
-`GET /instance/:instance/connect/code/:phoneNumber` retorna exatamente o código de pareamento do Whatsmeow. O alias legado mantém o formato `/instance/connect/:instanceName/code/:phoneNumber`. Números de telefone são normalizados para dígitos antes de chamar o Whatsmeow.
-
-Os dois endpoints de conexão exigem o bearer token da instância armazenado em `Auth.token`; o token global de admin não é aceito.
-
-`CONFIG_SESSION_PHONE_CLIENT` e `CONFIG_SESSION_PHONE_NAME` são aplicados uma vez durante a inicialização, antes da criação do SQL Store e dos clientes do Whatsmeow. Eles afetam somente novos vínculos. Dispositivos já vinculados não são apagados, deslogados nem reescritos automaticamente; para ver um novo rótulo, desconecte a instância pelo fluxo existente, remova o dispositivo vinculado no telefone, reinicie a aplicação, gere um novo QR code e vincule novamente.
+- Nao publique `.env` real.
+- Nao use secrets de desenvolvimento em producao.
+- Mantenha `CALLS_ALLOW_PRIVATE_MEDIA_DOWNLOADS=false` em producao, exceto quando houver uma razao operacional clara.
+- Trate `CALLS_DIAGNOSTICS_DIRECTORY` e `CALLS_RECORDING_DIRECTORY` como diretorios sensiveis.
+- Restrinja acesso a backups que contenham `DATABASE_URL`, tokens, metadados de chamadas ou arquivos de gravacao.

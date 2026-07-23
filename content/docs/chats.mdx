@@ -13,6 +13,64 @@ Todas as rotas atuais usam o JWT da instância.
 | `POST` | `/instance/:instance/chat/profile-picture` | destinatário | `200` |
 | `POST` | `/instance/:instance/chat/reject-call` | `callId`, `callFrom` | `204` |
 | `POST` | `/instance/:instance/chat/edit-message` | `id`, `text` | `200` |
+| `POST` | `/instance/:instance/db/messages` | filtros e cursor opcionais | `200` |
+| `POST` | `/chat/findMessages/:instanceName` | `where`, `offset`, `page` legados | `200` |
+
+## Buscar mensagens persistidas
+
+`POST /instance/codechat/db/messages` consulta somente o banco de dados da instancia da rota. A instancia nao precisa estar conectada ao WhatsApp; a rota nao resolve cliente WhatsApp nem valida sessao conectada.
+
+Body vazio e valido:
+
+```json
+{}
+```
+
+Filtros opcionais:
+
+```json
+{
+  "filter": {
+    "keyRemoteJid": "123@s.whatsapp.net",
+    "keyFromMe": "true",
+    "messageType": "conversation",
+    "status": "DELIVERY_ACK"
+  },
+  "cursor": {
+    "type": "next",
+    "id": 1200
+  },
+  "limit": 50
+}
+```
+
+O limite padrao e `50`, com minimo `1` e maximo `100`. O cursor usa o ID interno da mensagem. A resposta sempre vem em `id DESC`; `next` busca IDs menores e `previous` busca IDs maiores, invertendo internamente a pagina antes de responder.
+
+`keyFromMe` e string publica (`"true"` ou `"false"`, case-insensitive apos trim) e e convertido para booleano antes da consulta. `status` e filtrado por `MessageUpdate` com `EXISTS`, preservando mensagens sem atualizacoes quando nao ha filtro e evitando registros duplicados.
+
+O alias legado `POST /chat/findMessages/:instanceName` permanece disponivel com `where.keyid`, `where.messageStatus`, `offset` como tamanho da pagina e `page` baseado em 1. A resposta preserva `total`, `pages`, `currentPage`, `records` e o campo legado `MessageUpdate`.
+
+Exemplo:
+
+```bash
+curl --location --request POST \
+  'http://localhost:8084/instance/codechat-01/db/messages' \
+  --header 'Authorization: Bearer SEU_TOKEN' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "filter": {
+      "keyRemoteJid": "123@s.whatsapp.net",
+      "keyFromMe": "true",
+      "messageType": "conversation",
+      "status": "DELIVERY_ACK"
+    },
+    "cursor": {
+      "type": "next",
+      "id": 1200
+    },
+    "limit": 50
+  }'
+```
 
 ## Verificar contas
 

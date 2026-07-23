@@ -15,6 +15,14 @@ describe('request generation', () => {
     expect(curl).toContain('5511999999999@s.whatsapp.net');
   });
 
+  it('gera cURL com token de usuário para operações UserBearer', () => {
+    const spec = normalizeOpenApi(minimalDocument);
+    const operation = spec.operations.find((entry) => entry.id === 'listBatches')!;
+    const curl = generateCodeSample(operation, spec, 'https://api.codechat.test', 'cURL');
+
+    expect(curl).toContain('Authorization: Bearer <USER_TOKEN>');
+  });
+
   it('monta path e query sem perder caracteres especiais', () => {
     const request = buildRequest({
       baseUrl: 'https://api.codechat.test/',

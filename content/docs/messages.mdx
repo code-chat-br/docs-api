@@ -181,8 +181,6 @@ Latitude fica entre -90 e 90; longitude, entre -180 e 180.
 
 Envio síncrono bem-sucedido retorna a mensagem persistida com `id`, campos `key*`, `pushName`, `messageType`, `content`, `messageTimestamp`, `device`, `isGroup`, `instanceId`, `metadata` e `externalAttributes` quando aplicáveis.
 
-Na resposta dos endpoints de envio, `messageType` pode ser `imageMessage`, `audioMessage`, `videoMessage`, `documentMessage`, `stickerMessage`, `extendedTextMessage`, `interactiveMessage`, `contactMessage`, `contactArrayMessage`, `locationMessage` ou `reactionMessage`. `content` sempre é um objeto relativo ao `messageType` retornado.
-
 Operações assíncronas, como `mentionAll`, retornam `202` com `statusCode`, `status: "processing"`, `message`, `processId` e `instanceName`. Se o WhatsApp aceitar o envio mas a persistência local falhar, a API retorna `406`.
 
 Os aliases antigos `/message/*` estão em [Endpoints legados](/docs/legacy-endpoints).

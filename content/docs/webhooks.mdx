@@ -251,7 +251,7 @@ x-webhook-event: messages.upsert
 
 ## Eventos do Message Batch
 
-Esses eventos sao enviados uma unica vez ao `WEBHOOK_GLOBAL_URL`; nao sao repetidos por instancia. A linha de outbox e criada no mesmo commit da alteracao do lote/item, e a chamada HTTP acontece depois da transacao.
+Esses eventos sao enviados uma unica vez ao `WEBHOOK_GLOBAL_URL`; nao sao repetidos por instancia. A linha de outbox e criada no mesmo commit da alteracao do lote/item, e a chamada HTTP acontece depois da transacao. O mesmo payload tambem e publicado no WebSocket global `/ws/global/events` quando o evento esta assinado pelo `ownerUserId` do JWT de usuario.
 
 ### Mapa de eventos de lote
 
@@ -275,6 +275,1039 @@ Esses eventos sao enviados uma unica vez ao `WEBHOOK_GLOBAL_URL`; nao sao repeti
 | `message.batch.completed-with-errors` | Todos os itens terminaram com falha ou UNKNOWN. |
 | `message.batch.item.failed` | Um item terminou em FAILED. |
 | `message.batch.item.unknown` | O resultado externo de um item nao pode ser confirmado. |
+
+### Payloads JSON por evento
+
+Os exemplos abaixo mostram o nome exato do evento em `event` e o conteudo da mensagem do lote em `data.batch.message`. Eventos `message.batch.item.*` usam o contrato de item e nao carregam `data.batch.message`; use `batchId` para consultar o lote quando precisar da mensagem original.
+
+```json
+[
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 0,
+        "schedule": null,
+        "status": "QUEUED",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.created",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": "2026-07-16T03:00:00Z",
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 0,
+        "schedule": null,
+        "status": "SCHEDULED",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.scheduled",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 0,
+        "schedule": null,
+        "startedAt": "2026-07-13T15:01:00Z",
+        "status": "PROCESSING",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.started",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 0,
+        "schedule": null,
+        "status": "QUEUED",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.window-started",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": "2026-07-14T12:00:00Z",
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 35,
+        "schedule": null,
+        "status": "WAITING_FOR_WINDOW",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.waiting-window",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": "LEASE_EXPIRED",
+        "lastInterruptedAt": "2026-07-13T14:58:00Z",
+        "lastRecoveredAt": "2026-07-13T15:00:00Z",
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 35,
+        "schedule": null,
+        "status": "QUEUED",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.recovered",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "currentItem": {
+          "id": "01900000-0000-7000-8000-000000000036",
+          "instanceName": "codechat-01",
+          "position": 35,
+          "recipient": "5531999999999"
+        },
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 35,
+        "schedule": null,
+        "startedAt": "2026-07-13T15:01:00Z",
+        "status": "PROCESSING",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.progress",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 35,
+        "schedule": null,
+        "status": "PAUSE_REQUESTED",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.pause-requested",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "pausedAt": "2026-07-13T15:12:00Z",
+        "progress": 35,
+        "schedule": null,
+        "status": "PAUSED",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.paused",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 35,
+        "schedule": null,
+        "status": "WAITING_FOR_INSTANCE",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.waiting-instance",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 35,
+        "schedule": null,
+        "startedAt": "2026-07-13T15:15:00Z",
+        "status": "PROCESSING",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.resumed",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 35,
+        "schedule": null,
+        "status": "STOP_REQUESTED",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.stop-requested",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 35,
+        "schedule": null,
+        "status": "STOPPED",
+        "stoppedAt": "2026-07-13T15:16:00Z",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.stopped",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "counts": {
+          "failed": 2,
+          "pending": 64,
+          "processed": 35,
+          "sending": 1,
+          "skipped": 0,
+          "success": 33,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptedAt": "2026-07-13T15:17:00Z",
+        "interruptionReason": "GRACEFUL_SHUTDOWN",
+        "lastInterruptedAt": "2026-07-13T15:17:00Z",
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 35,
+        "schedule": null,
+        "status": "INTERRUPTED",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.interrupted",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "completedAt": "2026-07-13T15:30:00Z",
+        "counts": {
+          "failed": 0,
+          "pending": 0,
+          "processed": 100,
+          "sending": 0,
+          "skipped": 0,
+          "success": 100,
+          "total": 100,
+          "unknown": 0
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 100,
+        "schedule": null,
+        "status": "COMPLETED",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.completed",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batch": {
+        "autoResume": true,
+        "completedAt": "2026-07-13T15:30:00Z",
+        "counts": {
+          "failed": 3,
+          "pending": 0,
+          "processed": 100,
+          "sending": 0,
+          "skipped": 0,
+          "success": 96,
+          "total": 100,
+          "unknown": 1
+        },
+        "createdAt": "2026-07-13T15:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+        "instances": [
+          {
+            "connectionStatus": "online",
+            "failedCount": 2,
+            "id": 1,
+            "name": "codechat-01",
+            "selectedCount": 20,
+            "successCount": 18
+          },
+          {
+            "connectionStatus": "online",
+            "failedCount": 0,
+            "id": 2,
+            "name": "codechat-02",
+            "selectedCount": 15,
+            "successCount": 15
+          }
+        ],
+        "interruptionReason": null,
+        "lastInterruptedAt": null,
+        "lastRecoveredAt": null,
+        "message": {
+          "payload": {
+            "text": "Ola, esta e uma mensagem em lote."
+          },
+          "type": "text"
+        },
+        "name": "Aviso de manutencao",
+        "nextRunAt": null,
+        "options": {
+          "delay": {
+            "maxMs": 12000,
+            "minMs": 3000
+          }
+        },
+        "ownerUserId": "11111111-1111-4111-8111-111111111111",
+        "progress": 100,
+        "schedule": null,
+        "status": "COMPLETED_WITH_ERRORS",
+        "updatedAt": "2026-07-13T15:10:00Z"
+      }
+    },
+    "event": "message.batch.completed-with-errors",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batchId": "01900000-0000-7000-8000-000000000001",
+      "error": {
+        "code": "SEND_MESSAGE_FAILED",
+        "message": "Falha ao enviar a mensagem."
+      },
+      "instance": {
+        "id": 1,
+        "name": "codechat-01"
+      },
+      "itemId": "01900000-0000-7000-8000-000000000036",
+      "recipient": "5531999999999"
+    },
+    "event": "message.batch.item.failed",
+    "timestamp": "2026-07-13T15:10:00Z"
+  },
+  {
+    "data": {
+      "batchId": "01900000-0000-7000-8000-000000000001",
+      "error": {
+        "code": "SEND_RESULT_UNKNOWN",
+        "message": "A mensagem pode ter sido enviada, mas o resultado nao foi persistido."
+      },
+      "instance": {
+        "id": 1,
+        "name": "codechat-01"
+      },
+      "itemId": "01900000-0000-7000-8000-000000000036",
+      "recipient": "5531999999999"
+    },
+    "event": "message.batch.item.unknown",
+    "timestamp": "2026-07-13T15:10:00Z"
+  }
+]
+```
 
 ### Headers do Message Batch
 
@@ -1389,6 +2422,7 @@ x-webhook-event: messages.delete
     "dateTime": "2026-07-04T18:00:00Z",
     "deleteMedia": true,
     "fromFullSync": false,
+    "id": 1024,
     "keyFromMe": false,
     "messageId": "ABC123",
     "messageTime": "2026-07-04T17:59:00Z",
@@ -1408,6 +2442,7 @@ x-webhook-event: messages.delete
 
 #### Campos de `data`
 
+- `id`: `number`, opcional, não aceita `null`. ID interno da mensagem persistida quando encontrada no banco.
 - `chatJid`: `string`, obrigatório, não aceita `null`. JID da conversa.
 - `senderJid`: `string`, opcional, não aceita `null`. JID do remetente quando disponivel; omitido quando ausente.
 - `keyFromMe`: `boolean`, obrigatório, não aceita `null`. Indica se a mensagem era da propria instancia.
@@ -1661,6 +2696,7 @@ x-webhook-event: messages.upsert
     "id": 1024,
     "isGroup": false,
     "keyFromMe": false,
+    "keyId": "ABC123",
     "keyLid": null,
     "keyParticipant": null,
     "keyParticipantLid": null,
@@ -1685,6 +2721,7 @@ x-webhook-event: messages.upsert
 #### Campos de `data`
 
 - `id`: `number`, obrigatório, não aceita `null`. ID interno da mensagem.
+- `keyId`: `string`, obrigatório, não aceita `null`. ID da mensagem no protocolo WhatsApp.
 - `keyRemoteJid`: `string | null`, obrigatório, aceita `null`. JID remoto da mensagem.
 - `keyLid`: `string | null`, obrigatório, aceita `null`. LID remoto da mensagem.
 - `keyFromMe`: `boolean`, obrigatório, não aceita `null`. Indica se a mensagem foi enviada pela propria instancia.
@@ -2020,6 +3057,7 @@ x-webhook-event: send.message
 #### Campos de `data`
 
 - `id`: `number`, obrigatório, não aceita `null`. ID interno da mensagem.
+- `keyId`: `string`, obrigatório, não aceita `null`. ID da mensagem no protocolo WhatsApp.
 - `keyRemoteJid`: `string | null`, obrigatório, aceita `null`. JID remoto da mensagem.
 - `keyLid`: `string | null`, obrigatório, aceita `null`. LID remoto da mensagem.
 - `keyFromMe`: `boolean`, obrigatório, não aceita `null`. Indica se a mensagem foi enviada pela propria instancia.

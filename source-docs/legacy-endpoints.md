@@ -66,6 +66,7 @@ Os handlers, bodies e respostas são compartilhados com as rotas atuais. Todos u
 | `POST` | `/chat/rejectCall/:instanceName` | `/instance/:instance/chat/reject-call` |
 | `POST` | `/chat/editMessage/:instanceName` | `/instance/:instance/chat/edit-message` |
 | `POST` | `/chat/mediaData/:instanceName` | `/instance/:instance/media/data` |
+| `POST` | `/chat/findMessages/:instanceName` | `/instance/:instance/db/messages` |
 
 Todos usam JWT, compartilham handlers com os substitutos e estão deprecated.
 

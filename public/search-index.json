@@ -3,9 +3,9 @@
     "id": "doc:auth-reference.mdx",
     "type": "Guia",
     "title": "Referência de autenticação",
-    "description": "Resumo operacional dos dois esquemas de segurança do OpenAPI. GlobalApiKey Envie apikey: $GLOBAL TOKEN em POST /instance , GET /instance e nas dez operações /message/batches... . Os aliases x-api-key e apiKey também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor. InstanceBearer Envie Authorization: Bearer $INSTANCE TOKEN nas operações da instância. O JWT usa HS256 e contém instanceName , comparado com o nome da rota. Referência interativa A referência própria da CodeChat lê os dois esquemas diretamente do OpenAPI. Credenciais são enviadas somente para a Base URL escolhida. O playground usa sessionStorage por padrão e só usa localStorage quando a pessoa marca explicitamente a opção de persistência; o portal não usa p",
+    "description": "Resumo operacional dos esquemas de segurança do OpenAPI. GlobalApiKey Envie apikey: $GLOBAL TOKEN em POST /instance , GET /instance e nos aliases administrativos legados. Os aliases x-api-key e apiKey também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor. InstanceBearer Envie Authorization: Bearer $INSTANCE TOKEN nas operações da instância. O JWT usa HS256 e contém instanceName , comparado com o nome da rota. UserBearer Envie Authorization: Bearer $USER TOKEN nas operações /message/batches... e no WebSocket global. O JWT usa HS256, contém userId em formato UUID e precisa ter exp . Referência interativa A referência própria da CodeChat lê os dois esquemas diretamente do OpenAPI. Credenciais são enviadas somente ",
     "href": "/docs/auth-reference",
-    "search": "referência de autenticação resumo operacional dos dois esquemas de segurança do openapi. globalapikey envie apikey: $global token em post /instance , get /instance e nas dez operações /message/batches... . os aliases x-api-key e apikey também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor. instancebearer envie authorization: bearer $instance token nas operações da instância. o jwt usa hs256 e contém instancename , comparado com o nome da rota. referência interativa a referência própria da codechat lê os dois esquemas diretamente do openapi. credenciais são enviadas somente para a base url escolhida. o playground usa sessionstorage por padrão e só usa localstorage quando a pessoa marca explicitamente a opção de persistência; o portal não usa p  "
+    "search": "referência de autenticação resumo operacional dos esquemas de segurança do openapi. globalapikey envie apikey: $global token em post /instance , get /instance e nos aliases administrativos legados. os aliases x-api-key e apikey também são aceitos; se mais de um for enviado, todos precisam ter exatamente o mesmo valor. instancebearer envie authorization: bearer $instance token nas operações da instância. o jwt usa hs256 e contém instancename , comparado com o nome da rota. userbearer envie authorization: bearer $user token nas operações /message/batches... e no websocket global. o jwt usa hs256, contém userid em formato uuid e precisa ter exp . referência interativa a referência própria da codechat lê os dois esquemas diretamente do openapi. credenciais são enviadas somente   "
   },
   {
     "id": "heading:auth-reference.mdx:globalapikey",
@@ -24,6 +24,14 @@
     "search": "instancebearer referência de autenticação  "
   },
   {
+    "id": "heading:auth-reference.mdx:userbearer",
+    "type": "Seção",
+    "title": "UserBearer",
+    "description": "Referência de autenticação",
+    "href": "/docs/auth-reference#userbearer",
+    "search": "userbearer referência de autenticação  "
+  },
+  {
     "id": "heading:auth-reference.mdx:referencia-interativa",
     "type": "Seção",
     "title": "Referência interativa",
@@ -35,9 +43,9 @@
     "id": "doc:authentication.mdx",
     "type": "Guia",
     "title": "Autenticação",
-    "description": "Token global, JWT da instância e regras de autorização. A API possui dois mecanismos independentes. O token global administra o cadastro de instâncias e os envios em lote; o JWT da instância autoriza conexão, mensagens individuais, chats, grupos, mídia e webhooks por instância. Token global Configure AUTHENTICATION GLOBAL AUTH TOKEN e envie um dos headers abaixo: Também são aceitos x-api-key e apiKey . apikey é a forma recomendada. Se mais de um alias for enviado, todos precisam ter exatamente o mesmo valor. Rotas protegidas pelo token global: Método Rota Situação --- --- --- POST /instance Atual GET /instance Atual POST /instance/create Legada GET /instance/fetchInstances Legada POST/GET /message/batches... Recurso Pro de envio em lote: criação,",
+    "description": "Token global, JWT da instância e regras de autorização. A API possui tres mecanismos independentes: - Token global: administra criacao e listagem de instancias. - JWT da instancia: autoriza conexao, mensagens individuais, chats, grupos, midia e webhooks por instancia. - JWT de usuario: autoriza o fluxo de envio em lote e os eventos globais. Token global Configure AUTHENTICATION GLOBAL AUTH TOKEN e envie um dos headers abaixo: Tambem sao aceitos x-api-key e apiKey . apikey e a forma recomendada. Se mais de um alias for enviado, todos precisam ter exatamente o mesmo valor. Rotas protegidas pelo token global: Metodo Rota Situacao --- --- --- POST /instance Atual GET /instance Atual POST /instance/create Legada GET /instance/fetchInstances Legada Fal",
     "href": "/docs/authentication",
-    "search": "autenticação token global, jwt da instância e regras de autorização. a api possui dois mecanismos independentes. o token global administra o cadastro de instâncias e os envios em lote; o jwt da instância autoriza conexão, mensagens individuais, chats, grupos, mídia e webhooks por instância. token global configure authentication global auth token e envie um dos headers abaixo: também são aceitos x-api-key e apikey . apikey é a forma recomendada. se mais de um alias for enviado, todos precisam ter exatamente o mesmo valor. rotas protegidas pelo token global: método rota situação --- --- --- post /instance atual get /instance atual post /instance/create legada get /instance/fetchinstances legada post/get /message/batches... recurso pro de envio em lote: criação,  "
+    "search": "autenticação token global, jwt da instância e regras de autorização. a api possui tres mecanismos independentes: - token global: administra criacao e listagem de instancias. - jwt da instancia: autoriza conexao, mensagens individuais, chats, grupos, midia e webhooks por instancia. - jwt de usuario: autoriza o fluxo de envio em lote e os eventos globais. token global configure authentication global auth token e envie um dos headers abaixo: tambem sao aceitos x-api-key e apikey . apikey e a forma recomendada. se mais de um alias for enviado, todos precisam ter exatamente o mesmo valor. rotas protegidas pelo token global: metodo rota situacao --- --- --- post /instance atual get /instance atual post /instance/create legada get /instance/fetchinstances legada fal  "
   },
   {
     "id": "heading:authentication.mdx:token-global",
@@ -50,10 +58,18 @@
   {
     "id": "heading:authentication.mdx:token-da-instancia",
     "type": "Seção",
-    "title": "Token da instância",
+    "title": "Token da instancia",
     "description": "Autenticação",
     "href": "/docs/authentication#token-da-instancia",
-    "search": "token da instância autenticação  "
+    "search": "token da instancia autenticação  "
+  },
+  {
+    "id": "heading:authentication.mdx:token-de-usuario",
+    "type": "Seção",
+    "title": "Token de usuario",
+    "description": "Autenticação",
+    "href": "/docs/authentication#token-de-usuario",
+    "search": "token de usuario autenticação  "
   },
   {
     "id": "heading:authentication.mdx:exemplo",
@@ -70,6 +86,382 @@
     "description": "Autenticação",
     "href": "/docs/authentication#planos-basic-e-pro",
     "search": "planos basic e pro autenticação  "
+  },
+  {
+    "id": "doc:calls.mdx",
+    "type": "Guia",
+    "title": "Chamadas WhatsApp",
+    "description": "Chamadas individuais experimentais com áudio, vídeo, reações, gravações e eventos. Este documento consolida a documentação do subsistema experimental de chamadas WhatsApp da API. Sumário - Visão Geral - Arquitetura - Dependências - Configuração - Configuração Por Instância - Ciclo de Vida - Comportamento Multi-Device - API - Eventos - WebSocket - Mídia - Vídeo - Gravação - Armazenamento de Gravações - Retenção de Gravações - Recuperação de Gravações - Segurança - Validação Manual - Solução de Problemas Visão Geral O suporte a chamadas 1:1 do WhatsApp é experimental, não oficial e só fica disponível quando CALLS ENABLED=true e a instância também habilita chamadas na configuração própria. A implementação usa instâncias já existentes, autenticação JWT da instância, migrations",
+    "href": "/docs/calls",
+    "search": "chamadas whatsapp chamadas individuais experimentais com áudio, vídeo, reações, gravações e eventos. este documento consolida a documentação do subsistema experimental de chamadas whatsapp da api. sumário - visão geral - arquitetura - dependências - configuração - configuração por instância - ciclo de vida - comportamento multi-device - api - eventos - websocket - mídia - vídeo - gravação - armazenamento de gravações - retenção de gravações - recuperação de gravações - segurança - validação manual - solução de problemas visão geral o suporte a chamadas 1:1 do whatsapp é experimental, não oficial e só fica disponível quando calls enabled=true e a instância também habilita chamadas na configuração própria. a implementação usa instâncias já existentes, autenticação jwt da instância, migrations  "
+  },
+  {
+    "id": "heading:calls.mdx:sumario",
+    "type": "Seção",
+    "title": "Sumário",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#sumario",
+    "search": "sumário chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:visao-geral",
+    "type": "Seção",
+    "title": "Visão Geral",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#visao-geral",
+    "search": "visão geral chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:arquitetura",
+    "type": "Seção",
+    "title": "Arquitetura",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#arquitetura",
+    "search": "arquitetura chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:dependencias",
+    "type": "Seção",
+    "title": "Dependências",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#dependencias",
+    "search": "dependências chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:configuracao",
+    "type": "Seção",
+    "title": "Configuração",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#configuracao",
+    "search": "configuração chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:configuracao-por-instancia",
+    "type": "Seção",
+    "title": "Configuração Por Instância",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#configuracao-por-instancia",
+    "search": "configuração por instância chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:ciclo-de-vida",
+    "type": "Seção",
+    "title": "Ciclo de Vida",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#ciclo-de-vida",
+    "search": "ciclo de vida chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:comportamento-multi-device",
+    "type": "Seção",
+    "title": "Comportamento Multi-Device",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#comportamento-multi-device",
+    "search": "comportamento multi-device chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:api",
+    "type": "Seção",
+    "title": "API",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#api",
+    "search": "api chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:formato-basico-de-chamada",
+    "type": "Seção",
+    "title": "Formato Básico de Chamada",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#formato-basico-de-chamada",
+    "search": "formato básico de chamada chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancename",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancename",
+    "search": "post /call/{instancename} chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:get-callinstancename",
+    "type": "Seção",
+    "title": "GET /call/{instanceName}",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#get-callinstancename",
+    "search": "get /call/{instancename} chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:get-callinstancenameconfig",
+    "type": "Seção",
+    "title": "GET /call/{instanceName}/config",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#get-callinstancenameconfig",
+    "search": "get /call/{instancename}/config chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:put-callinstancenameconfig",
+    "type": "Seção",
+    "title": "PUT /call/{instanceName}/config",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#put-callinstancenameconfig",
+    "search": "put /call/{instancename}/config chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:get-callinstancenamecallid",
+    "type": "Seção",
+    "title": "GET /call/{instanceName}/{callId}",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#get-callinstancenamecallid",
+    "search": "get /call/{instancename}/{callid} chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:get-callinstancenamecallidevents",
+    "type": "Seção",
+    "title": "GET /call/{instanceName}/{callId}/events",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#get-callinstancenamecallidevents",
+    "search": "get /call/{instancename}/{callid}/events chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidanswer",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/answer",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidanswer",
+    "search": "post /call/{instancename}/{callid}/answer chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidreject",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/reject",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidreject",
+    "search": "post /call/{instancename}/{callid}/reject chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidhangup",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/hangup",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidhangup",
+    "search": "post /call/{instancename}/{callid}/hangup chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidaudioplay",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/audio/play",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidaudioplay",
+    "search": "post /call/{instancename}/{callid}/audio/play chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidaudiostop",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/audio/stop",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidaudiostop",
+    "search": "post /call/{instancename}/{callid}/audio/stop chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidvideostart",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/video/start",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidvideostart",
+    "search": "post /call/{instancename}/{callid}/video/start chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidvideoaccept",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/video/accept",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidvideoaccept",
+    "search": "post /call/{instancename}/{callid}/video/accept chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidvideoreject",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/video/reject",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidvideoreject",
+    "search": "post /call/{instancename}/{callid}/video/reject chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidvideostop",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/video/stop",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidvideostop",
+    "search": "post /call/{instancename}/{callid}/video/stop chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidvideoorientation",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/video/orientation",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidvideoorientation",
+    "search": "post /call/{instancename}/{callid}/video/orientation chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidvideoplay",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/video/play",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidvideoplay",
+    "search": "post /call/{instancename}/{callid}/video/play chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidvideostop-playback",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/video/stop-playback",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidvideostop-playback",
+    "search": "post /call/{instancename}/{callid}/video/stop-playback chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidreaction",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/reaction",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidreaction",
+    "search": "post /call/{instancename}/{callid}/reaction chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:get-callinstancenamecallidrecordings",
+    "type": "Seção",
+    "title": "GET /call/{instanceName}/{callId}/recordings",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#get-callinstancenamecallidrecordings",
+    "search": "get /call/{instancename}/{callid}/recordings chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidrecordingstart",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/recording/start",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidrecordingstart",
+    "search": "post /call/{instancename}/{callid}/recording/start chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:post-callinstancenamecallidrecordingstop",
+    "type": "Seção",
+    "title": "POST /call/{instanceName}/{callId}/recording/stop",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#post-callinstancenamecallidrecordingstop",
+    "search": "post /call/{instancename}/{callid}/recording/stop chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:get-callinstancenamecallidrecordingsrecordingid",
+    "type": "Seção",
+    "title": "GET /call/{instanceName}/{callId}/recordings/{recordingId}",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#get-callinstancenamecallidrecordingsrecordingid",
+    "search": "get /call/{instancename}/{callid}/recordings/{recordingid} chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:get-callinstancenamecallidrecordingsrecordingiddownload",
+    "type": "Seção",
+    "title": "GET /call/{instanceName}/{callId}/recordings/{recordingId}/download",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#get-callinstancenamecallidrecordingsrecordingiddownload",
+    "search": "get /call/{instancename}/{callid}/recordings/{recordingid}/download chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:delete-callinstancenamecallidrecordingsrecordingid",
+    "type": "Seção",
+    "title": "DELETE /call/{instanceName}/{callId}/recordings/{recordingId}",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#delete-callinstancenamecallidrecordingsrecordingid",
+    "search": "delete /call/{instancename}/{callid}/recordings/{recordingid} chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:eventos",
+    "type": "Seção",
+    "title": "Eventos",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#eventos",
+    "search": "eventos chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:websocket",
+    "type": "Seção",
+    "title": "WebSocket",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#websocket",
+    "search": "websocket chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:midia",
+    "type": "Seção",
+    "title": "Mídia",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#midia",
+    "search": "mídia chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:video",
+    "type": "Seção",
+    "title": "Vídeo",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#video",
+    "search": "vídeo chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:gravacao",
+    "type": "Seção",
+    "title": "Gravação",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#gravacao",
+    "search": "gravação chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:armazenamento-de-gravacoes",
+    "type": "Seção",
+    "title": "Armazenamento de Gravações",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#armazenamento-de-gravacoes",
+    "search": "armazenamento de gravações chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:retencao-de-gravacoes",
+    "type": "Seção",
+    "title": "Retenção de Gravações",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#retencao-de-gravacoes",
+    "search": "retenção de gravações chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:recuperacao-de-gravacoes",
+    "type": "Seção",
+    "title": "Recuperação de Gravações",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#recuperacao-de-gravacoes",
+    "search": "recuperação de gravações chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:seguranca",
+    "type": "Seção",
+    "title": "Segurança",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#seguranca",
+    "search": "segurança chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:validacao-manual",
+    "type": "Seção",
+    "title": "Validação Manual",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#validacao-manual",
+    "search": "validação manual chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:solucao-de-problemas",
+    "type": "Seção",
+    "title": "Solução de Problemas",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#solucao-de-problemas",
+    "search": "solução de problemas chamadas whatsapp  "
   },
   {
     "id": "doc:changelog.mdx",
@@ -99,9 +491,17 @@
     "id": "doc:chats.mdx",
     "type": "Guia",
     "title": "Chats",
-    "description": "Operações de conversa, leitura, arquivo e edição. Todas as rotas atuais usam o JWT da instância. Método Rota Body ou query Sucesso --- --- --- --- POST /instance/:instance/chat/is-account numbers 200 PATCH /instance/:instance/chat/read-message IDs ou remetente/chat/IDs 200 PUT /instance/:instance/chat/archive lastMessage e archive 204 DELETE /instance/:instance/chat/delete-message?id=1 query id 204 POST /instance/:instance/chat/profile-picture destinatário 200 POST /instance/:instance/chat/reject-call callId , callFrom 204 POST /instance/:instance/chat/edit-message id , text 200 Verificar contas Aceita de 1 a 100 telefones/JIDs individuais, não grupos. A resposta é um array com jid , lid opcional e exists . Marcar como lida Modo por IDs int",
+    "description": "Operações de conversa, leitura, arquivo e edição. Todas as rotas atuais usam o JWT da instância. Método Rota Body ou query Sucesso --- --- --- --- POST /instance/:instance/chat/is-account numbers 200 PATCH /instance/:instance/chat/read-message IDs ou remetente/chat/IDs 200 PUT /instance/:instance/chat/archive lastMessage e archive 204 DELETE /instance/:instance/chat/delete-message?id=1 query id 204 POST /instance/:instance/chat/profile-picture destinatário 200 POST /instance/:instance/chat/reject-call callId , callFrom 204 POST /instance/:instance/chat/edit-message id , text 200 POST /instance/:instance/db/messages filtros e cursor opcionais 200 POST /chat/findMessages/:instanceName where , offset , page legados 200 Buscar mensagens persist",
     "href": "/docs/chats",
-    "search": "chats operações de conversa, leitura, arquivo e edição. todas as rotas atuais usam o jwt da instância. método rota body ou query sucesso --- --- --- --- post /instance/:instance/chat/is-account numbers 200 patch /instance/:instance/chat/read-message ids ou remetente/chat/ids 200 put /instance/:instance/chat/archive lastmessage e archive 204 delete /instance/:instance/chat/delete-message?id=1 query id 204 post /instance/:instance/chat/profile-picture destinatário 200 post /instance/:instance/chat/reject-call callid , callfrom 204 post /instance/:instance/chat/edit-message id , text 200 verificar contas aceita de 1 a 100 telefones/jids individuais, não grupos. a resposta é um array com jid , lid opcional e exists . marcar como lida modo por ids int  "
+    "search": "chats operações de conversa, leitura, arquivo e edição. todas as rotas atuais usam o jwt da instância. método rota body ou query sucesso --- --- --- --- post /instance/:instance/chat/is-account numbers 200 patch /instance/:instance/chat/read-message ids ou remetente/chat/ids 200 put /instance/:instance/chat/archive lastmessage e archive 204 delete /instance/:instance/chat/delete-message?id=1 query id 204 post /instance/:instance/chat/profile-picture destinatário 200 post /instance/:instance/chat/reject-call callid , callfrom 204 post /instance/:instance/chat/edit-message id , text 200 post /instance/:instance/db/messages filtros e cursor opcionais 200 post /chat/findmessages/:instancename where , offset , page legados 200 buscar mensagens persist  "
+  },
+  {
+    "id": "heading:chats.mdx:buscar-mensagens-persistidas",
+    "type": "Seção",
+    "title": "Buscar mensagens persistidas",
+    "description": "Chats",
+    "href": "/docs/chats#buscar-mensagens-persistidas",
+    "search": "buscar mensagens persistidas chats  "
   },
   {
     "id": "heading:chats.mdx:verificar-contas",
@@ -307,41 +707,145 @@
     "id": "doc:environment.mdx",
     "type": "Guia",
     "title": "Instalação e ambiente",
-    "description": "Variáveis de ambiente e configuração do servidor. Como Instalar a CodeChat API WhatsApp em Go Guia Completo Neste vídeo, você vai aprender a instalar e executar a CodeChat API WhatsApp em Go. youtu.be Execução local Quando DOCKER ENV está ausente ou definido como false , a aplicação carrega .env e depois lê os valores do ambiente do processo. Variáveis já definidas no processo têm prioridade sobre os valores em .env . .env.dev é um arquivo de referência para desenvolvimento local e não é carregado automaticamente. Store de sessão do Whatsmeow DATABASE URL continua sendo o banco principal da API. WHATSAPP SESSION POSTGRES URL é opcional e é usado somente pelo SQL store do whatsmeow quando estiver preenchido. Os repositórios da API e as migra",
+    "description": "Variáveis de ambiente e configuração do servidor. Este documento descreve as variaveis de ambiente usadas pela API no estado atual do codigo. Quando DOCKER ENV esta ausente ou definido como false , a aplicacao carrega o arquivo .env do diretorio de execucao e depois le os valores do ambiente do processo. Variaveis ja definidas no processo tem prioridade sobre os valores do arquivo .env . Quando DOCKER ENV=true , .env e .env.dev nao sao carregados; todas as variaveis precisam ser fornecidas diretamente ao container. .env.dev e .env.docker.example sao arquivos de referencia. A aplicacao nao carrega esses arquivos automaticamente. Variaveis obrigatorias Variavel Exemplo Descricao --- --- --- DATABASE URL postgres://postgres:postgres@localhost:",
     "href": "/docs/environment",
-    "search": "instalação e ambiente variáveis de ambiente e configuração do servidor. como instalar a codechat api whatsapp em go guia completo neste vídeo, você vai aprender a instalar e executar a codechat api whatsapp em go. youtu.be execução local quando docker env está ausente ou definido como false , a aplicação carrega .env e depois lê os valores do ambiente do processo. variáveis já definidas no processo têm prioridade sobre os valores em .env . .env.dev é um arquivo de referência para desenvolvimento local e não é carregado automaticamente. store de sessão do whatsmeow database url continua sendo o banco principal da api. whatsapp session postgres url é opcional e é usado somente pelo sql store do whatsmeow quando estiver preenchido. os repositórios da api e as migra  "
+    "search": "instalação e ambiente variáveis de ambiente e configuração do servidor. este documento descreve as variaveis de ambiente usadas pela api no estado atual do codigo. quando docker env esta ausente ou definido como false , a aplicacao carrega o arquivo .env do diretorio de execucao e depois le os valores do ambiente do processo. variaveis ja definidas no processo tem prioridade sobre os valores do arquivo .env . quando docker env=true , .env e .env.dev nao sao carregados; todas as variaveis precisam ser fornecidas diretamente ao container. .env.dev e .env.docker.example sao arquivos de referencia. a aplicacao nao carrega esses arquivos automaticamente. variaveis obrigatorias variavel exemplo descricao --- --- --- database url postgres://postgres:postgres@localhost:  "
+  },
+  {
+    "id": "heading:environment.mdx:variaveis-obrigatorias",
+    "type": "Seção",
+    "title": "Variaveis obrigatorias",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#variaveis-obrigatorias",
+    "search": "variaveis obrigatorias instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:servidor-e-execucao",
+    "type": "Seção",
+    "title": "Servidor e execucao",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#servidor-e-execucao",
+    "search": "servidor e execucao instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:banco-de-dados",
+    "type": "Seção",
+    "title": "Banco de dados",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#banco-de-dados",
+    "search": "banco de dados instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:sessoes-do-whatsmeow",
+    "type": "Seção",
+    "title": "Sessoes do Whatsmeow",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#sessoes-do-whatsmeow",
+    "search": "sessoes do whatsmeow instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:autenticacao",
+    "type": "Seção",
+    "title": "Autenticacao",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#autenticacao",
+    "search": "autenticacao instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:whatsapp-e-pareamento",
+    "type": "Seção",
+    "title": "WhatsApp e pareamento",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#whatsapp-e-pareamento",
+    "search": "whatsapp e pareamento instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:webhooks",
+    "type": "Seção",
+    "title": "Webhooks",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#webhooks",
+    "search": "webhooks instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:websocket",
+    "type": "Seção",
+    "title": "WebSocket",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#websocket",
+    "search": "websocket instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:processamento-de-mensagens",
+    "type": "Seção",
+    "title": "Processamento de mensagens",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#processamento-de-mensagens",
+    "search": "processamento de mensagens instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:message-batch",
+    "type": "Seção",
+    "title": "Message Batch",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#message-batch",
+    "search": "message batch instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:media-pre-upload",
+    "type": "Seção",
+    "title": "Media pre-upload",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#media-pre-upload",
+    "search": "media pre-upload instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:calls",
+    "type": "Seção",
+    "title": "Calls",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#calls",
+    "search": "calls instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:calls-recording",
+    "type": "Seção",
+    "title": "Calls recording",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#calls-recording",
+    "search": "calls recording instalação e ambiente  "
+  },
+  {
+    "id": "heading:environment.mdx:variaveis-auxiliares-do-dockercompose",
+    "type": "Seção",
+    "title": "Variaveis auxiliares do Docker/Compose",
+    "description": "Instalação e ambiente",
+    "href": "/docs/environment#variaveis-auxiliares-do-dockercompose",
+    "search": "variaveis auxiliares do docker/compose instalação e ambiente  "
   },
   {
     "id": "heading:environment.mdx:execucao-local",
     "type": "Seção",
-    "title": "Execução local",
+    "title": "Execucao local",
     "description": "Instalação e ambiente",
     "href": "/docs/environment#execucao-local",
-    "search": "execução local instalação e ambiente  "
+    "search": "execucao local instalação e ambiente  "
   },
   {
-    "id": "heading:environment.mdx:store-de-sessao-do-whatsmeow",
+    "id": "heading:environment.mdx:docker",
     "type": "Seção",
-    "title": "Store de sessão do Whatsmeow",
+    "title": "Docker",
     "description": "Instalação e ambiente",
-    "href": "/docs/environment#store-de-sessao-do-whatsmeow",
-    "search": "store de sessão do whatsmeow instalação e ambiente  "
+    "href": "/docs/environment#docker",
+    "search": "docker instalação e ambiente  "
   },
   {
-    "id": "heading:environment.mdx:instalacao-com-docker",
+    "id": "heading:environment.mdx:notas-de-seguranca",
     "type": "Seção",
-    "title": "Instalação com Docker",
+    "title": "Notas de seguranca",
     "description": "Instalação e ambiente",
-    "href": "/docs/environment#instalacao-com-docker",
-    "search": "instalação com docker instalação e ambiente  "
-  },
-  {
-    "id": "heading:environment.mdx:variaveis-do-container",
-    "type": "Seção",
-    "title": "Variáveis do container",
-    "description": "Instalação e ambiente",
-    "href": "/docs/environment#variaveis-do-container",
-    "search": "variáveis do container instalação e ambiente  "
+    "href": "/docs/environment#notas-de-seguranca",
+    "search": "notas de seguranca instalação e ambiente  "
   },
   {
     "id": "doc:errors.mdx",
@@ -1043,9 +1547,9 @@
     "id": "doc:migrations.mdx",
     "type": "Guia",
     "title": "Migrações",
-    "description": "Execução e manutenção das migrações de banco de dados. As migrations da aplicação e as migrations internas do Whatsmeow podem ser executadas sem iniciar o listener HTTP com: No PowerShell: O comando carrega a configuração pelo mesmo fluxo da API. Fora do Docker, DOCKER ENV=false faz o processo carregar .env ; dentro do Docker, defina DOCKER ENV=true e forneça as variáveis diretamente. O runner aplica somente arquivos .up.sql em internal/database/migrations , em ordem lexicográfica, e registra os nomes aplicados na tabela schema migrations . Depois disso, inicializa o sqlstore configurado para o Whatsmeow; sqlstore.New executa as migrations internas no backend selecionado. O comando não inicia o Fiber, não registra rotas e não tenta restaurar con",
+    "description": "Execução e manutenção das migrações de banco de dados. As migrations da aplicação e as migrations internas do Whatsmeow podem ser executadas sem iniciar o listener HTTP com: No PowerShell: O comando carrega a configuração pelo mesmo fluxo da API. Fora do Docker, DOCKER ENV=false faz o processo carregar .env ; dentro do Docker, defina DOCKER ENV=true e forneça as variáveis diretamente. O runner aplica somente arquivos .up.sql em internal/database/migrations , em ordem lexicográfica, e registra os nomes aplicados na tabela \"SchemaMigration\" . Depois disso, inicializa o sqlstore configurado para o Whatsmeow; sqlstore.New executa as migrations internas no backend selecionado. O comando não inicia o Fiber, não registra rotas e não tenta restaurar con",
     "href": "/docs/migrations",
-    "search": "migrações execução e manutenção das migrações de banco de dados. as migrations da aplicação e as migrations internas do whatsmeow podem ser executadas sem iniciar o listener http com: no powershell: o comando carrega a configuração pelo mesmo fluxo da api. fora do docker, docker env=false faz o processo carregar .env ; dentro do docker, defina docker env=true e forneça as variáveis diretamente. o runner aplica somente arquivos .up.sql em internal/database/migrations , em ordem lexicográfica, e registra os nomes aplicados na tabela schema migrations . depois disso, inicializa o sqlstore configurado para o whatsmeow; sqlstore.new executa as migrations internas no backend selecionado. o comando não inicia o fiber, não registra rotas e não tenta restaurar con  "
+    "search": "migrações execução e manutenção das migrações de banco de dados. as migrations da aplicação e as migrations internas do whatsmeow podem ser executadas sem iniciar o listener http com: no powershell: o comando carrega a configuração pelo mesmo fluxo da api. fora do docker, docker env=false faz o processo carregar .env ; dentro do docker, defina docker env=true e forneça as variáveis diretamente. o runner aplica somente arquivos .up.sql em internal/database/migrations , em ordem lexicográfica, e registra os nomes aplicados na tabela \"schemamigration\" . depois disso, inicializa o sqlstore configurado para o whatsmeow; sqlstore.new executa as migrations internas no backend selecionado. o comando não inicia o fiber, não registra rotas e não tenta restaurar con  "
   },
   {
     "id": "doc:openapi.mdx",
@@ -1488,6 +1992,14 @@
     "search": "mapa de eventos de lote webhooks  "
   },
   {
+    "id": "heading:webhooks.mdx:payloads-json-por-evento",
+    "type": "Seção",
+    "title": "Payloads JSON por evento",
+    "description": "Webhooks",
+    "href": "/docs/webhooks#payloads-json-por-evento",
+    "search": "payloads json por evento webhooks  "
+  },
+  {
     "id": "heading:webhooks.mdx:headers-do-message-batch",
     "type": "Seção",
     "title": "Headers do Message Batch",
@@ -1834,92 +2346,92 @@
   {
     "id": "operation:get:/health",
     "type": "ATUAL",
-    "title": "Verifica se o processo está ativo",
+    "title": "Verifica se o processo estÃ¡ ativo",
     "description": "System getHealth",
     "href": "/api-reference/getHealth",
     "method": "GET",
     "path": "/health",
-    "search": "verifica se o processo está ativo system gethealth get /health"
+    "search": "verifica se o processo estã¡ ativo system gethealth get /health"
   },
   {
     "id": "operation:get:/ready",
     "type": "ATUAL",
-    "title": "Verifica dependências necessárias para receber tráfego",
+    "title": "Verifica dependÃªncias necessÃ¡rias para receber trÃ¡fego",
     "description": "System getReadiness",
     "href": "/api-reference/getReadiness",
     "method": "GET",
     "path": "/ready",
-    "search": "verifica dependências necessárias para receber tráfego system getreadiness get /ready"
+    "search": "verifica dependãªncias necessã¡rias para receber trã¡fego system getreadiness get /ready"
   },
   {
     "id": "operation:get:/instance",
     "type": "ATUAL",
-    "title": "Lista instâncias",
+    "title": "Lista instÃ¢ncias",
     "description": "Instances listInstances InstanceFilter",
     "href": "/api-reference/listInstances",
     "method": "GET",
     "path": "/instance",
-    "search": "lista instâncias instances listinstances instancefilter get /instance"
+    "search": "lista instã¢ncias instances listinstances instancefilter get /instance"
   },
   {
     "id": "operation:post:/instance",
     "type": "ATUAL",
-    "title": "Cria uma instância",
+    "title": "Cria uma instÃ¢ncia",
     "description": "Instances createInstance",
     "href": "/api-reference/createInstance",
     "method": "POST",
     "path": "/instance",
-    "search": "cria uma instância instances createinstance post /instance"
+    "search": "cria uma instã¢ncia instances createinstance post /instance"
   },
   {
     "id": "operation:get:/instance/{instance}",
     "type": "ATUAL",
-    "title": "Consulta uma instância",
+    "title": "Consulta uma instÃ¢ncia",
     "description": "Instances getInstance Instance",
     "href": "/api-reference/getInstance",
     "method": "GET",
     "path": "/instance/{instance}",
-    "search": "consulta uma instância instances getinstance instance get /instance/{instance}"
+    "search": "consulta uma instã¢ncia instances getinstance instance get /instance/{instance}"
   },
   {
     "id": "operation:delete:/instance/{instance}",
     "type": "ATUAL",
-    "title": "Exclui uma instância",
+    "title": "Exclui uma instÃ¢ncia",
     "description": "Instances deleteInstance Instance Force",
     "href": "/api-reference/deleteInstance",
     "method": "DELETE",
     "path": "/instance/{instance}",
-    "search": "exclui uma instância instances deleteinstance instance force delete /instance/{instance}"
+    "search": "exclui uma instã¢ncia instances deleteinstance instance force delete /instance/{instance}"
   },
   {
     "id": "operation:get:/instance/{instance}/connection/status",
     "type": "ATUAL",
-    "title": "Consulta o estado da conexão",
+    "title": "Consulta o estado da conexÃ£o",
     "description": "Connections getConnectionStatus Instance",
     "href": "/api-reference/getConnectionStatus",
     "method": "GET",
     "path": "/instance/{instance}/connection/status",
-    "search": "consulta o estado da conexão connections getconnectionstatus instance get /instance/{instance}/connection/status"
+    "search": "consulta o estado da conexã£o connections getconnectionstatus instance get /instance/{instance}/connection/status"
   },
   {
     "id": "operation:get:/instance/{instance}/connect",
     "type": "ATUAL",
-    "title": "Inicia ou acompanha conexão por QR Code",
+    "title": "Inicia ou acompanha conexÃ£o por QR Code",
     "description": "Connections connectInstanceByQrGet Instance",
     "href": "/api-reference/connectInstanceByQrGet",
     "method": "GET",
     "path": "/instance/{instance}/connect",
-    "search": "inicia ou acompanha conexão por qr code connections connectinstancebyqrget instance get /instance/{instance}/connect"
+    "search": "inicia ou acompanha conexã£o por qr code connections connectinstancebyqrget instance get /instance/{instance}/connect"
   },
   {
     "id": "operation:post:/instance/{instance}/connect",
     "type": "ATUAL",
-    "title": "Inicia ou acompanha conexão por QR Code",
+    "title": "Inicia ou acompanha conexÃ£o por QR Code",
     "description": "Connections connectInstanceByQrPost Instance",
     "href": "/api-reference/connectInstanceByQrPost",
     "method": "POST",
     "path": "/instance/{instance}/connect",
-    "search": "inicia ou acompanha conexão por qr code connections connectinstancebyqrpost instance post /instance/{instance}/connect"
+    "search": "inicia ou acompanha conexã£o por qr code connections connectinstancebyqrpost instance post /instance/{instance}/connect"
   },
   {
     "id": "operation:get:/instance/{instance}/connect/code/{phoneNumber}",
@@ -1944,12 +2456,12 @@
   {
     "id": "operation:post:/instance/{instance}/connect/passkey/challenge",
     "type": "ATUAL",
-    "title": "Obtém challenge WebAuthn",
+    "title": "ObtÃ©m challenge WebAuthn",
     "description": "Connections createPasskeyChallenge Instance",
     "href": "/api-reference/createPasskeyChallenge",
     "method": "POST",
     "path": "/instance/{instance}/connect/passkey/challenge",
-    "search": "obtém challenge webauthn connections createpasskeychallenge instance post /instance/{instance}/connect/passkey/challenge"
+    "search": "obtã©m challenge webauthn connections createpasskeychallenge instance post /instance/{instance}/connect/passkey/challenge"
   },
   {
     "id": "operation:post:/instance/{instance}/connect/passkey/assertion",
@@ -1964,22 +2476,22 @@
   {
     "id": "operation:delete:/instance/{instance}/logout/{instanceName}",
     "type": "ATUAL",
-    "title": "Desconecta a sessão WhatsApp",
-    "description": "A rota possui dois nomes de instância. O middleware e o handler preferem {instanceName}; envie o mesmo valor nos dois segmentos. Connections logoutInstance Instance LegacyInstanceName",
+    "title": "Desconecta a sessÃ£o WhatsApp",
+    "description": "A rota possui dois nomes de instÃ¢ncia. O middleware e o handler preferem {instanceName}; envie o mesmo valor nos dois segmentos. Connections logoutInstance Instance LegacyInstanceName",
     "href": "/api-reference/logoutInstance",
     "method": "DELETE",
     "path": "/instance/{instance}/logout/{instanceName}",
-    "search": "desconecta a sessão whatsapp a rota possui dois nomes de instância. o middleware e o handler preferem {instancename}; envie o mesmo valor nos dois segmentos. connections logoutinstance instance legacyinstancename delete /instance/{instance}/logout/{instancename}"
+    "search": "desconecta a sessã£o whatsapp a rota possui dois nomes de instã¢ncia. o middleware e o handler preferem {instancename}; envie o mesmo valor nos dois segmentos. connections logoutinstance instance legacyinstancename delete /instance/{instance}/logout/{instancename}"
   },
   {
     "id": "operation:post:/instance/{instance}/chat/is-account",
     "type": "ATUAL",
-    "title": "Verifica números cadastrados no WhatsApp",
+    "title": "Verifica nÃºmeros cadastrados no WhatsApp",
     "description": "Chats checkWhatsAppAccounts Instance",
     "href": "/api-reference/checkWhatsAppAccounts",
     "method": "POST",
     "path": "/instance/{instance}/chat/is-account",
-    "search": "verifica números cadastrados no whatsapp chats checkwhatsappaccounts instance post /instance/{instance}/chat/is-account"
+    "search": "verifica nãºmeros cadastrados no whatsapp chats checkwhatsappaccounts instance post /instance/{instance}/chat/is-account"
   },
   {
     "id": "operation:patch:/instance/{instance}/chat/read-message",
@@ -2042,6 +2554,16 @@
     "search": "edita uma mensagem enviada chats editmessage instance post /instance/{instance}/chat/edit-message"
   },
   {
+    "id": "operation:post:/instance/{instance}/db/messages",
+    "type": "ATUAL",
+    "title": "Busca mensagens persistidas no banco",
+    "description": "Consulta exclusivamente mensagens persistidas da instancia informada. A instancia nao precisa estar conectada ao WhatsApp; a rota nao resolve cliente WhatsApp, nao valida sessao conectada e nao acessa WebSocket. O cursor usa o ID interno da mensagem e a resposta publica e sempre ordenada por id decrescente. Campos legados como where, keyid, messageStatus, page e offset nao fazem parte deste contrato.\n\nExemplo:\n```bash\ncurl --location --request POST 'http://localhost:8084/instance/codechat-01/db/messages' \\\n  --header 'Authorization: Bearer SEU_TOKEN' \\\n  --header 'Content-Type: application/json' \\\n  --data-raw '{\"filter\":{\"keyRemoteJid\":\"123@s.whatsapp.net\",\"keyFromMe\":\"true\",\"messageType\":\"conversation\",\"status\":\"DELIVERY_ACK\"},\"cursor\":{\"type\":\"next\",\"id\":1200},\"limit\":50}'\n``` Chats findPersistedMessages Instance",
+    "href": "/api-reference/findPersistedMessages",
+    "method": "POST",
+    "path": "/instance/{instance}/db/messages",
+    "search": "busca mensagens persistidas no banco consulta exclusivamente mensagens persistidas da instancia informada. a instancia nao precisa estar conectada ao whatsapp; a rota nao resolve cliente whatsapp, nao valida sessao conectada e nao acessa websocket. o cursor usa o id interno da mensagem e a resposta publica e sempre ordenada por id decrescente. campos legados como where, keyid, messagestatus, page e offset nao fazem parte deste contrato.\n\nexemplo:\n```bash\ncurl --location --request post 'http://localhost:8084/instance/codechat-01/db/messages' \\\n  --header 'authorization: bearer seu_token' \\\n  --header 'content-type: application/json' \\\n  --data-raw '{\"filter\":{\"keyremotejid\":\"123@s.whatsapp.net\",\"keyfromme\":\"true\",\"messagetype\":\"conversation\",\"status\":\"delivery_ack\"},\"cursor\":{\"type\":\"next\",\"id\":1200},\"limit\":50}'\n``` chats findpersistedmessages instance post /instance/{instance}/db/messages"
+  },
+  {
     "id": "operation:post:/instance/{instance}/send/text",
     "type": "ATUAL",
     "title": "Envia texto",
@@ -2064,42 +2586,42 @@
   {
     "id": "operation:post:/instance/{instance}/send/media",
     "type": "ATUAL",
-    "title": "Envia mídia por URL ou upload antecipado",
+    "title": "Envia mÃ­dia por URL ou upload antecipado",
     "description": "Messages sendMediaMessage Instance",
     "href": "/api-reference/sendMediaMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/media",
-    "search": "envia mídia por url ou upload antecipado messages sendmediamessage instance post /instance/{instance}/send/media"
+    "search": "envia mã­dia por url ou upload antecipado messages sendmediamessage instance post /instance/{instance}/send/media"
   },
   {
     "id": "operation:post:/instance/{instance}/send/media-file",
     "type": "ATUAL",
-    "title": "Envia mídia multipart",
+    "title": "Envia mÃ­dia multipart",
     "description": "Messages sendMediaFileMessage Instance",
     "href": "/api-reference/sendMediaFileMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/media-file",
-    "search": "envia mídia multipart messages sendmediafilemessage instance post /instance/{instance}/send/media-file"
+    "search": "envia mã­dia multipart messages sendmediafilemessage instance post /instance/{instance}/send/media-file"
   },
   {
     "id": "operation:post:/instance/{instance}/send/ppt",
     "type": "ATUAL",
-    "title": "Envia áudio Push-to-Talk por URL",
+    "title": "Envia Ã¡udio Push-to-Talk por URL",
     "description": "Messages sendPushToTalkMessage Instance",
     "href": "/api-reference/sendPushToTalkMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/ppt",
-    "search": "envia áudio push-to-talk por url messages sendpushtotalkmessage instance post /instance/{instance}/send/ppt"
+    "search": "envia ã¡udio push-to-talk por url messages sendpushtotalkmessage instance post /instance/{instance}/send/ppt"
   },
   {
     "id": "operation:post:/instance/{instance}/send/ppt-file",
     "type": "ATUAL",
-    "title": "Envia áudio Push-to-Talk multipart",
+    "title": "Envia Ã¡udio Push-to-Talk multipart",
     "description": "Messages sendPushToTalkFileMessage Instance",
     "href": "/api-reference/sendPushToTalkFileMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/ppt-file",
-    "search": "envia áudio push-to-talk multipart messages sendpushtotalkfilemessage instance post /instance/{instance}/send/ppt-file"
+    "search": "envia ã¡udio push-to-talk multipart messages sendpushtotalkfilemessage instance post /instance/{instance}/send/ppt-file"
   },
   {
     "id": "operation:post:/instance/{instance}/send/contact",
@@ -2114,52 +2636,52 @@
   {
     "id": "operation:post:/instance/{instance}/send/location",
     "type": "ATUAL",
-    "title": "Envia localização",
+    "title": "Envia localizaÃ§Ã£o",
     "description": "Messages sendLocationMessage Instance",
     "href": "/api-reference/sendLocationMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/location",
-    "search": "envia localização messages sendlocationmessage instance post /instance/{instance}/send/location"
+    "search": "envia localizaã§ã£o messages sendlocationmessage instance post /instance/{instance}/send/location"
   },
   {
     "id": "operation:post:/instance/{instance}/send/reaction",
     "type": "ATUAL",
-    "title": "Envia ou remove reação",
+    "title": "Envia ou remove reaÃ§Ã£o",
     "description": "Messages sendReactionMessage Instance",
     "href": "/api-reference/sendReactionMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/reaction",
-    "search": "envia ou remove reação messages sendreactionmessage instance post /instance/{instance}/send/reaction"
+    "search": "envia ou remove reaã§ã£o messages sendreactionmessage instance post /instance/{instance}/send/reaction"
   },
   {
     "id": "operation:post:/instance/{instance}/media/data",
     "type": "ATUAL",
-    "title": "Baixa mídia de uma mensagem",
+    "title": "Baixa mÃ­dia de uma mensagem",
     "description": "Media downloadMessageMedia Instance Binary",
     "href": "/api-reference/downloadMessageMedia",
     "method": "POST",
     "path": "/instance/{instance}/media/data",
-    "search": "baixa mídia de uma mensagem media downloadmessagemedia instance binary post /instance/{instance}/media/data"
+    "search": "baixa mã­dia de uma mensagem media downloadmessagemedia instance binary post /instance/{instance}/media/data"
   },
   {
     "id": "operation:get:/instance/{instance}/media/uploads",
     "type": "ATUAL",
     "title": "Lista uploads antecipados",
-    "description": "Lista uploads com paginação bidirecional. Use nextCursor para avançar ou previousCursor para voltar; eles são mutuamente exclusivos. O parâmetro cursor é um alias legado de nextCursor. Media listMediaUploads Instance ExternalID MediaTypeFilter Expired CreatedFrom CreatedTo Limit MediaUploadNextCursor MediaUploadPreviousCursor Cursor",
+    "description": "Lista uploads com paginaÃ§Ã£o bidirecional. Use nextCursor para avanÃ§ar ou previousCursor para voltar; eles sÃ£o mutuamente exclusivos. O parÃ¢metro cursor Ã© um alias legado de nextCursor. Media listMediaUploads Instance ExternalID MediaTypeFilter Expired CreatedFrom CreatedTo Limit MediaUploadNextCursor MediaUploadPreviousCursor Cursor",
     "href": "/api-reference/listMediaUploads",
     "method": "GET",
     "path": "/instance/{instance}/media/uploads",
-    "search": "lista uploads antecipados lista uploads com paginação bidirecional. use nextcursor para avançar ou previouscursor para voltar; eles são mutuamente exclusivos. o parâmetro cursor é um alias legado de nextcursor. media listmediauploads instance externalid mediatypefilter expired createdfrom createdto limit mediauploadnextcursor mediauploadpreviouscursor cursor get /instance/{instance}/media/uploads"
+    "search": "lista uploads antecipados lista uploads com paginaã§ã£o bidirecional. use nextcursor para avanã§ar ou previouscursor para voltar; eles sã£o mutuamente exclusivos. o parã¢metro cursor ã© um alias legado de nextcursor. media listmediauploads instance externalid mediatypefilter expired createdfrom createdto limit mediauploadnextcursor mediauploadpreviouscursor cursor get /instance/{instance}/media/uploads"
   },
   {
     "id": "operation:post:/instance/{instance}/media/uploads",
     "type": "ATUAL",
-    "title": "Faz upload antecipado de mídia",
+    "title": "Faz upload antecipado de mÃ­dia",
     "description": "Media createMediaUpload Instance",
     "href": "/api-reference/createMediaUpload",
     "method": "POST",
     "path": "/instance/{instance}/media/uploads",
-    "search": "faz upload antecipado de mídia media createmediaupload instance post /instance/{instance}/media/uploads"
+    "search": "faz upload antecipado de mã­dia media createmediaupload instance post /instance/{instance}/media/uploads"
   },
   {
     "id": "operation:get:/instance/{instance}/media/{id}/uploads",
@@ -2204,22 +2726,22 @@
   {
     "id": "operation:get:/instance/{instance}/group/invitation-code",
     "type": "ATUAL",
-    "title": "Consulta código de convite",
+    "title": "Consulta cÃ³digo de convite",
     "description": "Groups getGroupInviteCode Instance GroupJID",
     "href": "/api-reference/getGroupInviteCode",
     "method": "GET",
     "path": "/instance/{instance}/group/invitation-code",
-    "search": "consulta código de convite groups getgroupinvitecode instance groupjid get /instance/{instance}/group/invitation-code"
+    "search": "consulta cã³digo de convite groups getgroupinvitecode instance groupjid get /instance/{instance}/group/invitation-code"
   },
   {
     "id": "operation:put:/instance/{instance}/group/revoke-invitation",
     "type": "ATUAL",
-    "title": "Revoga código de convite",
+    "title": "Revoga cÃ³digo de convite",
     "description": "Groups revokeGroupInviteCode Instance GroupJID",
     "href": "/api-reference/revokeGroupInviteCode",
     "method": "PUT",
     "path": "/instance/{instance}/group/revoke-invitation",
-    "search": "revoga código de convite groups revokegroupinvitecode instance groupjid put /instance/{instance}/group/revoke-invitation"
+    "search": "revoga cã³digo de convite groups revokegroupinvitecode instance groupjid put /instance/{instance}/group/revoke-invitation"
   },
   {
     "id": "operation:put:/instance/{instance}/group/update-participants",
@@ -2244,42 +2766,42 @@
   {
     "id": "operation:get:/instance/{instance}/webhook",
     "type": "ATUAL",
-    "title": "Consulta webhook da instância",
+    "title": "Consulta webhook da instÃ¢ncia",
     "description": "Webhooks getInstanceWebhook Instance",
     "href": "/api-reference/getInstanceWebhook",
     "method": "GET",
     "path": "/instance/{instance}/webhook",
-    "search": "consulta webhook da instância webhooks getinstancewebhook instance get /instance/{instance}/webhook"
+    "search": "consulta webhook da instã¢ncia webhooks getinstancewebhook instance get /instance/{instance}/webhook"
   },
   {
     "id": "operation:put:/instance/{instance}/webhook",
     "type": "ATUAL",
-    "title": "Configura webhook da instância",
+    "title": "Configura webhook da instÃ¢ncia",
     "description": "Webhooks setInstanceWebhook Instance",
     "href": "/api-reference/setInstanceWebhook",
     "method": "PUT",
     "path": "/instance/{instance}/webhook",
-    "search": "configura webhook da instância webhooks setinstancewebhook instance put /instance/{instance}/webhook"
+    "search": "configura webhook da instã¢ncia webhooks setinstancewebhook instance put /instance/{instance}/webhook"
   },
   {
     "id": "operation:post:/instance/{instance}/send/payment-request",
     "type": "PRO",
-    "title": "Envia solicitação de pagamento",
+    "title": "Envia solicitaÃ§Ã£o de pagamento",
     "description": "CodeChat API Go Pro sendPaymentRequest Instance",
     "href": "/api-reference/sendPaymentRequest",
     "method": "POST",
     "path": "/instance/{instance}/send/payment-request",
-    "search": "envia solicitação de pagamento codechat api go pro sendpaymentrequest instance post /instance/{instance}/send/payment-request"
+    "search": "envia solicitaã§ã£o de pagamento codechat api go pro sendpaymentrequest instance post /instance/{instance}/send/payment-request"
   },
   {
     "id": "operation:post:/instance/{instance}/send/review-order",
     "type": "PRO",
     "title": "Atualiza o status de um pedido",
-    "description": "Atualiza uma mensagem de pedido já persistida. O body, as validações e a resposta são compartilhados com o alias legado PATCH /message/reviewOrder/{instanceName}. CodeChat API Go Pro reviewOrder Instance",
+    "description": "Atualiza uma mensagem de pedido jÃ¡ persistida. O body, as validaÃ§Ãµes e a resposta sÃ£o compartilhados com o alias legado PATCH /message/reviewOrder/{instanceName}. CodeChat API Go Pro reviewOrder Instance",
     "href": "/api-reference/reviewOrder",
     "method": "POST",
     "path": "/instance/{instance}/send/review-order",
-    "search": "atualiza o status de um pedido atualiza uma mensagem de pedido já persistida. o body, as validações e a resposta são compartilhados com o alias legado patch /message/revieworder/{instancename}. codechat api go pro revieworder instance post /instance/{instance}/send/review-order"
+    "search": "atualiza o status de um pedido atualiza uma mensagem de pedido jã¡ persistida. o body, as validaã§ãµes e a resposta sã£o compartilhados com o alias legado patch /message/revieworder/{instancename}. codechat api go pro revieworder instance post /instance/{instance}/send/review-order"
   },
   {
     "id": "operation:post:/instance/{instance}/send/pix",
@@ -2294,72 +2816,72 @@
   {
     "id": "operation:post:/instance/{instance}/send/form",
     "type": "PRO",
-    "title": "Envia formulário nativo",
+    "title": "Envia formulÃ¡rio nativo",
     "description": "CodeChat API Go Pro sendFormMessage Instance",
     "href": "/api-reference/sendFormMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/form",
-    "search": "envia formulário nativo codechat api go pro sendformmessage instance post /instance/{instance}/send/form"
+    "search": "envia formulã¡rio nativo codechat api go pro sendformmessage instance post /instance/{instance}/send/form"
   },
   {
     "id": "operation:post:/instance/{instance}/send/{type}",
     "type": "PRO",
     "title": "Envia mensagem interativa",
-    "description": "Tipos confirmados: reply, copy, url, buttons e carousel. Esta rota é registrada depois de todas as rotas /send explícitas. CodeChat API Go Pro sendInteractiveMessage Instance InteractiveType",
+    "description": "Tipos confirmados: reply, copy, url, buttons e carousel. Esta rota Ã© registrada depois de todas as rotas /send explÃ­citas. CodeChat API Go Pro sendInteractiveMessage Instance InteractiveType",
     "href": "/api-reference/sendInteractiveMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/{type}",
-    "search": "envia mensagem interativa tipos confirmados: reply, copy, url, buttons e carousel. esta rota é registrada depois de todas as rotas /send explícitas. codechat api go pro sendinteractivemessage instance interactivetype post /instance/{instance}/send/{type}"
+    "search": "envia mensagem interativa tipos confirmados: reply, copy, url, buttons e carousel. esta rota ã© registrada depois de todas as rotas /send explã­citas. codechat api go pro sendinteractivemessage instance interactivetype post /instance/{instance}/send/{type}"
   },
   {
     "id": "operation:post:/instance/create",
     "type": "LEGADO",
-    "title": "Cria uma instância pelo alias legado",
+    "title": "Cria uma instÃ¢ncia pelo alias legado",
     "description": "Legacy - Instances legacyCreateInstance",
     "href": "/api-reference/legacyCreateInstance",
     "method": "POST",
     "path": "/instance/create",
-    "search": "cria uma instância pelo alias legado legacy - instances legacycreateinstance post /instance/create"
+    "search": "cria uma instã¢ncia pelo alias legado legacy - instances legacycreateinstance post /instance/create"
   },
   {
     "id": "operation:get:/instance/fetchInstances",
     "type": "LEGADO",
-    "title": "Lista instâncias pelo alias legado",
+    "title": "Lista instÃ¢ncias pelo alias legado",
     "description": "Legacy - Instances legacyListInstances InstanceFilter",
     "href": "/api-reference/legacyListInstances",
     "method": "GET",
     "path": "/instance/fetchInstances",
-    "search": "lista instâncias pelo alias legado legacy - instances legacylistinstances instancefilter get /instance/fetchinstances"
+    "search": "lista instã¢ncias pelo alias legado legacy - instances legacylistinstances instancefilter get /instance/fetchinstances"
   },
   {
     "id": "operation:get:/instance/fetchInstance/{instanceName}",
     "type": "LEGADO",
-    "title": "Consulta uma instância pelo alias legado",
+    "title": "Consulta uma instÃ¢ncia pelo alias legado",
     "description": "Legacy - Instances legacyGetInstance LegacyInstanceName",
     "href": "/api-reference/legacyGetInstance",
     "method": "GET",
     "path": "/instance/fetchInstance/{instanceName}",
-    "search": "consulta uma instância pelo alias legado legacy - instances legacygetinstance legacyinstancename get /instance/fetchinstance/{instancename}"
+    "search": "consulta uma instã¢ncia pelo alias legado legacy - instances legacygetinstance legacyinstancename get /instance/fetchinstance/{instancename}"
   },
   {
     "id": "operation:put:/instance/refreshToken/{instanceName}",
     "type": "ATUAL",
-    "title": "Rotaciona o JWT da instância",
-    "description": "Rota antiga ainda sem substituto atual equivalente; por isso não está marcada como deprecated. Legacy - Instances refreshInstanceToken LegacyInstanceName",
+    "title": "Rotaciona o JWT da instÃ¢ncia",
+    "description": "Rota antiga ainda sem substituto atual equivalente; por isso nÃ£o estÃ¡ marcada como deprecated. Legacy - Instances refreshInstanceToken LegacyInstanceName",
     "href": "/api-reference/refreshInstanceToken",
     "method": "PUT",
     "path": "/instance/refreshToken/{instanceName}",
-    "search": "rotaciona o jwt da instância rota antiga ainda sem substituto atual equivalente; por isso não está marcada como deprecated. legacy - instances refreshinstancetoken legacyinstancename put /instance/refreshtoken/{instancename}"
+    "search": "rotaciona o jwt da instã¢ncia rota antiga ainda sem substituto atual equivalente; por isso nã£o estã¡ marcada como deprecated. legacy - instances refreshinstancetoken legacyinstancename put /instance/refreshtoken/{instancename}"
   },
   {
     "id": "operation:delete:/instance/delete/{instanceName}",
     "type": "LEGADO",
-    "title": "Exclui uma instância pelo alias legado",
+    "title": "Exclui uma instÃ¢ncia pelo alias legado",
     "description": "Legacy - Instances legacyDeleteInstance LegacyInstanceName Force",
     "href": "/api-reference/legacyDeleteInstance",
     "method": "DELETE",
     "path": "/instance/delete/{instanceName}",
-    "search": "exclui uma instância pelo alias legado legacy - instances legacydeleteinstance legacyinstancename force delete /instance/delete/{instancename}"
+    "search": "exclui uma instã¢ncia pelo alias legado legacy - instances legacydeleteinstance legacyinstancename force delete /instance/delete/{instancename}"
   },
   {
     "id": "operation:get:/instance/connect/{instanceName}/code/{phoneNumber}",
@@ -2384,12 +2906,12 @@
   {
     "id": "operation:post:/instance/connect/{instanceName}/passkey/challenge",
     "type": "LEGADO",
-    "title": "Obtém challenge pela rota legada",
+    "title": "ObtÃ©m challenge pela rota legada",
     "description": "Legacy - Connections legacyCreatePasskeyChallenge LegacyInstanceName",
     "href": "/api-reference/legacyCreatePasskeyChallenge",
     "method": "POST",
     "path": "/instance/connect/{instanceName}/passkey/challenge",
-    "search": "obtém challenge pela rota legada legacy - connections legacycreatepasskeychallenge legacyinstancename post /instance/connect/{instancename}/passkey/challenge"
+    "search": "obtã©m challenge pela rota legada legacy - connections legacycreatepasskeychallenge legacyinstancename post /instance/connect/{instancename}/passkey/challenge"
   },
   {
     "id": "operation:post:/instance/connect/{instanceName}/passkey/assertion",
@@ -2474,22 +2996,22 @@
   {
     "id": "operation:post:/message/sendMedia/{instanceName}",
     "type": "LEGADO",
-    "title": "Envia mídia pelo alias legado",
+    "title": "Envia mÃ­dia pelo alias legado",
     "description": "Legacy - Messages legacySendMediaMessage LegacyInstanceName",
     "href": "/api-reference/legacySendMediaMessage",
     "method": "POST",
     "path": "/message/sendMedia/{instanceName}",
-    "search": "envia mídia pelo alias legado legacy - messages legacysendmediamessage legacyinstancename post /message/sendmedia/{instancename}"
+    "search": "envia mã­dia pelo alias legado legacy - messages legacysendmediamessage legacyinstancename post /message/sendmedia/{instancename}"
   },
   {
     "id": "operation:post:/message/sendMediaFile/{instanceName}",
     "type": "LEGADO",
-    "title": "Envia mídia multipart pelo alias legado",
+    "title": "Envia mÃ­dia multipart pelo alias legado",
     "description": "Legacy - Messages legacySendMediaFileMessage LegacyInstanceName",
     "href": "/api-reference/legacySendMediaFileMessage",
     "method": "POST",
     "path": "/message/sendMediaFile/{instanceName}",
-    "search": "envia mídia multipart pelo alias legado legacy - messages legacysendmediafilemessage legacyinstancename post /message/sendmediafile/{instancename}"
+    "search": "envia mã­dia multipart pelo alias legado legacy - messages legacysendmediafilemessage legacyinstancename post /message/sendmediafile/{instancename}"
   },
   {
     "id": "operation:post:/message/sendWhatsAppAudio/{instanceName}",
@@ -2524,32 +3046,32 @@
   {
     "id": "operation:post:/message/sendLocation/{instanceName}",
     "type": "LEGADO",
-    "title": "Envia localização pelo alias legado",
+    "title": "Envia localizaÃ§Ã£o pelo alias legado",
     "description": "Legacy - Messages legacySendLocationMessage LegacyInstanceName",
     "href": "/api-reference/legacySendLocationMessage",
     "method": "POST",
     "path": "/message/sendLocation/{instanceName}",
-    "search": "envia localização pelo alias legado legacy - messages legacysendlocationmessage legacyinstancename post /message/sendlocation/{instancename}"
+    "search": "envia localizaã§ã£o pelo alias legado legacy - messages legacysendlocationmessage legacyinstancename post /message/sendlocation/{instancename}"
   },
   {
     "id": "operation:post:/message/sendReaction/{instanceName}",
     "type": "LEGADO",
-    "title": "Envia reação pelo alias legado",
+    "title": "Envia reaÃ§Ã£o pelo alias legado",
     "description": "Legacy - Messages legacySendReactionMessage LegacyInstanceName",
     "href": "/api-reference/legacySendReactionMessage",
     "method": "POST",
     "path": "/message/sendReaction/{instanceName}",
-    "search": "envia reação pelo alias legado legacy - messages legacysendreactionmessage legacyinstancename post /message/sendreaction/{instancename}"
+    "search": "envia reaã§ã£o pelo alias legado legacy - messages legacysendreactionmessage legacyinstancename post /message/sendreaction/{instancename}"
   },
   {
     "id": "operation:patch:/message/reviewOrder/{instanceName}",
     "type": "LEGADO",
     "title": "Atualiza pedido pelo alias legado",
-    "description": "Alias legado ainda registrado para o mesmo handler de revisão de pedido da rota atual. Somente método e caminho diferem. Legacy - Messages legacyReviewOrder LegacyInstanceName",
+    "description": "Alias legado ainda registrado para o mesmo handler de revisÃ£o de pedido da rota atual. Somente mÃ©todo e caminho diferem. Legacy - Messages legacyReviewOrder LegacyInstanceName",
     "href": "/api-reference/legacyReviewOrder",
     "method": "PATCH",
     "path": "/message/reviewOrder/{instanceName}",
-    "search": "atualiza pedido pelo alias legado alias legado ainda registrado para o mesmo handler de revisão de pedido da rota atual. somente método e caminho diferem. legacy - messages legacyrevieworder legacyinstancename patch /message/revieworder/{instancename}"
+    "search": "atualiza pedido pelo alias legado alias legado ainda registrado para o mesmo handler de revisã£o de pedido da rota atual. somente mã©todo e caminho diferem. legacy - messages legacyrevieworder legacyinstancename patch /message/revieworder/{instancename}"
   },
   {
     "id": "operation:post:/chat/whatsappNumbers/{instanceName}",
@@ -2614,12 +3136,22 @@
   {
     "id": "operation:post:/chat/mediaData/{instanceName}",
     "type": "LEGADO",
-    "title": "Baixa mídia pelo alias legado",
+    "title": "Baixa mÃ­dia pelo alias legado",
     "description": "Legacy - Chats legacyDownloadMessageMedia LegacyInstanceName Binary",
     "href": "/api-reference/legacyDownloadMessageMedia",
     "method": "POST",
     "path": "/chat/mediaData/{instanceName}",
-    "search": "baixa mídia pelo alias legado legacy - chats legacydownloadmessagemedia legacyinstancename binary post /chat/mediadata/{instancename}"
+    "search": "baixa mã­dia pelo alias legado legacy - chats legacydownloadmessagemedia legacyinstancename binary post /chat/mediadata/{instancename}"
+  },
+  {
+    "id": "operation:post:/chat/findMessages/{instanceName}",
+    "type": "LEGADO",
+    "title": "Busca mensagens persistidas pelo contrato legado",
+    "description": "Alias legado com where/page/offset. Consulta o banco da instancia e nao exige conexao ativa ao WhatsApp. keyid e messageStatus preservam os nomes legados; a resposta preserva MessageUpdate com capitalizacao legada. Legacy - Chats legacyFindMessages LegacyInstanceName",
+    "href": "/api-reference/legacyFindMessages",
+    "method": "POST",
+    "path": "/chat/findMessages/{instanceName}",
+    "search": "busca mensagens persistidas pelo contrato legado alias legado com where/page/offset. consulta o banco da instancia e nao exige conexao ativa ao whatsapp. keyid e messagestatus preservam os nomes legados; a resposta preserva messageupdate com capitalizacao legada. legacy - chats legacyfindmessages legacyinstancename post /chat/findmessages/{instancename}"
   },
   {
     "id": "operation:delete:/chat/deleteMessage/{instanceName}",
@@ -2695,101 +3227,387 @@
     "id": "operation:post:/message/batches",
     "type": "PRO",
     "title": "Cria um lote persistente",
-    "description": "Persiste a definição, os destinatários normalizados, as instâncias permitidas e a agenda opcional. Com autoStart=true, o estado inicial é QUEUED, SCHEDULED ou WAITING_FOR_WINDOW conforme a janela. Message Batches createMessageBatch",
+    "description": "Persiste a definiÃ§Ã£o, os destinatÃ¡rios normalizados, as instÃ¢ncias permitidas e a agenda opcional. Com autoStart=true, o estado inicial Ã© QUEUED, SCHEDULED ou WAITING_FOR_WINDOW conforme a janela. Message Batches createMessageBatch",
     "href": "/api-reference/createMessageBatch",
     "method": "POST",
     "path": "/message/batches",
-    "search": "cria um lote persistente persiste a definição, os destinatários normalizados, as instâncias permitidas e a agenda opcional. com autostart=true, o estado inicial é queued, scheduled ou waiting_for_window conforme a janela. message batches createmessagebatch post /message/batches"
+    "search": "cria um lote persistente persiste a definiã§ã£o, os destinatã¡rios normalizados, as instã¢ncias permitidas e a agenda opcional. com autostart=true, o estado inicial ã© queued, scheduled ou waiting_for_window conforme a janela. message batches createmessagebatch post /message/batches"
   },
   {
     "id": "operation:post:/message/batches/list",
     "type": "PRO",
     "title": "Lista lotes",
-    "description": "Lista lotes por filtros enviados no body e cursor opaco. nextCursor e previousCursor são mutuamente exclusivos; o limite padrão é 50 e o máximo é 200. Message Batches listMessageBatches",
+    "description": "Lista lotes por filtros enviados no body e cursor opaco. nextCursor e previousCursor sÃ£o mutuamente exclusivos; o limite padrÃ£o Ã© 50 e o mÃ¡ximo Ã© 200. Message Batches listMessageBatches",
     "href": "/api-reference/listMessageBatches",
     "method": "POST",
     "path": "/message/batches/list",
-    "search": "lista lotes lista lotes por filtros enviados no body e cursor opaco. nextcursor e previouscursor são mutuamente exclusivos; o limite padrão é 50 e o máximo é 200. message batches listmessagebatches post /message/batches/list"
+    "search": "lista lotes lista lotes por filtros enviados no body e cursor opaco. nextcursor e previouscursor sã£o mutuamente exclusivos; o limite padrã£o ã© 50 e o mã¡ximo ã© 200. message batches listmessagebatches post /message/batches/list"
   },
   {
     "id": "operation:get:/message/batches/{batchId}",
     "type": "PRO",
     "title": "Consulta um lote sem incorporar seus itens",
-    "description": "Retorna a definição completa do lote, incluindo message e options, mas mantém os itens em recursos paginados separados. Message Batches getMessageBatch MessageBatchID",
+    "description": "Retorna a definiÃ§Ã£o completa do lote, incluindo message e options, mas mantÃ©m os itens em recursos paginados separados. Message Batches getMessageBatch MessageBatchID",
     "href": "/api-reference/getMessageBatch",
     "method": "GET",
     "path": "/message/batches/{batchId}",
-    "search": "consulta um lote sem incorporar seus itens retorna a definição completa do lote, incluindo message e options, mas mantém os itens em recursos paginados separados. message batches getmessagebatch messagebatchid get /message/batches/{batchid}"
+    "search": "consulta um lote sem incorporar seus itens retorna a definiã§ã£o completa do lote, incluindo message e options, mas mantã©m os itens em recursos paginados separados. message batches getmessagebatch messagebatchid get /message/batches/{batchid}"
   },
   {
     "id": "operation:get:/message/batches/{batchId}/processing",
     "type": "PRO",
     "title": "Consulta o processamento completo de um lote",
-    "description": "Retorna a definição do lote, mensagem, opções, instâncias, contadores e todos os destinatários sem paginação. Cada destinatário inclui seu resultado e o histórico ordenado de tentativas, com payloads, IDs e erros persistidos. A resposta pode ser grande em lotes com muitos destinatários. Message Batches getMessageBatchProcessing MessageBatchID",
+    "description": "Retorna a definiÃ§Ã£o do lote, mensagem, opÃ§Ãµes, instÃ¢ncias, contadores e todos os destinatÃ¡rios sem paginaÃ§Ã£o. Cada destinatÃ¡rio inclui seu resultado e o histÃ³rico ordenado de tentativas, com payloads, IDs e erros persistidos. A resposta pode ser grande em lotes com muitos destinatÃ¡rios. Message Batches getMessageBatchProcessing MessageBatchID",
     "href": "/api-reference/getMessageBatchProcessing",
     "method": "GET",
     "path": "/message/batches/{batchId}/processing",
-    "search": "consulta o processamento completo de um lote retorna a definição do lote, mensagem, opções, instâncias, contadores e todos os destinatários sem paginação. cada destinatário inclui seu resultado e o histórico ordenado de tentativas, com payloads, ids e erros persistidos. a resposta pode ser grande em lotes com muitos destinatários. message batches getmessagebatchprocessing messagebatchid get /message/batches/{batchid}/processing"
+    "search": "consulta o processamento completo de um lote retorna a definiã§ã£o do lote, mensagem, opã§ãµes, instã¢ncias, contadores e todos os destinatã¡rios sem paginaã§ã£o. cada destinatã¡rio inclui seu resultado e o histã³rico ordenado de tentativas, com payloads, ids e erros persistidos. a resposta pode ser grande em lotes com muitos destinatã¡rios. message batches getmessagebatchprocessing messagebatchid get /message/batches/{batchid}/processing"
   },
   {
     "id": "operation:get:/message/batches/{batchId}/items",
     "type": "PRO",
     "title": "Lista itens do lote",
-    "description": "Lista destinatários e resultados por cursor opaco. O cursor de itens é derivado da posição original do destinatário. Message Batches listMessageBatchItems MessageBatchID status recipient instanceName MessageBatchLimit NextCursor PreviousCursor",
+    "description": "Lista destinatÃ¡rios e resultados por cursor opaco. O cursor de itens Ã© derivado da posiÃ§Ã£o original do destinatÃ¡rio. Message Batches listMessageBatchItems MessageBatchID status recipient instanceName MessageBatchLimit NextCursor PreviousCursor",
     "href": "/api-reference/listMessageBatchItems",
     "method": "GET",
     "path": "/message/batches/{batchId}/items",
-    "search": "lista itens do lote lista destinatários e resultados por cursor opaco. o cursor de itens é derivado da posição original do destinatário. message batches listmessagebatchitems messagebatchid status recipient instancename messagebatchlimit nextcursor previouscursor get /message/batches/{batchid}/items"
+    "search": "lista itens do lote lista destinatã¡rios e resultados por cursor opaco. o cursor de itens ã© derivado da posiã§ã£o original do destinatã¡rio. message batches listmessagebatchitems messagebatchid status recipient instancename messagebatchlimit nextcursor previouscursor get /message/batches/{batchid}/items"
   },
   {
     "id": "operation:get:/message/batches/{batchId}/items/{itemId}",
     "type": "PRO",
     "title": "Consulta item e suas tentativas",
-    "description": "Retorna um destinatário do lote com o histórico completo de tentativas de envio. Message Batches getMessageBatchItem MessageBatchID MessageBatchItemID",
+    "description": "Retorna um destinatÃ¡rio do lote com o histÃ³rico completo de tentativas de envio. Message Batches getMessageBatchItem MessageBatchID MessageBatchItemID",
     "href": "/api-reference/getMessageBatchItem",
     "method": "GET",
     "path": "/message/batches/{batchId}/items/{itemId}",
-    "search": "consulta item e suas tentativas retorna um destinatário do lote com o histórico completo de tentativas de envio. message batches getmessagebatchitem messagebatchid messagebatchitemid get /message/batches/{batchid}/items/{itemid}"
+    "search": "consulta item e suas tentativas retorna um destinatã¡rio do lote com o histã³rico completo de tentativas de envio. message batches getmessagebatchitem messagebatchid messagebatchitemid get /message/batches/{batchid}/items/{itemid}"
   },
   {
     "id": "operation:get:/message/batches/{batchId}/attempts",
     "type": "PRO",
     "title": "Lista tentativas do lote",
-    "description": "Lista tentativas persistidas, incluindo indisponibilidade de instância e resultados UNKNOWN após recovery. Message Batches listMessageBatchAttempts MessageBatchID status recipient instanceName MessageBatchLimit NextCursor PreviousCursor",
+    "description": "Lista tentativas persistidas, incluindo indisponibilidade de instÃ¢ncia e resultados UNKNOWN apÃ³s recovery. Message Batches listMessageBatchAttempts MessageBatchID status recipient instanceName MessageBatchLimit NextCursor PreviousCursor",
     "href": "/api-reference/listMessageBatchAttempts",
     "method": "GET",
     "path": "/message/batches/{batchId}/attempts",
-    "search": "lista tentativas do lote lista tentativas persistidas, incluindo indisponibilidade de instância e resultados unknown após recovery. message batches listmessagebatchattempts messagebatchid status recipient instancename messagebatchlimit nextcursor previouscursor get /message/batches/{batchid}/attempts"
+    "search": "lista tentativas do lote lista tentativas persistidas, incluindo indisponibilidade de instã¢ncia e resultados unknown apã³s recovery. message batches listmessagebatchattempts messagebatchid status recipient instancename messagebatchlimit nextcursor previouscursor get /message/batches/{batchid}/attempts"
   },
   {
     "id": "operation:post:/message/batches/{batchId}/start",
     "type": "PRO",
-    "title": "Inicia ou continua o lote sem executar o loop na requisição",
-    "description": "Inicia DRAFT, PAUSED ou INTERRUPTED respeitando a agenda: QUEUED dentro da janela, SCHEDULED antes da primeira ou WAITING_FOR_WINDOW fora dela. É idempotente nos estados já ativos ou agendados. Message Batches startMessageBatch MessageBatchID",
+    "title": "Inicia ou continua o lote sem executar o loop na requisiÃ§Ã£o",
+    "description": "Inicia DRAFT, PAUSED ou INTERRUPTED respeitando a agenda: QUEUED dentro da janela, SCHEDULED antes da primeira ou WAITING_FOR_WINDOW fora dela. Ã‰ idempotente nos estados jÃ¡ ativos ou agendados. Message Batches startMessageBatch MessageBatchID",
     "href": "/api-reference/startMessageBatch",
     "method": "POST",
     "path": "/message/batches/{batchId}/start",
-    "search": "inicia ou continua o lote sem executar o loop na requisição inicia draft, paused ou interrupted respeitando a agenda: queued dentro da janela, scheduled antes da primeira ou waiting_for_window fora dela. é idempotente nos estados já ativos ou agendados. message batches startmessagebatch messagebatchid post /message/batches/{batchid}/start"
+    "search": "inicia ou continua o lote sem executar o loop na requisiã§ã£o inicia draft, paused ou interrupted respeitando a agenda: queued dentro da janela, scheduled antes da primeira ou waiting_for_window fora dela. ã‰ idempotente nos estados jã¡ ativos ou agendados. message batches startmessagebatch messagebatchid post /message/batches/{batchid}/start"
   },
   {
     "id": "operation:post:/message/batches/{batchId}/pause",
     "type": "PRO",
     "title": "Solicita pausa",
-    "description": "Persiste PAUSE_REQUESTED e retorna imediatamente. O worker conclui o item já confirmado e chega a PAUSED em um ponto seguro. Message Batches pauseMessageBatch MessageBatchID",
+    "description": "Persiste PAUSE_REQUESTED e retorna imediatamente. O worker conclui o item jÃ¡ confirmado e chega a PAUSED em um ponto seguro. Message Batches pauseMessageBatch MessageBatchID",
     "href": "/api-reference/pauseMessageBatch",
     "method": "POST",
     "path": "/message/batches/{batchId}/pause",
-    "search": "solicita pausa persiste pause_requested e retorna imediatamente. o worker conclui o item já confirmado e chega a paused em um ponto seguro. message batches pausemessagebatch messagebatchid post /message/batches/{batchid}/pause"
+    "search": "solicita pausa persiste pause_requested e retorna imediatamente. o worker conclui o item jã¡ confirmado e chega a paused em um ponto seguro. message batches pausemessagebatch messagebatchid post /message/batches/{batchid}/pause"
   },
   {
     "id": "operation:post:/message/batches/{batchId}/stop",
     "type": "PRO",
     "title": "Solicita encerramento terminal",
-    "description": "Persiste STOP_REQUESTED e retorna imediatamente. STOPPED é terminal e conserva como PENDING os itens não processados. Message Batches stopMessageBatch MessageBatchID",
+    "description": "Persiste STOP_REQUESTED e retorna imediatamente. STOPPED Ã© terminal e conserva como PENDING os itens nÃ£o processados. Message Batches stopMessageBatch MessageBatchID",
     "href": "/api-reference/stopMessageBatch",
     "method": "POST",
     "path": "/message/batches/{batchId}/stop",
-    "search": "solicita encerramento terminal persiste stop_requested e retorna imediatamente. stopped é terminal e conserva como pending os itens não processados. message batches stopmessagebatch messagebatchid post /message/batches/{batchid}/stop"
+    "search": "solicita encerramento terminal persiste stop_requested e retorna imediatamente. stopped ã© terminal e conserva como pending os itens nã£o processados. message batches stopmessagebatch messagebatchid post /message/batches/{batchid}/stop"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}",
+    "type": "ATUAL",
+    "title": "List calls",
+    "description": "Calls listCalls InstanceName status direction peer video externalId cursor limit",
+    "href": "/api-reference/listCalls",
+    "method": "GET",
+    "path": "/call/{instanceName}",
+    "search": "list calls calls listcalls instancename status direction peer video externalid cursor limit get /call/{instancename}"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}",
+    "type": "ATUAL",
+    "title": "Start an outbound WhatsApp call",
+    "description": "Calls startCall InstanceName",
+    "href": "/api-reference/startCall",
+    "method": "POST",
+    "path": "/call/{instanceName}",
+    "search": "start an outbound whatsapp call calls startcall instancename post /call/{instancename}"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/config",
+    "type": "ATUAL",
+    "title": "Get per-instance call settings",
+    "description": "Returns stored instance settings and effective settings after global master flags are applied. Calls getInstanceCallSettings InstanceName",
+    "href": "/api-reference/getInstanceCallSettings",
+    "method": "GET",
+    "path": "/call/{instanceName}/config",
+    "search": "get per-instance call settings returns stored instance settings and effective settings after global master flags are applied. calls getinstancecallsettings instancename get /call/{instancename}/config"
+  },
+  {
+    "id": "operation:put:/call/{instanceName}/config",
+    "type": "ATUAL",
+    "title": "Replace per-instance call settings",
+    "description": "Updates settings stored by instance_id. Global CALLS_* flags remain master locks and may keep effective fields disabled. Calls updateInstanceCallSettings InstanceName",
+    "href": "/api-reference/updateInstanceCallSettings",
+    "method": "PUT",
+    "path": "/call/{instanceName}/config",
+    "search": "replace per-instance call settings updates settings stored by instance_id. global calls_* flags remain master locks and may keep effective fields disabled. calls updateinstancecallsettings instancename put /call/{instancename}/config"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/{callId}",
+    "type": "ATUAL",
+    "title": "Get one call",
+    "description": "Calls getCall InstanceName CallId",
+    "href": "/api-reference/getCall",
+    "method": "GET",
+    "path": "/call/{instanceName}/{callId}",
+    "search": "get one call calls getcall instancename callid get /call/{instancename}/{callid}"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/{callId}/events",
+    "type": "ATUAL",
+    "title": "List call events",
+    "description": "Calls listCallEvents InstanceName CallId limit",
+    "href": "/api-reference/listCallEvents",
+    "method": "GET",
+    "path": "/call/{instanceName}/{callId}/events",
+    "search": "list call events calls listcallevents instancename callid limit get /call/{instancename}/{callid}/events"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/answer",
+    "type": "ATUAL",
+    "title": "Answer an inbound call through the API",
+    "description": "Calls answerCall InstanceName CallId",
+    "href": "/api-reference/answerCall",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/answer",
+    "search": "answer an inbound call through the api calls answercall instancename callid post /call/{instancename}/{callid}/answer"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/reject",
+    "type": "ATUAL",
+    "title": "Reject an inbound call through the API",
+    "description": "Calls rejectManagedCall InstanceName CallId",
+    "href": "/api-reference/rejectManagedCall",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/reject",
+    "search": "reject an inbound call through the api calls rejectmanagedcall instancename callid post /call/{instancename}/{callid}/reject"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/hangup",
+    "type": "ATUAL",
+    "title": "Hang up a call through the API",
+    "description": "Calls hangupCall InstanceName CallId",
+    "href": "/api-reference/hangupCall",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/hangup",
+    "search": "hang up a call through the api calls hangupcall instancename callid post /call/{instancename}/{callid}/hangup"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/{callId}/recordings",
+    "type": "ATUAL",
+    "title": "List call recordings",
+    "description": "Calls listCallRecordings InstanceName CallId",
+    "href": "/api-reference/listCallRecordings",
+    "method": "GET",
+    "path": "/call/{instanceName}/{callId}/recordings",
+    "search": "list call recordings calls listcallrecordings instancename callid get /call/{instancename}/{callid}/recordings"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/recording/start",
+    "type": "ATUAL",
+    "title": "Start local disk recording for a managed call",
+    "description": "Records only media that is available in the API runtime. Calls answered on another linked device return 409 and do not create media files. Calls startCallRecording InstanceName CallId",
+    "href": "/api-reference/startCallRecording",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/recording/start",
+    "search": "start local disk recording for a managed call records only media that is available in the api runtime. calls answered on another linked device return 409 and do not create media files. calls startcallrecording instancename callid post /call/{instancename}/{callid}/recording/start"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/recording/stop",
+    "type": "ATUAL",
+    "title": "Stop local disk recording",
+    "description": "Calls stopCallRecording InstanceName CallId",
+    "href": "/api-reference/stopCallRecording",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/recording/stop",
+    "search": "stop local disk recording calls stopcallrecording instancename callid post /call/{instancename}/{callid}/recording/stop"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/{callId}/recordings/{recordingId}",
+    "type": "ATUAL",
+    "title": "Get call recording metadata",
+    "description": "Calls getCallRecording InstanceName CallId RecordingId",
+    "href": "/api-reference/getCallRecording",
+    "method": "GET",
+    "path": "/call/{instanceName}/{callId}/recordings/{recordingId}",
+    "search": "get call recording metadata calls getcallrecording instancename callid recordingid get /call/{instancename}/{callid}/recordings/{recordingid}"
+  },
+  {
+    "id": "operation:delete:/call/{instanceName}/{callId}/recordings/{recordingId}",
+    "type": "ATUAL",
+    "title": "Delete a local call recording",
+    "description": "Calls deleteCallRecording InstanceName CallId RecordingId",
+    "href": "/api-reference/deleteCallRecording",
+    "method": "DELETE",
+    "path": "/call/{instanceName}/{callId}/recordings/{recordingId}",
+    "search": "delete a local call recording calls deletecallrecording instancename callid recordingid delete /call/{instancename}/{callid}/recordings/{recordingid}"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/{callId}/recordings/{recordingId}/download",
+    "type": "ATUAL",
+    "title": "Download a completed local call recording",
+    "description": "Calls downloadCallRecording InstanceName CallId RecordingId",
+    "href": "/api-reference/downloadCallRecording",
+    "method": "GET",
+    "path": "/call/{instanceName}/{callId}/recordings/{recordingId}/download",
+    "search": "download a completed local call recording calls downloadcallrecording instancename callid recordingid get /call/{instancename}/{callid}/recordings/{recordingid}/download"
+  },
+  {
+    "id": "schema:CallStatus",
+    "type": "Schema",
+    "title": "CallStatus",
+    "description": "Schema OpenAPI ",
+    "href": "/api-reference",
+    "search": "callstatus schema openapi   "
+  },
+  {
+    "id": "schema:AnsweredBy",
+    "type": "Schema",
+    "title": "AnsweredBy",
+    "description": "Schema OpenAPI ",
+    "href": "/api-reference",
+    "search": "answeredby schema openapi   "
+  },
+  {
+    "id": "schema:EndedBy",
+    "type": "Schema",
+    "title": "EndedBy",
+    "description": "Schema OpenAPI ",
+    "href": "/api-reference",
+    "search": "endedby schema openapi   "
+  },
+  {
+    "id": "schema:AnswerRequestedBy",
+    "type": "Schema",
+    "title": "AnswerRequestedBy",
+    "description": "Schema OpenAPI ",
+    "href": "/api-reference",
+    "search": "answerrequestedby schema openapi   "
+  },
+  {
+    "id": "schema:StartCallRequest",
+    "type": "Schema",
+    "title": "StartCallRequest",
+    "description": "Schema OpenAPI target video externalId recording",
+    "href": "/api-reference",
+    "search": "startcallrequest schema openapi target video externalid recording  "
+  },
+  {
+    "id": "schema:CallReasonRequest",
+    "type": "Schema",
+    "title": "CallReasonRequest",
+    "description": "Schema OpenAPI reason",
+    "href": "/api-reference",
+    "search": "callreasonrequest schema openapi reason  "
+  },
+  {
+    "id": "schema:Call",
+    "type": "Schema",
+    "title": "Call",
+    "description": "Schema OpenAPI id instanceId instance provider providerCallId direction status peer peerJid audio video localVideoActive remoteVideoActive recordingEnabled recordingRequested recordingStarted recordingCompleted recordingAvailable recordingStatus recordingUnavailableReason recordingStartedAt recordingCompletedAt answeredBy endedBy answerRequestedBy endReason providerReason stateVersion lastProviderEventAt startedAt ringingAt answeredAt connectedAt endedAt durationSeconds",
+    "href": "/api-reference",
+    "search": "call schema openapi id instanceid instance provider providercallid direction status peer peerjid audio video localvideoactive remotevideoactive recordingenabled recordingrequested recordingstarted recordingcompleted recordingavailable recordingstatus recordingunavailablereason recordingstartedat recordingcompletedat answeredby endedby answerrequestedby endreason providerreason stateversion lastprovidereventat startedat ringingat answeredat connectedat endedat durationseconds  "
+  },
+  {
+    "id": "schema:CallEvent",
+    "type": "Schema",
+    "title": "CallEvent",
+    "description": "Schema OpenAPI id callId type sequence payload occurredAt",
+    "href": "/api-reference",
+    "search": "callevent schema openapi id callid type sequence payload occurredat  "
+  },
+  {
+    "id": "schema:CallConflictResponse",
+    "type": "Schema",
+    "title": "CallConflictResponse",
+    "description": "Schema OpenAPI status error message call",
+    "href": "/api-reference",
+    "search": "callconflictresponse schema openapi status error message call  "
+  },
+  {
+    "id": "schema:RecordingStatus",
+    "type": "Schema",
+    "title": "RecordingStatus",
+    "description": "Schema OpenAPI ",
+    "href": "/api-reference",
+    "search": "recordingstatus schema openapi   "
+  },
+  {
+    "id": "schema:CallRecording",
+    "type": "Schema",
+    "title": "CallRecording",
+    "description": "Schema OpenAPI id instanceId callId type mediaType direction format relativePath sizeBytes durationMs durationSeconds sampleRate channels audioCodec videoCodec checksumSha256 status errorCode errorMessage downloadAvailable startedAt completedAt expiresAt createdAt updatedAt",
+    "href": "/api-reference",
+    "search": "callrecording schema openapi id instanceid callid type mediatype direction format relativepath sizebytes durationms durationseconds samplerate channels audiocodec videocodec checksumsha256 status errorcode errormessage downloadavailable startedat completedat expiresat createdat updatedat  "
+  },
+  {
+    "id": "schema:StartCallRecordingRequest",
+    "type": "Schema",
+    "title": "StartCallRecordingRequest",
+    "description": "Schema OpenAPI audio video incomingAudio outgoingAudio incomingVideo outgoingVideo consentGranted consentAt reason",
+    "href": "/api-reference",
+    "search": "startcallrecordingrequest schema openapi audio video incomingaudio outgoingaudio incomingvideo outgoingvideo consentgranted consentat reason  "
+  },
+  {
+    "id": "schema:StopCallRecordingRequest",
+    "type": "Schema",
+    "title": "StopCallRecordingRequest",
+    "description": "Schema OpenAPI reason",
+    "href": "/api-reference",
+    "search": "stopcallrecordingrequest schema openapi reason  "
+  },
+  {
+    "id": "schema:InstanceCallSettings",
+    "type": "Schema",
+    "title": "InstanceCallSettings",
+    "description": "Schema OpenAPI callsEnabled incomingCallsEnabled outgoingCallsEnabled audio video reactionsEnabled recording diagnosticsEnabled autoAnswer limits",
+    "href": "/api-reference",
+    "search": "instancecallsettings schema openapi callsenabled incomingcallsenabled outgoingcallsenabled audio video reactionsenabled recording diagnosticsenabled autoanswer limits  "
+  },
+  {
+    "id": "schema:EffectiveCallSettings",
+    "type": "Schema",
+    "title": "EffectiveCallSettings",
+    "description": "Result of global CALLS_* master locks combined with stored instance settings. callsEnabled incomingCallsEnabled outgoingCallsEnabled audioEnabled audioReceiveEnabled audioSendEnabled audioPlaybackEnabled audioStreamingEnabled videoEnabled videoReceiveEnabled videoSendEnabled videoUpgradeEnabled videoPlaybackEnabled reactionsEnabled recordingEnabled audioRecordingEnabled videoRecordingEnabled diagnosticsEnabled autoAnswerEnabled maxConcurrentCalls ringTimeoutSeconds connectTimeoutSeconds maxCallDurationSeconds",
+    "href": "/api-reference",
+    "search": "effectivecallsettings result of global calls_* master locks combined with stored instance settings. callsenabled incomingcallsenabled outgoingcallsenabled audioenabled audioreceiveenabled audiosendenabled audioplaybackenabled audiostreamingenabled videoenabled videoreceiveenabled videosendenabled videoupgradeenabled videoplaybackenabled reactionsenabled recordingenabled audiorecordingenabled videorecordingenabled diagnosticsenabled autoanswerenabled maxconcurrentcalls ringtimeoutseconds connecttimeoutseconds maxcalldurationseconds  "
+  },
+  {
+    "id": "schema:UpdateInstanceCallSettingsRequest",
+    "type": "Schema",
+    "title": "UpdateInstanceCallSettingsRequest",
+    "description": "Schema OpenAPI ",
+    "href": "/api-reference",
+    "search": "updateinstancecallsettingsrequest schema openapi   "
+  },
+  {
+    "id": "schema:InstanceCallSettingsResponse",
+    "type": "Schema",
+    "title": "InstanceCallSettingsResponse",
+    "description": "Schema OpenAPI instance settings effective activeCalls",
+    "href": "/api-reference",
+    "search": "instancecallsettingsresponse schema openapi instance settings effective activecalls  "
   },
   {
     "id": "schema:MessageBatchStatus",
@@ -2859,25 +3677,25 @@
     "id": "schema:MessageBatchMessage",
     "type": "Schema",
     "title": "MessageBatchMessage",
-    "description": "Mensagem persistida do lote. O payload é direto: não envie number/chat/recipient/options nem wrappers como textMessage, mediaMessage, audioMessage, contactMessage, locationMessage ou buttonMessage. Tipos aceitos: text, link, media, audio, contact, location e interactive; ptt, whatsapp-audio e whatsapp_audio são aliases de audio. type payload",
+    "description": "Mensagem persistida do lote. O payload Ã© direto: nÃ£o envie number/chat/recipient/options nem wrappers como textMessage, mediaMessage, audioMessage, contactMessage, locationMessage ou buttonMessage. Tipos aceitos: text, link, media, audio, contact, location e interactive; ptt, whatsapp-audio e whatsapp_audio sÃ£o aliases de audio. type payload",
     "href": "/api-reference",
-    "search": "messagebatchmessage mensagem persistida do lote. o payload é direto: não envie number/chat/recipient/options nem wrappers como textmessage, mediamessage, audiomessage, contactmessage, locationmessage ou buttonmessage. tipos aceitos: text, link, media, audio, contact, location e interactive; ptt, whatsapp-audio e whatsapp_audio são aliases de audio. type payload  "
+    "search": "messagebatchmessage mensagem persistida do lote. o payload ã© direto: nã£o envie number/chat/recipient/options nem wrappers como textmessage, mediamessage, audiomessage, contactmessage, locationmessage ou buttonmessage. tipos aceitos: text, link, media, audio, contact, location e interactive; ptt, whatsapp-audio e whatsapp_audio sã£o aliases de audio. type payload  "
   },
   {
     "id": "schema:MessageBatchInteractivePayload",
     "type": "Schema",
     "title": "MessageBatchInteractivePayload",
-    "description": "Payload direto de message.type=interactive no Message Batch. Os botões podem misturar url, copyCode e id. Um mediaUploadId positivo exige lote com exatamente uma instância. ",
+    "description": "Payload direto de message.type=interactive no Message Batch. Os botÃµes podem misturar url, copyCode e id. Um mediaUploadId positivo exige lote com exatamente uma instÃ¢ncia. ",
     "href": "/api-reference",
-    "search": "messagebatchinteractivepayload payload direto de message.type=interactive no message batch. os botões podem misturar url, copycode e id. um mediauploadid positivo exige lote com exatamente uma instância.   "
+    "search": "messagebatchinteractivepayload payload direto de message.type=interactive no message batch. os botãµes podem misturar url, copycode e id. um mediauploadid positivo exige lote com exatamente uma instã¢ncia.   "
   },
   {
     "id": "schema:MessageBatchSchedule",
     "type": "Schema",
     "title": "MessageBatchSchedule",
-    "description": "Janela absoluta inicial. DAILY preserva os horários locais e aceita janelas que atravessam a meia-noite. windowStartAt windowEndAt recurrence timezone",
+    "description": "Janela absoluta inicial. DAILY preserva os horÃ¡rios locais e aceita janelas que atravessam a meia-noite. windowStartAt windowEndAt recurrence timezone",
     "href": "/api-reference",
-    "search": "messagebatchschedule janela absoluta inicial. daily preserva os horários locais e aceita janelas que atravessam a meia-noite. windowstartat windowendat recurrence timezone  "
+    "search": "messagebatchschedule janela absoluta inicial. daily preserva os horã¡rios locais e aceita janelas que atravessam a meia-noite. windowstartat windowendat recurrence timezone  "
   },
   {
     "id": "schema:MessageBatchScheduleInput",
@@ -2899,9 +3717,9 @@
     "id": "schema:MessageBatchListRequest",
     "type": "Schema",
     "title": "MessageBatchListRequest",
-    "description": "Filtros da listagem de lotes. Envie {} para usar os padrões. status instanceName createdFrom createdTo name query limit nextCursor previousCursor",
+    "description": "Filtros da listagem de lotes. Envie {} para usar os padrÃµes. status instanceName createdFrom createdTo name query limit nextCursor previousCursor",
     "href": "/api-reference",
-    "search": "messagebatchlistrequest filtros da listagem de lotes. envie {} para usar os padrões. status instancename createdfrom createdto name query limit nextcursor previouscursor  "
+    "search": "messagebatchlistrequest filtros da listagem de lotes. envie {} para usar os padrãµes. status instancename createdfrom createdto name query limit nextcursor previouscursor  "
   },
   {
     "id": "schema:MessageBatchCounts",
@@ -3336,6 +4154,22 @@
     "search": "sendreactionrequest schema openapi reactionmessage  "
   },
   {
+    "id": "schema:NativeFlowMessage",
+    "type": "Schema",
+    "title": "NativeFlowMessage",
+    "description": "Payload nativo de fluxo interativo do WhatsApp. ",
+    "href": "/api-reference",
+    "search": "nativeflowmessage payload nativo de fluxo interativo do whatsapp.   "
+  },
+  {
+    "id": "schema:SendNativeFlowRequest",
+    "type": "Schema",
+    "title": "SendNativeFlowRequest",
+    "description": "Schema OpenAPI number chat recipient options message",
+    "href": "/api-reference",
+    "search": "sendnativeflowrequest schema openapi number chat recipient options message  "
+  },
+  {
     "id": "schema:IsAccountRequest",
     "type": "Schema",
     "title": "IsAccountRequest",
@@ -3366,6 +4200,102 @@
     "description": "Schema OpenAPI message read",
     "href": "/api-reference",
     "search": "readmessagesresponse schema openapi message read  "
+  },
+  {
+    "id": "schema:FindMessagesRequest",
+    "type": "Schema",
+    "title": "FindMessagesRequest",
+    "description": "Todos os campos sao opcionais. O body vazio {} retorna as mensagens mais recentes da instancia com limite padrao 50. Nao aceita where, page, offset, keyid legado, messageStatus legado, device ou instanceId vindo do cliente. filter cursor limit",
+    "href": "/api-reference",
+    "search": "findmessagesrequest todos os campos sao opcionais. o body vazio {} retorna as mensagens mais recentes da instancia com limite padrao 50. nao aceita where, page, offset, keyid legado, messagestatus legado, device ou instanceid vindo do cliente. filter cursor limit  "
+  },
+  {
+    "id": "schema:FindMessagesFilter",
+    "type": "Schema",
+    "title": "FindMessagesFilter",
+    "description": "Schema OpenAPI id keyId keyRemoteJid keyFromMe messageType status",
+    "href": "/api-reference",
+    "search": "findmessagesfilter schema openapi id keyid keyremotejid keyfromme messagetype status  "
+  },
+  {
+    "id": "schema:MessageCursorRequest",
+    "type": "Schema",
+    "title": "MessageCursorRequest",
+    "description": "Schema OpenAPI type id",
+    "href": "/api-reference",
+    "search": "messagecursorrequest schema openapi type id  "
+  },
+  {
+    "id": "schema:MessageCursor",
+    "type": "Schema",
+    "title": "MessageCursor",
+    "description": "Schema OpenAPI type id",
+    "href": "/api-reference",
+    "search": "messagecursor schema openapi type id  "
+  },
+  {
+    "id": "schema:FindMessagesResponse",
+    "type": "Schema",
+    "title": "FindMessagesResponse",
+    "description": "Schema OpenAPI messages",
+    "href": "/api-reference",
+    "search": "findmessagesresponse schema openapi messages  "
+  },
+  {
+    "id": "schema:FindMessagesPage",
+    "type": "Schema",
+    "title": "FindMessagesPage",
+    "description": "Schema OpenAPI records pageInfo",
+    "href": "/api-reference",
+    "search": "findmessagespage schema openapi records pageinfo  "
+  },
+  {
+    "id": "schema:FindMessagesPageInfo",
+    "type": "Schema",
+    "title": "FindMessagesPageInfo",
+    "description": "Schema OpenAPI limit hasNext hasPrevious nextCursor previousCursor",
+    "href": "/api-reference",
+    "search": "findmessagespageinfo schema openapi limit hasnext hasprevious nextcursor previouscursor  "
+  },
+  {
+    "id": "schema:PersistedMessageUpdate",
+    "type": "Schema",
+    "title": "PersistedMessageUpdate",
+    "description": "Schema OpenAPI status dateTime",
+    "href": "/api-reference",
+    "search": "persistedmessageupdate schema openapi status datetime  "
+  },
+  {
+    "id": "schema:PersistedMessage",
+    "type": "Schema",
+    "title": "PersistedMessage",
+    "description": "Schema OpenAPI id keyId keyRemoteJid keyLid keyFromMe keyParticipant keyParticipantLid pushName messageType content messageTimestamp instanceId device isGroup metadata externalAttributes messageUpdates",
+    "href": "/api-reference",
+    "search": "persistedmessage schema openapi id keyid keyremotejid keylid keyfromme keyparticipant keyparticipantlid pushname messagetype content messagetimestamp instanceid device isgroup metadata externalattributes messageupdates  "
+  },
+  {
+    "id": "schema:LegacyFindMessagesRequest",
+    "type": "Schema",
+    "title": "LegacyFindMessagesRequest",
+    "description": "Schema OpenAPI where offset page",
+    "href": "/api-reference",
+    "search": "legacyfindmessagesrequest schema openapi where offset page  "
+  },
+  {
+    "id": "schema:LegacyMessage",
+    "type": "Schema",
+    "title": "LegacyMessage",
+    "description": "Schema OpenAPI ",
+    "href": "/api-reference",
+    "search": "legacymessage schema openapi   "
+  },
+  {
+    "id": "schema:LegacyFindMessagesResponse",
+    "type": "Schema",
+    "title": "LegacyFindMessagesResponse",
+    "description": "Schema OpenAPI messages",
+    "href": "/api-reference",
+    "search": "legacyfindmessagesresponse schema openapi messages  "
   },
   {
     "id": "schema:MessageKey",
@@ -3635,11 +4565,11 @@
     "id": "webhook:post:messageBatchEvent",
     "type": "PRO",
     "title": "Evento global persistente de Message Batch",
-    "description": "Enviado somente para WEBHOOK_GLOBAL_URL depois do commit da transação do lote. Respostas 2xx confirmam a entrega; falhas são reagendadas pela outbox com backoff persistente. Message Batches",
+    "description": "Enviado somente para WEBHOOK_GLOBAL_URL depois do commit da transaÃ§Ã£o do lote. Respostas 2xx confirmam a entrega; falhas sÃ£o reagendadas pela outbox com backoff persistente. Message Batches",
     "href": "/api-reference",
     "method": "POST",
     "path": "messageBatchEvent",
-    "search": "evento global persistente de message batch enviado somente para webhook_global_url depois do commit da transação do lote. respostas 2xx confirmam a entrega; falhas são reagendadas pela outbox com backoff persistente. message batches post messagebatchevent"
+    "search": "evento global persistente de message batch enviado somente para webhook_global_url depois do commit da transaã§ã£o do lote. respostas 2xx confirmam a entrega; falhas sã£o reagendadas pela outbox com backoff persistente. message batches post messagebatchevent"
   },
   {
     "id": "webhook-event:call.upsert",
@@ -3757,9 +4687,9 @@
     "id": "webhook-event:messages.delete",
     "type": "Evento",
     "title": "messages.delete",
-    "description": "Mensagem removida localmente pelo evento DeleteForMe. messagesDeleted chatJid senderJid keyFromMe messageId deleteMedia fromFullSync dateTime messageTime",
+    "description": "Mensagem removida localmente pelo evento DeleteForMe. messagesDeleted id chatJid senderJid keyFromMe messageId deleteMedia fromFullSync dateTime messageTime",
     "href": "/api-reference/webhooks/messages.delete",
-    "search": "messages.delete mensagem removida localmente pelo evento deleteforme. messagesdeleted chatjid senderjid keyfromme messageid deletemedia fromfullsync datetime messagetime  "
+    "search": "messages.delete mensagem removida localmente pelo evento deleteforme. messagesdeleted id chatjid senderjid keyfromme messageid deletemedia fromfullsync datetime messagetime  "
   },
   {
     "id": "webhook-event:messages.star",
@@ -3789,9 +4719,9 @@
     "id": "webhook-event:messages.upsert",
     "type": "Evento",
     "title": "messages.upsert",
-    "description": "Mensagem recebida e persistida pela aplicacao. messagesUpsert id keyRemoteJid keyLid keyFromMe keyParticipant keyParticipantLid pushName messageType content messageTimestamp device isGroup metadata",
+    "description": "Mensagem recebida e persistida pela aplicacao. messagesUpsert id keyId keyRemoteJid keyLid keyFromMe keyParticipant keyParticipantLid pushName messageType content messageTimestamp device isGroup metadata",
     "href": "/api-reference/webhooks/messages.upsert",
-    "search": "messages.upsert mensagem recebida e persistida pela aplicacao. messagesupsert id keyremotejid keylid keyfromme keyparticipant keyparticipantlid pushname messagetype content messagetimestamp device isgroup metadata  "
+    "search": "messages.upsert mensagem recebida e persistida pela aplicacao. messagesupsert id keyid keyremotejid keylid keyfromme keyparticipant keyparticipantlid pushname messagetype content messagetimestamp device isgroup metadata  "
   },
   {
     "id": "webhook-event:news.letter",
@@ -3829,9 +4759,9 @@
     "id": "webhook-event:send.message",
     "type": "Evento",
     "title": "send.message",
-    "description": "Mensagem enviada pela API apos envio e persistencia bem-sucedidos. sendMessage id keyRemoteJid keyLid keyFromMe keyParticipant keyParticipantLid pushName messageType content messageTimestamp device isGroup metadata",
+    "description": "Mensagem enviada pela API apos envio e persistencia bem-sucedidos. sendMessage id keyId keyRemoteJid keyLid keyFromMe keyParticipant keyParticipantLid pushName messageType content messageTimestamp device isGroup metadata",
     "href": "/api-reference/webhooks/send.message",
-    "search": "send.message mensagem enviada pela api apos envio e persistencia bem-sucedidos. sendmessage id keyremotejid keylid keyfromme keyparticipant keyparticipantlid pushname messagetype content messagetimestamp device isgroup metadata  "
+    "search": "send.message mensagem enviada pela api apos envio e persistencia bem-sucedidos. sendmessage id keyid keyremotejid keylid keyfromme keyparticipant keyparticipantlid pushname messagetype content messagetimestamp device isgroup metadata  "
   },
   {
     "id": "webhook-event:settings.update",

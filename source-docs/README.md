@@ -14,6 +14,7 @@ Esta pasta descreve o contrato observado no código executável atual. A referê
 8. [Grupos](./groups.md): criação, participantes, convite, foto e saída.
 9. [Webhooks](./webhooks.md): configuração, eventos, envelopes e entrega.
 10. [WebSocket](./websocket.md): eventos em tempo real por instancia e por dono de lote.
+11. [Chamadas](./calls.md): chamadas individuais experimentais com áudio, vídeo, reações e eventos.
 
 ## CodeChat API Go Pro
 
@@ -28,6 +29,8 @@ Esta pasta descreve o contrato observado no código executável atual. A referê
 - [Variáveis de ambiente](./environment.md).
 - [Pareamento por Passkey](./passkey-pairing.md).
 - [Migrações](./migrations.md).
+- [Dependências de chamadas](./calls.md#dependências).
+- [Chamadas multi-device](./calls.md#comportamento-multi-device).
 
 ## Convenções
 

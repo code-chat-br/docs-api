@@ -23,6 +23,11 @@ const documents = {
     'Fila persistente, múltiplas instâncias, controle assíncrono, recovery e progresso.',
   ],
   'chats.md': ['chats.mdx', 'Chats', 'Operações de conversa, leitura, arquivo e edição.'],
+  'calls.md': [
+    'calls.mdx',
+    'Chamadas WhatsApp',
+    'Chamadas individuais experimentais com áudio, vídeo, reações, gravações e eventos.',
+  ],
   'media.md': ['media.mdx', 'Mídia', 'Download e upload antecipado de arquivos.'],
   'groups.md': ['groups.mdx', 'Grupos', 'Criação, participantes, convites, foto e saída.'],
   'webhooks.md': ['webhooks.mdx', 'Webhooks', 'Configuração, entrega e os 45 eventos implementados.'],

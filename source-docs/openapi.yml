@@ -1,48 +1,52 @@
-openapi: 3.1.0
+﻿openapi: 3.1.0
 info:
   title: "CodeChat API Go"
   version: "1.0.0"
-  description: "Contrato source-first das rotas atuais, dos recursos classificados como CodeChat API Go Pro e dos aliases legados ainda registrados. A classificação Pro não é aplicada pelo runtime auditado."
+  description: "Contrato source-first das rotas atuais, dos recursos classificados como CodeChat API Go Pro e dos aliases legados ainda registrados. A classificaÃ§Ã£o Pro nÃ£o Ã© aplicada pelo runtime auditado."
   license:
     name: "GNU Affero General Public License v3.0 only"
     identifier: "AGPL-3.0-only"
 servers:
   - url: "http://{host}:{port}"
-    description: "Servidor configurável; os defaults representam a execução local."
+    description: "Servidor configurÃ¡vel; os defaults representam a execuÃ§Ã£o local."
     variables:
       host:
         default: "localhost"
       port:
         default: "8084"
+security:
+  - InstanceBearer: []
 tags:
   - name: "System"
-    description: "Saúde e prontidão."
+    description: "SaÃºde e prontidÃ£o."
   - name: "Instances"
-    description: "Contrato atual de instâncias."
+    description: "Contrato atual de instÃ¢ncias."
   - name: "Connections"
-    description: "Contrato atual de conexão, pairing e logout."
+    description: "Contrato atual de conexÃ£o, pairing e logout."
   - name: "Messages"
     description: "Mensagens comuns atuais."
   - name: "Message Batches"
-    description: "Recurso CodeChat API Go Pro: fila PostgreSQL persistente para envio assíncrono a contatos individuais, autenticada por JWT de usuario com userId UUID. A classificação Pro não é aplicada pelo runtime atual."
+    description: "Recurso CodeChat API Go Pro: fila PostgreSQL persistente para envio assÃ­ncrono a contatos individuais, autenticada por JWT de usuario com userId UUID. A classificaÃ§Ã£o Pro nÃ£o Ã© aplicada pelo runtime atual."
   - name: "Chats"
-    description: "Operações atuais de chat."
+    description: "OperaÃ§Ãµes atuais de chat."
   - name: "Media"
-    description: "Download e upload antecipado de mídia."
+    description: "Download e upload antecipado de mÃ­dia."
+  - name: "Calls"
+    description: "Chamadas WhatsApp 1:1 experimentais, incluindo reconciliacao multi-device."
   - name: "Groups"
-    description: "Operações atuais de grupo."
+    description: "OperaÃ§Ãµes atuais de grupo."
   - name: "Webhooks"
-    description: "Configuração atual de webhook por instância."
+    description: "ConfiguraÃ§Ã£o atual de webhook por instÃ¢ncia."
   - name: "CodeChat API Go Pro"
-    description: "Classificação comercial. O runtime atual não aplica entitlement nem retorna 402."
+    description: "ClassificaÃ§Ã£o comercial. O runtime atual nÃ£o aplica entitlement nem retorna 402."
   - name: "Legacy - Instances"
-    description: "Aliases antigos de instância ainda ativos."
+    description: "Aliases antigos de instÃ¢ncia ainda ativos."
   - name: "Legacy - Connections"
-    description: "Aliases antigos de conexão ainda ativos."
+    description: "Aliases antigos de conexÃ£o ainda ativos."
   - name: "Legacy - Messages"
     description: "Aliases antigos de mensagem ainda ativos."
   - name: "Legacy - Chats"
-    description: "Aliases antigos de chat e mídia ainda ativos."
+    description: "Aliases antigos de chat e mÃ­dia ainda ativos."
   - name: "Legacy - Groups"
     description: "Aliases antigos de grupo ainda ativos."
   - name: "Legacy - Webhooks"
@@ -52,7 +56,7 @@ paths:
   "/health":
     get:
       tags: ["System"]
-      summary: "Verifica se o processo está ativo"
+      summary: "Verifica se o processo estÃ¡ ativo"
       operationId: getHealth
       security: []
       responses:
@@ -64,21 +68,21 @@ paths:
   "/ready":
     get:
       tags: ["System"]
-      summary: "Verifica dependências necessárias para receber tráfego"
+      summary: "Verifica dependÃªncias necessÃ¡rias para receber trÃ¡fego"
       operationId: getReadiness
       security: []
       responses:
         "200":
-          description: "Aplicação pronta"
+          description: "AplicaÃ§Ã£o pronta"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/ReadyResponse"}
         "503": {"$ref":"#/components/responses/Error503"}
-  # Endpoints atuais - instâncias
+  # Endpoints atuais - instÃ¢ncias
   "/instance":
     post:
       tags: ["Instances"]
-      summary: "Cria uma instância"
+      summary: "Cria uma instÃ¢ncia"
       operationId: createInstance
       security:
         - GlobalApiKey: []
@@ -89,7 +93,7 @@ paths:
             schema: {"$ref":"#/components/schemas/CreateInstanceRequest"}
       responses:
         "201":
-          description: "Instância criada"
+          description: "InstÃ¢ncia criada"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/CreateInstanceResponse"}
@@ -101,7 +105,7 @@ paths:
         "503": {"$ref":"#/components/responses/Error503"}
     get:
       tags: ["Instances"]
-      summary: "Lista instâncias"
+      summary: "Lista instÃ¢ncias"
       operationId: listInstances
       security:
         - GlobalApiKey: []
@@ -109,7 +113,7 @@ paths:
         - {"$ref":"#/components/parameters/InstanceFilter"}
       responses:
         "200":
-          description: "Lista de instâncias"
+          description: "Lista de instÃ¢ncias"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/InstanceListResponse"}
@@ -120,7 +124,7 @@ paths:
   "/instance/{instance}":
     get:
       tags: ["Instances"]
-      summary: "Consulta uma instância"
+      summary: "Consulta uma instÃ¢ncia"
       operationId: getInstance
       security:
         - InstanceBearer: []
@@ -128,7 +132,7 @@ paths:
         - {"$ref":"#/components/parameters/Instance"}
       responses:
         "200":
-          description: "Instância encontrada"
+          description: "InstÃ¢ncia encontrada"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/InstanceResponse"}
@@ -140,7 +144,7 @@ paths:
         "503": {"$ref":"#/components/responses/Error503"}
     delete:
       tags: ["Instances"]
-      summary: "Exclui uma instância"
+      summary: "Exclui uma instÃ¢ncia"
       operationId: deleteInstance
       security:
         - InstanceBearer: []
@@ -149,7 +153,7 @@ paths:
         - {"$ref":"#/components/parameters/Force"}
       responses:
         "200":
-          description: "Resultado da exclusão"
+          description: "Resultado da exclusÃ£o"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/DeleteInstanceResponse"}
@@ -159,11 +163,11 @@ paths:
         "404": {"$ref":"#/components/responses/Error404"}
         "500": {"$ref":"#/components/responses/Error500"}
         "503": {"$ref":"#/components/responses/Error503"}
-  # Endpoints atuais - conexões
+  # Endpoints atuais - conexÃµes
   "/instance/{instance}/connection/status":
     get:
       tags: ["Connections"]
-      summary: "Consulta o estado da conexão"
+      summary: "Consulta o estado da conexÃ£o"
       operationId: getConnectionStatus
       security:
         - InstanceBearer: []
@@ -171,7 +175,7 @@ paths:
         - {"$ref":"#/components/parameters/Instance"}
       responses:
         "200":
-          description: "Estado da conexão"
+          description: "Estado da conexÃ£o"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/ConnectionStatusResponse"}
@@ -186,7 +190,7 @@ paths:
   "/instance/{instance}/connect":
     get:
       tags: ["Connections"]
-      summary: "Inicia ou acompanha conexão por QR Code"
+      summary: "Inicia ou acompanha conexÃ£o por QR Code"
       operationId: connectInstanceByQrGet
       security:
         - InstanceBearer: []
@@ -208,7 +212,7 @@ paths:
         "503": {"$ref":"#/components/responses/Error503"}
     post:
       tags: ["Connections"]
-      summary: "Inicia ou acompanha conexão por QR Code"
+      summary: "Inicia ou acompanha conexÃ£o por QR Code"
       operationId: connectInstanceByQrPost
       security:
         - InstanceBearer: []
@@ -240,7 +244,7 @@ paths:
         - {"$ref":"#/components/parameters/PhoneNumber"}
       responses:
         "200":
-          description: "Código de pareamento"
+          description: "CÃ³digo de pareamento"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/PairingCodeResponse"}
@@ -268,7 +272,7 @@ paths:
             schema: {"$ref":"#/components/schemas/PairingCodeRequest"}
       responses:
         "200":
-          description: "Código de pareamento"
+          description: "CÃ³digo de pareamento"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/PairingCodeResponse"}
@@ -283,7 +287,7 @@ paths:
   "/instance/{instance}/connect/passkey/challenge":
     post:
       tags: ["Connections"]
-      summary: "Obtém challenge WebAuthn"
+      summary: "ObtÃ©m challenge WebAuthn"
       operationId: createPasskeyChallenge
       security:
         - InstanceBearer: []
@@ -291,7 +295,7 @@ paths:
         - {"$ref":"#/components/parameters/Instance"}
       responses:
         "200":
-          description: "Challenge disponível"
+          description: "Challenge disponÃ­vel"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/PasskeyChallengeResponse"}
@@ -336,9 +340,9 @@ paths:
   "/instance/{instance}/logout/{instanceName}":
     delete:
       tags: ["Connections"]
-      summary: "Desconecta a sessão WhatsApp"
+      summary: "Desconecta a sessÃ£o WhatsApp"
       operationId: logoutInstance
-      description: "A rota possui dois nomes de instância. O middleware e o handler preferem {instanceName}; envie o mesmo valor nos dois segmentos."
+      description: "A rota possui dois nomes de instÃ¢ncia. O middleware e o handler preferem {instanceName}; envie o mesmo valor nos dois segmentos."
       security:
         - InstanceBearer: []
       parameters:
@@ -346,7 +350,7 @@ paths:
         - {"$ref":"#/components/parameters/LegacyInstanceName"}
       responses:
         "200":
-          description: "Sessão desconectada"
+          description: "SessÃ£o desconectada"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/LogoutResponse"}
@@ -362,7 +366,7 @@ paths:
   "/instance/{instance}/chat/is-account":
     post:
       tags: ["Chats"]
-      summary: "Verifica números cadastrados no WhatsApp"
+      summary: "Verifica nÃºmeros cadastrados no WhatsApp"
       operationId: checkWhatsAppAccounts
       security:
         - InstanceBearer: []
@@ -375,7 +379,7 @@ paths:
             schema: {"$ref":"#/components/schemas/IsAccountRequest"}
       responses:
         "200":
-          description: "Resultado por número"
+          description: "Resultado por nÃºmero"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/IsAccountResponse"}
@@ -452,7 +456,7 @@ paths:
         - {"$ref":"#/components/parameters/MessageID"}
       responses:
         "204":
-          description: "Mensagem excluída"
+          description: "Mensagem excluÃ­da"
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -542,6 +546,45 @@ paths:
         "422": {"$ref":"#/components/responses/Error422"}
         "500": {"$ref":"#/components/responses/Error500"}
         "503": {"$ref":"#/components/responses/Error503"}
+  "/instance/{instance}/db/messages":
+    post:
+      tags: ["Chats"]
+      summary: "Busca mensagens persistidas no banco"
+      description: "Consulta exclusivamente mensagens persistidas da instancia informada. A instancia nao precisa estar conectada ao WhatsApp; a rota nao resolve cliente WhatsApp, nao valida sessao conectada e nao acessa WebSocket. O cursor usa o ID interno da mensagem e a resposta publica e sempre ordenada por id decrescente. Campos legados como where, keyid, messageStatus, page e offset nao fazem parte deste contrato.\n\nExemplo:\n```bash\ncurl --location --request POST 'http://localhost:8084/instance/codechat-01/db/messages' \\\n  --header 'Authorization: Bearer SEU_TOKEN' \\\n  --header 'Content-Type: application/json' \\\n  --data-raw '{\"filter\":{\"keyRemoteJid\":\"123@s.whatsapp.net\",\"keyFromMe\":\"true\",\"messageType\":\"conversation\",\"status\":\"DELIVERY_ACK\"},\"cursor\":{\"type\":\"next\",\"id\":1200},\"limit\":50}'\n```"
+      operationId: findPersistedMessages
+      security:
+        - InstanceBearer: []
+      parameters:
+        - {"$ref":"#/components/parameters/Instance"}
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: {"$ref":"#/components/schemas/FindMessagesRequest"}
+            examples:
+              empty:
+                summary: "Sem filtros"
+                value: {}
+              filtered:
+                summary: "Com filtros"
+                value: {"filter":{"keyRemoteJid":"123@s.whatsapp.net","keyFromMe":"true","messageType":"conversation","status":"DELIVERY_ACK"},"limit":50}
+              next:
+                summary: "Cursor next"
+                value: {"cursor":{"type":"next","id":1200},"limit":50}
+              previous:
+                summary: "Cursor previous"
+                value: {"cursor":{"type":"previous","id":1150},"limit":50}
+      responses:
+        "200":
+          description: "Pagina de mensagens persistidas"
+          content:
+            application/json:
+              schema: {"$ref":"#/components/schemas/FindMessagesResponse"}
+        "400": {"$ref":"#/components/responses/Error400"}
+        "401": {"$ref":"#/components/responses/Error401"}
+        "403": {"$ref":"#/components/responses/Error403"}
+        "404": {"$ref":"#/components/responses/Error404"}
+        "500": {"$ref":"#/components/responses/Error500"}
   # Endpoints atuais - mensagens
   "/instance/{instance}/send/text":
     post:
@@ -564,7 +607,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -600,7 +643,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -618,7 +661,7 @@ paths:
   "/instance/{instance}/send/media":
     post:
       tags: ["Messages"]
-      summary: "Envia mídia por URL ou upload antecipado"
+      summary: "Envia mÃ­dia por URL ou upload antecipado"
       operationId: sendMediaMessage
       security:
         - InstanceBearer: []
@@ -636,7 +679,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -654,7 +697,7 @@ paths:
   "/instance/{instance}/send/media-file":
     post:
       tags: ["Messages"]
-      summary: "Envia mídia multipart"
+      summary: "Envia mÃ­dia multipart"
       operationId: sendMediaFileMessage
       security:
         - InstanceBearer: []
@@ -672,7 +715,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -690,7 +733,7 @@ paths:
   "/instance/{instance}/send/ppt":
     post:
       tags: ["Messages"]
-      summary: "Envia áudio Push-to-Talk por URL"
+      summary: "Envia Ã¡udio Push-to-Talk por URL"
       operationId: sendPushToTalkMessage
       security:
         - InstanceBearer: []
@@ -708,7 +751,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -726,7 +769,7 @@ paths:
   "/instance/{instance}/send/ppt-file":
     post:
       tags: ["Messages"]
-      summary: "Envia áudio Push-to-Talk multipart"
+      summary: "Envia Ã¡udio Push-to-Talk multipart"
       operationId: sendPushToTalkFileMessage
       security:
         - InstanceBearer: []
@@ -744,7 +787,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -780,7 +823,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -798,7 +841,7 @@ paths:
   "/instance/{instance}/send/location":
     post:
       tags: ["Messages"]
-      summary: "Envia localização"
+      summary: "Envia localizaÃ§Ã£o"
       operationId: sendLocationMessage
       security:
         - InstanceBearer: []
@@ -816,7 +859,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -834,7 +877,7 @@ paths:
   "/instance/{instance}/send/reaction":
     post:
       tags: ["Messages"]
-      summary: "Envia ou remove reação"
+      summary: "Envia ou remove reaÃ§Ã£o"
       operationId: sendReactionMessage
       security:
         - InstanceBearer: []
@@ -860,11 +903,11 @@ paths:
         "422": {"$ref":"#/components/responses/Error422"}
         "500": {"$ref":"#/components/responses/Error500"}
         "503": {"$ref":"#/components/responses/Error503"}
-  # Endpoints atuais - mídia
+  # Endpoints atuais - mÃ­dia
   "/instance/{instance}/media/data":
     post:
       tags: ["Media"]
-      summary: "Baixa mídia de uma mensagem"
+      summary: "Baixa mÃ­dia de uma mensagem"
       operationId: downloadMessageMedia
       security:
         - InstanceBearer: []
@@ -891,7 +934,7 @@ paths:
   "/instance/{instance}/media/uploads":
     post:
       tags: ["Media"]
-      summary: "Faz upload antecipado de mídia"
+      summary: "Faz upload antecipado de mÃ­dia"
       operationId: createMediaUpload
       security:
         - InstanceBearer: []
@@ -919,7 +962,7 @@ paths:
     get:
       tags: ["Media"]
       summary: "Lista uploads antecipados"
-      description: "Lista uploads com paginação bidirecional. Use nextCursor para avançar ou previousCursor para voltar; eles são mutuamente exclusivos. O parâmetro cursor é um alias legado de nextCursor."
+      description: "Lista uploads com paginaÃ§Ã£o bidirecional. Use nextCursor para avanÃ§ar ou previousCursor para voltar; eles sÃ£o mutuamente exclusivos. O parÃ¢metro cursor Ã© um alias legado de nextCursor."
       operationId: listMediaUploads
       security:
         - InstanceBearer: []
@@ -936,7 +979,7 @@ paths:
         - {"$ref":"#/components/parameters/Cursor"}
       responses:
         "200":
-          description: "Página de uploads"
+          description: "PÃ¡gina de uploads"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/MediaUploadList"}
@@ -983,7 +1026,7 @@ paths:
         - {"$ref":"#/components/parameters/MediaUploadID"}
       responses:
         "204":
-          description: "Registro excluído"
+          description: "Registro excluÃ­do"
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -1054,7 +1097,7 @@ paths:
   "/instance/{instance}/group/invitation-code":
     get:
       tags: ["Groups"]
-      summary: "Consulta código de convite"
+      summary: "Consulta cÃ³digo de convite"
       operationId: getGroupInviteCode
       security:
         - InstanceBearer: []
@@ -1063,7 +1106,7 @@ paths:
         - {"$ref":"#/components/parameters/GroupJID"}
       responses:
         "200":
-          description: "Código de convite"
+          description: "CÃ³digo de convite"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/InviteCodeResponse"}
@@ -1079,7 +1122,7 @@ paths:
   "/instance/{instance}/group/revoke-invitation":
     put:
       tags: ["Groups"]
-      summary: "Revoga código de convite"
+      summary: "Revoga cÃ³digo de convite"
       operationId: revokeGroupInviteCode
       security:
         - InstanceBearer: []
@@ -1088,7 +1131,7 @@ paths:
         - {"$ref":"#/components/parameters/GroupJID"}
       responses:
         "200":
-          description: "Código revogado"
+          description: "CÃ³digo revogado"
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -1137,7 +1180,7 @@ paths:
         - {"$ref":"#/components/parameters/GroupJID"}
       responses:
         "200":
-          description: "Instância saiu do grupo"
+          description: "InstÃ¢ncia saiu do grupo"
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -1151,7 +1194,7 @@ paths:
   "/instance/{instance}/webhook":
     put:
       tags: ["Webhooks"]
-      summary: "Configura webhook da instância"
+      summary: "Configura webhook da instÃ¢ncia"
       operationId: setInstanceWebhook
       security:
         - InstanceBearer: []
@@ -1177,7 +1220,7 @@ paths:
         "503": {"$ref":"#/components/responses/Error503"}
     get:
       tags: ["Webhooks"]
-      summary: "Consulta webhook da instância"
+      summary: "Consulta webhook da instÃ¢ncia"
       operationId: getInstanceWebhook
       security:
         - InstanceBearer: []
@@ -1200,7 +1243,7 @@ paths:
   "/instance/{instance}/send/payment-request":
     post:
       tags: ["CodeChat API Go Pro"]
-      summary: "Envia solicitação de pagamento"
+      summary: "Envia solicitaÃ§Ã£o de pagamento"
       operationId: sendPaymentRequest
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -1215,7 +1258,7 @@ paths:
             schema: {"$ref":"#/components/schemas/PaymentRequest"}
       responses:
         "200":
-          description: "Solicitação enviada"
+          description: "SolicitaÃ§Ã£o enviada"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
@@ -1234,7 +1277,7 @@ paths:
     post:
       tags: ["CodeChat API Go Pro"]
       summary: "Atualiza o status de um pedido"
-      description: "Atualiza uma mensagem de pedido já persistida. O body, as validações e a resposta são compartilhados com o alias legado PATCH /message/reviewOrder/{instanceName}."
+      description: "Atualiza uma mensagem de pedido jÃ¡ persistida. O body, as validaÃ§Ãµes e a resposta sÃ£o compartilhados com o alias legado PATCH /message/reviewOrder/{instanceName}."
       operationId: reviewOrder
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -1297,7 +1340,7 @@ paths:
   "/instance/{instance}/send/form":
     post:
       tags: ["CodeChat API Go Pro"]
-      summary: "Envia formulário nativo"
+      summary: "Envia formulÃ¡rio nativo"
       operationId: sendFormMessage
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -1312,7 +1355,7 @@ paths:
             schema: {"$ref":"#/components/schemas/FormRequest"}
       responses:
         "200":
-          description: "Formulário enviado"
+          description: "FormulÃ¡rio enviado"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
@@ -1332,7 +1375,7 @@ paths:
       tags: ["CodeChat API Go Pro"]
       summary: "Envia mensagem interativa"
       operationId: sendInteractiveMessage
-      description: "Tipos confirmados: reply, copy, url, buttons e carousel. Esta rota é registrada depois de todas as rotas /send explícitas."
+      description: "Tipos confirmados: reply, copy, url, buttons e carousel. Esta rota Ã© registrada depois de todas as rotas /send explÃ­citas."
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
       security:
@@ -1362,11 +1405,11 @@ paths:
         "422": {"$ref":"#/components/responses/Error422"}
         "500": {"$ref":"#/components/responses/Error500"}
         "503": {"$ref":"#/components/responses/Error503"}
-  # Endpoints legados - instâncias
+  # Endpoints legados - instÃ¢ncias
   "/instance/create":
     post:
       tags: ["Legacy - Instances"]
-      summary: "Cria uma instância pelo alias legado"
+      summary: "Cria uma instÃ¢ncia pelo alias legado"
       operationId: legacyCreateInstance
       deprecated: true
       security:
@@ -1378,7 +1421,7 @@ paths:
             schema: {"$ref":"#/components/schemas/CreateInstanceRequest"}
       responses:
         "201":
-          description: "Instância criada"
+          description: "InstÃ¢ncia criada"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/CreateInstanceResponse"}
@@ -1391,7 +1434,7 @@ paths:
   "/instance/fetchInstances":
     get:
       tags: ["Legacy - Instances"]
-      summary: "Lista instâncias pelo alias legado"
+      summary: "Lista instÃ¢ncias pelo alias legado"
       operationId: legacyListInstances
       deprecated: true
       security:
@@ -1400,7 +1443,7 @@ paths:
         - {"$ref":"#/components/parameters/InstanceFilter"}
       responses:
         "200":
-          description: "Lista de instâncias"
+          description: "Lista de instÃ¢ncias"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/InstanceListResponse"}
@@ -1411,7 +1454,7 @@ paths:
   "/instance/fetchInstance/{instanceName}":
     get:
       tags: ["Legacy - Instances"]
-      summary: "Consulta uma instância pelo alias legado"
+      summary: "Consulta uma instÃ¢ncia pelo alias legado"
       operationId: legacyGetInstance
       deprecated: true
       security:
@@ -1420,7 +1463,7 @@ paths:
         - {"$ref":"#/components/parameters/LegacyInstanceName"}
       responses:
         "200":
-          description: "Instância encontrada"
+          description: "InstÃ¢ncia encontrada"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/InstanceResponse"}
@@ -1433,9 +1476,9 @@ paths:
   "/instance/refreshToken/{instanceName}":
     put:
       tags: ["Legacy - Instances"]
-      summary: "Rotaciona o JWT da instância"
+      summary: "Rotaciona o JWT da instÃ¢ncia"
       operationId: refreshInstanceToken
-      description: "Rota antiga ainda sem substituto atual equivalente; por isso não está marcada como deprecated."
+      description: "Rota antiga ainda sem substituto atual equivalente; por isso nÃ£o estÃ¡ marcada como deprecated."
       security:
         - InstanceBearer: []
       parameters:
@@ -1460,7 +1503,7 @@ paths:
   "/instance/delete/{instanceName}":
     delete:
       tags: ["Legacy - Instances"]
-      summary: "Exclui uma instância pelo alias legado"
+      summary: "Exclui uma instÃ¢ncia pelo alias legado"
       operationId: legacyDeleteInstance
       deprecated: true
       security:
@@ -1470,7 +1513,7 @@ paths:
         - {"$ref":"#/components/parameters/Force"}
       responses:
         "200":
-          description: "Resultado da exclusão"
+          description: "Resultado da exclusÃ£o"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/DeleteInstanceResponse"}
@@ -1480,7 +1523,7 @@ paths:
         "404": {"$ref":"#/components/responses/Error404"}
         "500": {"$ref":"#/components/responses/Error500"}
         "503": {"$ref":"#/components/responses/Error503"}
-  # Endpoints legados - conexões
+  # Endpoints legados - conexÃµes
   "/instance/connect/{instanceName}/code/{phoneNumber}":
     get:
       tags: ["Legacy - Connections"]
@@ -1494,7 +1537,7 @@ paths:
         - {"$ref":"#/components/parameters/PhoneNumber"}
       responses:
         "200":
-          description: "Código de pareamento"
+          description: "CÃ³digo de pareamento"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/PairingCodeResponse"}
@@ -1523,7 +1566,7 @@ paths:
             schema: {"$ref":"#/components/schemas/PairingCodeRequest"}
       responses:
         "200":
-          description: "Código de pareamento"
+          description: "CÃ³digo de pareamento"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/PairingCodeResponse"}
@@ -1538,7 +1581,7 @@ paths:
   "/instance/connect/{instanceName}/passkey/challenge":
     post:
       tags: ["Legacy - Connections"]
-      summary: "Obtém challenge pela rota legada"
+      summary: "ObtÃ©m challenge pela rota legada"
       operationId: legacyCreatePasskeyChallenge
       deprecated: true
       security:
@@ -1547,7 +1590,7 @@ paths:
         - {"$ref":"#/components/parameters/LegacyInstanceName"}
       responses:
         "200":
-          description: "Challenge disponível"
+          description: "Challenge disponÃ­vel"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/PasskeyChallengeResponse"}
@@ -1649,7 +1692,7 @@ paths:
         - {"$ref":"#/components/parameters/LegacyInstanceName"}
       responses:
         "200":
-          description: "Sessão desconectada"
+          description: "SessÃ£o desconectada"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/LogoutResponse"}
@@ -1736,7 +1779,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -1773,7 +1816,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -1791,7 +1834,7 @@ paths:
   "/message/sendMedia/{instanceName}":
     post:
       tags: ["Legacy - Messages"]
-      summary: "Envia mídia pelo alias legado"
+      summary: "Envia mÃ­dia pelo alias legado"
       operationId: legacySendMediaMessage
       deprecated: true
       security:
@@ -1810,7 +1853,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -1828,7 +1871,7 @@ paths:
   "/message/sendMediaFile/{instanceName}":
     post:
       tags: ["Legacy - Messages"]
-      summary: "Envia mídia multipart pelo alias legado"
+      summary: "Envia mÃ­dia multipart pelo alias legado"
       operationId: legacySendMediaFileMessage
       deprecated: true
       security:
@@ -1847,7 +1890,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -1884,7 +1927,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -1921,7 +1964,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -1958,7 +2001,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -1976,7 +2019,7 @@ paths:
   "/message/sendLocation/{instanceName}":
     post:
       tags: ["Legacy - Messages"]
-      summary: "Envia localização pelo alias legado"
+      summary: "Envia localizaÃ§Ã£o pelo alias legado"
       operationId: legacySendLocationMessage
       deprecated: true
       security:
@@ -1995,7 +2038,7 @@ paths:
             application/json:
               schema: {"$ref":"#/components/schemas/Message"}
         "202":
-          description: "Envio assíncrono aceito"
+          description: "Envio assÃ­ncrono aceito"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/AcceptedResponse"}
@@ -2013,7 +2056,7 @@ paths:
   "/message/sendReaction/{instanceName}":
     post:
       tags: ["Legacy - Messages"]
-      summary: "Envia reação pelo alias legado"
+      summary: "Envia reaÃ§Ã£o pelo alias legado"
       operationId: legacySendReactionMessage
       deprecated: true
       security:
@@ -2044,7 +2087,7 @@ paths:
     patch:
       tags: ["Legacy - Messages"]
       summary: "Atualiza pedido pelo alias legado"
-      description: "Alias legado ainda registrado para o mesmo handler de revisão de pedido da rota atual. Somente método e caminho diferem."
+      description: "Alias legado ainda registrado para o mesmo handler de revisÃ£o de pedido da rota atual. Somente mÃ©todo e caminho diferem."
       operationId: legacyReviewOrder
       deprecated: true
       security:
@@ -2070,7 +2113,7 @@ paths:
         "422": {"$ref":"#/components/responses/Error422"}
         "500": {"$ref":"#/components/responses/Error500"}
         "503": {"$ref":"#/components/responses/Error503"}
-  # Endpoints legados - chats e mídia
+  # Endpoints legados - chats e mÃ­dia
   "/chat/whatsappNumbers/{instanceName}":
     post:
       tags: ["Legacy - Chats"]
@@ -2088,7 +2131,7 @@ paths:
             schema: {"$ref":"#/components/schemas/IsAccountRequest"}
       responses:
         "200":
-          description: "Resultado por número"
+          description: "Resultado por nÃºmero"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/IsAccountResponse"}
@@ -2242,7 +2285,7 @@ paths:
   "/chat/mediaData/{instanceName}":
     post:
       tags: ["Legacy - Chats"]
-      summary: "Baixa mídia pelo alias legado"
+      summary: "Baixa mÃ­dia pelo alias legado"
       operationId: legacyDownloadMessageMedia
       deprecated: true
       security:
@@ -2267,6 +2310,34 @@ paths:
         "422": {"$ref":"#/components/responses/Error422"}
         "500": {"$ref":"#/components/responses/Error500"}
         "503": {"$ref":"#/components/responses/Error503"}
+  "/chat/findMessages/{instanceName}":
+    post:
+      tags: ["Legacy - Chats"]
+      summary: "Busca mensagens persistidas pelo contrato legado"
+      description: "Alias legado com where/page/offset. Consulta o banco da instancia e nao exige conexao ativa ao WhatsApp. keyid e messageStatus preservam os nomes legados; a resposta preserva MessageUpdate com capitalizacao legada."
+      operationId: legacyFindMessages
+      deprecated: true
+      security:
+        - InstanceBearer: []
+      parameters:
+        - {"$ref":"#/components/parameters/LegacyInstanceName"}
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: {"$ref":"#/components/schemas/LegacyFindMessagesRequest"}
+            example: {"where":{"id":2,"keyid":"3A4592EBC0C67D447FB2","keyRemoteJid":"123@s.whatsapp.net","keyFromMe":"true","messageType":"imageMessage","device":"web","messageStatus":"DELIVERY_ACK"},"offset":20,"page":1}
+      responses:
+        "200":
+          description: "Pagina legada de mensagens"
+          content:
+            application/json:
+              schema: {"$ref":"#/components/schemas/LegacyFindMessagesResponse"}
+        "400": {"$ref":"#/components/responses/Error400"}
+        "401": {"$ref":"#/components/responses/Error401"}
+        "403": {"$ref":"#/components/responses/Error403"}
+        "404": {"$ref":"#/components/responses/Error404"}
+        "500": {"$ref":"#/components/responses/Error500"}
   "/chat/deleteMessage/{instanceName}":
     delete:
       tags: ["Legacy - Chats"]
@@ -2280,7 +2351,7 @@ paths:
         - {"$ref":"#/components/parameters/MessageID"}
       responses:
         "204":
-          description: "Mensagem excluída"
+          description: "Mensagem excluÃ­da"
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -2363,7 +2434,7 @@ paths:
         - {"$ref":"#/components/parameters/GroupJID"}
       responses:
         "200":
-          description: "Código de convite"
+          description: "CÃ³digo de convite"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/InviteCodeResponse"}
@@ -2389,7 +2460,7 @@ paths:
         - {"$ref":"#/components/parameters/GroupJID"}
       responses:
         "200":
-          description: "Código revogado"
+          description: "CÃ³digo revogado"
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -2440,7 +2511,7 @@ paths:
         - {"$ref":"#/components/parameters/GroupJID"}
       responses:
         "200":
-          description: "Instância saiu do grupo"
+          description: "InstÃ¢ncia saiu do grupo"
         "400": {"$ref":"#/components/responses/Error400"}
         "401": {"$ref":"#/components/responses/Error401"}
         "403": {"$ref":"#/components/responses/Error403"}
@@ -2455,7 +2526,7 @@ paths:
     post:
       tags: ["Message Batches"]
       summary: "Cria um lote persistente"
-      description: "Persiste a definição, os destinatários normalizados, as instâncias permitidas e a agenda opcional. Com autoStart=true, o estado inicial é QUEUED, SCHEDULED ou WAITING_FOR_WINDOW conforme a janela."
+      description: "Persiste a definiÃ§Ã£o, os destinatÃ¡rios normalizados, as instÃ¢ncias permitidas e a agenda opcional. Com autoStart=true, o estado inicial Ã© QUEUED, SCHEDULED ou WAITING_FOR_WINDOW conforme a janela."
       operationId: createMessageBatch
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -2475,7 +2546,7 @@ paths:
               example:
                 id: "01900000-0000-7000-8000-000000000001"
                 ownerUserId: "11111111-1111-4111-8111-111111111111"
-                name: "Aviso de manutenção"
+                name: "Aviso de manutenÃ§Ã£o"
                 status: "DRAFT"
                 autoResume: true
                 schedule: null
@@ -2501,7 +2572,7 @@ paths:
     post:
       tags: ["Message Batches"]
       summary: "Lista lotes"
-      description: "Lista lotes por filtros enviados no body e cursor opaco. nextCursor e previousCursor são mutuamente exclusivos; o limite padrão é 50 e o máximo é 200."
+      description: "Lista lotes por filtros enviados no body e cursor opaco. nextCursor e previousCursor sÃ£o mutuamente exclusivos; o limite padrÃ£o Ã© 50 e o mÃ¡ximo Ã© 200."
       operationId: listMessageBatches
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -2514,7 +2585,7 @@ paths:
             schema: {"$ref":"#/components/schemas/MessageBatchListRequest"}
       responses:
         "200":
-          description: "Página de lotes"
+          description: "PÃ¡gina de lotes"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/MessageBatchPage"}
@@ -2525,7 +2596,7 @@ paths:
     get:
       tags: ["Message Batches"]
       summary: "Consulta um lote sem incorporar seus itens"
-      description: "Retorna a definição completa do lote, incluindo message e options, mas mantém os itens em recursos paginados separados."
+      description: "Retorna a definiÃ§Ã£o completa do lote, incluindo message e options, mas mantÃ©m os itens em recursos paginados separados."
       operationId: getMessageBatch
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -2547,7 +2618,7 @@ paths:
     get:
       tags: ["Message Batches"]
       summary: "Consulta o processamento completo de um lote"
-      description: "Retorna a definição do lote, mensagem, opções, instâncias, contadores e todos os destinatários sem paginação. Cada destinatário inclui seu resultado e o histórico ordenado de tentativas, com payloads, IDs e erros persistidos. A resposta pode ser grande em lotes com muitos destinatários."
+      description: "Retorna a definiÃ§Ã£o do lote, mensagem, opÃ§Ãµes, instÃ¢ncias, contadores e todos os destinatÃ¡rios sem paginaÃ§Ã£o. Cada destinatÃ¡rio inclui seu resultado e o histÃ³rico ordenado de tentativas, com payloads, IDs e erros persistidos. A resposta pode ser grande em lotes com muitos destinatÃ¡rios."
       operationId: getMessageBatchProcessing
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -2569,7 +2640,7 @@ paths:
     get:
       tags: ["Message Batches"]
       summary: "Lista itens do lote"
-      description: "Lista destinatários e resultados por cursor opaco. O cursor de itens é derivado da posição original do destinatário."
+      description: "Lista destinatÃ¡rios e resultados por cursor opaco. O cursor de itens Ã© derivado da posiÃ§Ã£o original do destinatÃ¡rio."
       operationId: listMessageBatchItems
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -2585,7 +2656,7 @@ paths:
         - {"$ref":"#/components/parameters/PreviousCursor"}
       responses:
         "200":
-          description: "Página de itens"
+          description: "PÃ¡gina de itens"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/MessageBatchItemPage"}
@@ -2597,7 +2668,7 @@ paths:
     get:
       tags: ["Message Batches"]
       summary: "Consulta item e suas tentativas"
-      description: "Retorna um destinatário do lote com o histórico completo de tentativas de envio."
+      description: "Retorna um destinatÃ¡rio do lote com o histÃ³rico completo de tentativas de envio."
       operationId: getMessageBatchItem
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -2620,7 +2691,7 @@ paths:
     get:
       tags: ["Message Batches"]
       summary: "Lista tentativas do lote"
-      description: "Lista tentativas persistidas, incluindo indisponibilidade de instância e resultados UNKNOWN após recovery."
+      description: "Lista tentativas persistidas, incluindo indisponibilidade de instÃ¢ncia e resultados UNKNOWN apÃ³s recovery."
       operationId: listMessageBatchAttempts
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -2636,7 +2707,7 @@ paths:
         - {"$ref":"#/components/parameters/PreviousCursor"}
       responses:
         "200":
-          description: "Página de tentativas"
+          description: "PÃ¡gina de tentativas"
           content:
             application/json:
               schema: {"$ref":"#/components/schemas/MessageBatchAttemptPage"}
@@ -2647,8 +2718,8 @@ paths:
   "/message/batches/{batchId}/start":
     post:
       tags: ["Message Batches"]
-      summary: "Inicia ou continua o lote sem executar o loop na requisição"
-      description: "Inicia DRAFT, PAUSED ou INTERRUPTED respeitando a agenda: QUEUED dentro da janela, SCHEDULED antes da primeira ou WAITING_FOR_WINDOW fora dela. É idempotente nos estados já ativos ou agendados."
+      summary: "Inicia ou continua o lote sem executar o loop na requisiÃ§Ã£o"
+      description: "Inicia DRAFT, PAUSED ou INTERRUPTED respeitando a agenda: QUEUED dentro da janela, SCHEDULED antes da primeira ou WAITING_FOR_WINDOW fora dela. Ã‰ idempotente nos estados jÃ¡ ativos ou agendados."
       operationId: startMessageBatch
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -2667,7 +2738,7 @@ paths:
     post:
       tags: ["Message Batches"]
       summary: "Solicita pausa"
-      description: "Persiste PAUSE_REQUESTED e retorna imediatamente. O worker conclui o item já confirmado e chega a PAUSED em um ponto seguro."
+      description: "Persiste PAUSE_REQUESTED e retorna imediatamente. O worker conclui o item jÃ¡ confirmado e chega a PAUSED em um ponto seguro."
       operationId: pauseMessageBatch
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -2686,7 +2757,7 @@ paths:
     post:
       tags: ["Message Batches"]
       summary: "Solicita encerramento terminal"
-      description: "Persiste STOP_REQUESTED e retorna imediatamente. STOPPED é terminal e conserva como PENDING os itens não processados."
+      description: "Persiste STOP_REQUESTED e retorna imediatamente. STOPPED Ã© terminal e conserva como PENDING os itens nÃ£o processados."
       operationId: stopMessageBatch
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -2701,12 +2772,323 @@ paths:
         "404": {"$ref":"#/components/responses/MessageBatchError"}
         "409": {"$ref":"#/components/responses/MessageBatchError"}
         "500": {"$ref":"#/components/responses/Error500"}
+  "/call/{instanceName}":
+    post:
+      tags: ["Calls"]
+      summary: "Start an outbound WhatsApp call"
+      operationId: startCall
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/StartCallRequest"}
+      responses:
+        "201":
+          description: "Call created"
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Call"}
+        "409": {$ref: "#/components/responses/Error409"}
+    get:
+      tags: ["Calls"]
+      summary: "List calls"
+      operationId: listCalls
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+        - {name: status, in: query, schema: {$ref: "#/components/schemas/CallStatus"}}
+        - {name: direction, in: query, schema: {type: string, enum: [incoming, outgoing]}}
+        - {name: peer, in: query, schema: {type: string}}
+        - {name: video, in: query, schema: {type: boolean}}
+        - {name: externalId, in: query, schema: {type: string}}
+        - {name: cursor, in: query, schema: {type: string}}
+        - {name: limit, in: query, schema: {type: integer, minimum: 1, maximum: 100}}
+      responses:
+        "200":
+          description: "Calls"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: {$ref: "#/components/schemas/Call"}
+                required: [data]
+  "/call/{instanceName}/config":
+    get:
+      tags: ["Calls"]
+      summary: "Get per-instance call settings"
+      description: "Returns stored instance settings and effective settings after global master flags are applied."
+      operationId: getInstanceCallSettings
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+      responses:
+        "200":
+          description: "Instance call settings"
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/InstanceCallSettingsResponse"}
+        "404": {$ref: "#/components/responses/Error404"}
+    put:
+      tags: ["Calls"]
+      summary: "Replace per-instance call settings"
+      description: "Updates settings stored by instance_id. Global CALLS_* flags remain master locks and may keep effective fields disabled."
+      operationId: updateInstanceCallSettings
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/UpdateInstanceCallSettingsRequest"}
+      responses:
+        "200":
+          description: "Updated instance call settings"
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/InstanceCallSettingsResponse"}
+        "403":
+          description: "The token cannot configure this instance"
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/ErrorResponse"}
+        "422":
+          description: "Invalid cross-field call settings"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: {type: integer, const: 422}
+                  error: {type: string, const: invalid_call_settings}
+                  message: {type: string}
+                  fields: {type: object, additionalProperties: {type: string}}
+                required: [status, error, message, fields]
+  "/call/{instanceName}/{callId}":
+    get:
+      tags: ["Calls"]
+      summary: "Get one call"
+      operationId: getCall
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+        - {$ref: "#/components/parameters/CallId"}
+      responses:
+        "200":
+          description: "Call"
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Call"}
+        "404": {$ref: "#/components/responses/Error404"}
+  "/call/{instanceName}/{callId}/events":
+    get:
+      tags: ["Calls"]
+      summary: "List call events"
+      operationId: listCallEvents
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+        - {$ref: "#/components/parameters/CallId"}
+        - {name: limit, in: query, schema: {type: integer, minimum: 1, maximum: 500}}
+      responses:
+        "200":
+          description: "Events"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: {$ref: "#/components/schemas/CallEvent"}
+                required: [data]
+  "/call/{instanceName}/{callId}/answer":
+    post:
+      tags: ["Calls"]
+      summary: "Answer an inbound call through the API"
+      operationId: answerCall
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+        - {$ref: "#/components/parameters/CallId"}
+      responses:
+        "200":
+          description: "Call moved to CONNECTING"
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Call"}
+        "409":
+          description: "Call cannot be answered, including ANSWERED_ELSEWHERE"
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/CallConflictResponse"}
+  "/call/{instanceName}/{callId}/reject":
+    post:
+      tags: ["Calls"]
+      summary: "Reject an inbound call through the API"
+      operationId: rejectManagedCall
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+        - {$ref: "#/components/parameters/CallId"}
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CallReasonRequest"}
+      responses:
+        "200":
+          description: "Rejected"
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Call"}
+        "409":
+          description: "Call cannot be rejected, including REJECTED_ELSEWHERE"
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/CallConflictResponse"}
+  "/call/{instanceName}/{callId}/hangup":
+    post:
+      tags: ["Calls"]
+      summary: "Hang up a call through the API"
+      operationId: hangupCall
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+        - {$ref: "#/components/parameters/CallId"}
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CallReasonRequest"}
+      responses:
+        "200":
+          description: "Ended"
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Call"}
+        "409":
+          description: "Call already ended elsewhere"
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/CallConflictResponse"}
+  "/call/{instanceName}/{callId}/recordings":
+    get:
+      tags: ["Calls"]
+      summary: "List call recordings"
+      operationId: listCallRecordings
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+        - {$ref: "#/components/parameters/CallId"}
+      responses:
+        "200":
+          description: "Recording metadata"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: {$ref: "#/components/schemas/CallRecording"}
+                required: [data]
+  "/call/{instanceName}/{callId}/recording/start":
+    post:
+      tags: ["Calls"]
+      summary: "Start local disk recording for a managed call"
+      description: "Records only media that is available in the API runtime. Calls answered on another linked device return 409 and do not create media files."
+      operationId: startCallRecording
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+        - {$ref: "#/components/parameters/CallId"}
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/StartCallRecordingRequest"}
+      responses:
+        "202":
+          description: "Recording started"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: {$ref: "#/components/schemas/CallRecording"}
+                required: [data]
+        "409": {$ref: "#/components/responses/Error409"}
+        "422": {$ref: "#/components/responses/Error422"}
+  "/call/{instanceName}/{callId}/recording/stop":
+    post:
+      tags: ["Calls"]
+      summary: "Stop local disk recording"
+      operationId: stopCallRecording
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+        - {$ref: "#/components/parameters/CallId"}
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/StopCallRecordingRequest"}
+      responses:
+        "200":
+          description: "Recording stopped"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: {$ref: "#/components/schemas/CallRecording"}
+                required: [data]
+        "409": {$ref: "#/components/responses/Error409"}
+  "/call/{instanceName}/{callId}/recordings/{recordingId}":
+    get:
+      tags: ["Calls"]
+      summary: "Get call recording metadata"
+      operationId: getCallRecording
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+        - {$ref: "#/components/parameters/CallId"}
+        - {$ref: "#/components/parameters/RecordingId"}
+      responses:
+        "200":
+          description: "Recording"
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/CallRecording"}
+        "404": {$ref: "#/components/responses/Error404"}
+    delete:
+      tags: ["Calls"]
+      summary: "Delete a local call recording"
+      operationId: deleteCallRecording
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+        - {$ref: "#/components/parameters/CallId"}
+        - {$ref: "#/components/parameters/RecordingId"}
+      responses:
+        "204": {description: "Deleted"}
+        "404": {$ref: "#/components/responses/Error404"}
+  "/call/{instanceName}/{callId}/recordings/{recordingId}/download":
+    get:
+      tags: ["Calls"]
+      summary: "Download a completed local call recording"
+      operationId: downloadCallRecording
+      parameters:
+        - {$ref: "#/components/parameters/InstanceName"}
+        - {$ref: "#/components/parameters/CallId"}
+        - {$ref: "#/components/parameters/RecordingId"}
+      responses:
+        "200":
+          description: "Recording file"
+          content:
+            audio/wav: {schema: {type: string, format: binary}}
+            video/h264: {schema: {type: string, format: binary}}
+        "404": {$ref: "#/components/responses/Error404"}
+
 webhooks:
   messageBatchEvent:
     post:
       tags: ["Message Batches"]
       summary: "Evento global persistente de Message Batch"
-      description: "Enviado somente para WEBHOOK_GLOBAL_URL depois do commit da transação do lote. Respostas 2xx confirmam a entrega; falhas são reagendadas pela outbox com backoff persistente."
+      description: "Enviado somente para WEBHOOK_GLOBAL_URL depois do commit da transaÃ§Ã£o do lote. Respostas 2xx confirmam a entrega; falhas sÃ£o reagendadas pela outbox com backoff persistente."
       operationId: receiveMessageBatchEvent
       x-codechat-plan: pro
       x-codechat-plan-enforced: false
@@ -2719,7 +3101,7 @@ webhooks:
         - name: "x-request-id"
           in: header
           required: true
-          description: "UUID de rastreio da tentativa HTTP; não é uma chave de idempotência."
+          description: "UUID de rastreio da tentativa HTTP; nÃ£o Ã© uma chave de idempotÃªncia."
           schema: {"type":"string","format":"uuid"}
         - name: "x-webhook-event"
           in: header
@@ -2741,7 +3123,7 @@ webhooks:
                     batch:
                       id: "01900000-0000-7000-8000-000000000001"
                       ownerUserId: "11111111-1111-4111-8111-111111111111"
-                      name: "Aviso de manutenção"
+                      name: "Aviso de manutenÃ§Ã£o"
                       status: "PROCESSING"
                       autoResume: true
                       schedule: null
@@ -2777,27 +3159,30 @@ components:
       type: apiKey
       in: header
       name: apikey
-      description: "Token global. O runtime também aceita x-api-key e apiKey; aliases simultâneos precisam ter o mesmo valor."
+      description: "Token global. O runtime tambÃ©m aceita x-api-key e apiKey; aliases simultÃ¢neos precisam ter o mesmo valor."
     InstanceBearer:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: "JWT HS256 da própria instância."
+      description: "JWT HS256 da prÃ³pria instÃ¢ncia."
     UserBearer:
       type: http
       scheme: bearer
       bearerFormat: JWT
       description: "JWT HS256 de usuario. Deve conter userId em formato UUID e exp; a expiracao sempre e validada."
   parameters:
-    Instance: {"name":"instance","in":"path","required":true,"description":"Nome público da instância","schema":{"type":"string","minLength":1}}
-    LegacyInstanceName: {"name":"instanceName","in":"path","required":true,"description":"Nome público da instância na rota legada ou no segundo segmento de logout","schema":{"type":"string","minLength":1}}
-    PhoneNumber: {"name":"phoneNumber","in":"path","required":true,"description":"Telefone; o servidor normaliza para dígitos","schema":{"type":"string","minLength":1}}
-    InteractiveType: {"name":"type","in":"path","required":true,"description":"Tipo interativo confirmado no código","schema":{"type":"string","enum":["reply","copy","url","buttons","carousel"]}}
+    InstanceName: {"name":"instanceName","in":"path","required":true,"description":"Nome publico da instancia","schema":{"type":"string","minLength":1}}
+    CallId: {"name":"callId","in":"path","required":true,"description":"ID interno da chamada","schema":{"type":"string","format":"uuid"}}
+    RecordingId: {"name":"recordingId","in":"path","required":true,"description":"ID interno do arquivo de gravacao","schema":{"type":"string","format":"uuid"}}
+    Instance: {"name":"instance","in":"path","required":true,"description":"Nome pÃºblico da instÃ¢ncia","schema":{"type":"string","minLength":1}}
+    LegacyInstanceName: {"name":"instanceName","in":"path","required":true,"description":"Nome pÃºblico da instÃ¢ncia na rota legada ou no segundo segmento de logout","schema":{"type":"string","minLength":1}}
+    PhoneNumber: {"name":"phoneNumber","in":"path","required":true,"description":"Telefone; o servidor normaliza para dÃ­gitos","schema":{"type":"string","minLength":1}}
+    InteractiveType: {"name":"type","in":"path","required":true,"description":"Tipo interativo confirmado no cÃ³digo","schema":{"type":"string","enum":["reply","copy","url","buttons","carousel"]}}
     MediaUploadID: {"name":"id","in":"path","required":true,"description":"ID positivo do upload antecipado","schema":{"type":"integer","minimum":1}}
-    InstanceFilter: {"name":"instanceName","in":"query","required":false,"description":"Filtro opcional, não vazio, máximo 255","schema":{"type":"string","minLength":1,"maxLength":255}}
-    Force: {"name":"force","in":"query","required":false,"description":"Força exclusão de dependências","schema":{"type":"boolean","default":false}}
+    InstanceFilter: {"name":"instanceName","in":"query","required":false,"description":"Filtro opcional, nÃ£o vazio, mÃ¡ximo 255","schema":{"type":"string","minLength":1,"maxLength":255}}
+    Force: {"name":"force","in":"query","required":false,"description":"ForÃ§a exclusÃ£o de dependÃªncias","schema":{"type":"boolean","default":false}}
     MessageID: {"name":"id","in":"query","required":true,"description":"ID interno positivo da mensagem","schema":{"type":"integer","minimum":1}}
-    Binary: {"name":"binary","in":"query","required":false,"description":"Retorna binário bruto quando true","schema":{"type":"boolean","default":false}}
+    Binary: {"name":"binary","in":"query","required":false,"description":"Retorna binÃ¡rio bruto quando true","schema":{"type":"boolean","default":false}}
     GroupJID: {"name":"groupJid","in":"query","required":true,"description":"JID do grupo","schema":{"type":"string","pattern":"@g\\.us$"}}
     ExternalID: {"name":"externalId","in":"query","required":false,"schema":{"type":"string","maxLength":255}}
     MediaTypeFilter: {"name":"mediaType","in":"query","required":false,"schema":{"type":"string","enum":["image","video","audio","document"]}}
@@ -2805,9 +3190,9 @@ components:
     CreatedFrom: {"name":"createdFrom","in":"query","required":false,"schema":{"type":"string","format":"date-time"}}
     CreatedTo: {"name":"createdTo","in":"query","required":false,"schema":{"type":"string","format":"date-time"}}
     Limit: {"name":"limit","in":"query","required":false,"schema":{"type":"integer","default":20,"maximum":100}}
-    Cursor: {"name":"cursor","in":"query","required":false,"deprecated":true,"description":"Alias legado de nextCursor para avançar na listagem de uploads; não combine com nextCursor ou previousCursor.","schema":{"type":"integer","minimum":1}}
-    MediaUploadNextCursor: {"name":"nextCursor","in":"query","required":false,"description":"Cursor retornado pela página atual para avançar; não combine com previousCursor ou cursor.","schema":{"type":"integer","minimum":1}}
-    MediaUploadPreviousCursor: {"name":"previousCursor","in":"query","required":false,"description":"Cursor retornado pela página atual para voltar; não combine com nextCursor ou cursor.","schema":{"type":"integer","minimum":1}}
+    Cursor: {"name":"cursor","in":"query","required":false,"deprecated":true,"description":"Alias legado de nextCursor para avanÃ§ar na listagem de uploads; nÃ£o combine com nextCursor ou previousCursor.","schema":{"type":"integer","minimum":1}}
+    MediaUploadNextCursor: {"name":"nextCursor","in":"query","required":false,"description":"Cursor retornado pela pÃ¡gina atual para avanÃ§ar; nÃ£o combine com previousCursor ou cursor.","schema":{"type":"integer","minimum":1}}
+    MediaUploadPreviousCursor: {"name":"previousCursor","in":"query","required":false,"description":"Cursor retornado pela pÃ¡gina atual para voltar; nÃ£o combine com nextCursor ou cursor.","schema":{"type":"integer","minimum":1}}
     MessageBatchID: {"name":"batchId","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}
     MessageBatchItemID: {"name":"itemId","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}
     MessageBatchLimit: {"name":"limit","in":"query","required":false,"schema":{"type":"integer","default":50,"minimum":1,"maximum":200}}
@@ -2815,7 +3200,7 @@ components:
     PreviousCursor: {"name":"previousCursor","in":"query","required":false,"schema":{"type":"string"}}
   responses:
     MessageBatchBadRequest:
-      description: "Payload ou filtro inválido. Erros do Message Batch usam message; rejeições do middleware Bearer de usuario usam messages."
+      description: "Payload ou filtro invÃ¡lido. Erros do Message Batch usam message; rejeiÃ§Ãµes do middleware Bearer de usuario usam messages."
       content:
         application/json:
           schema:
@@ -2823,32 +3208,32 @@ components:
               - {"$ref":"#/components/schemas/MessageBatchErrorResponse"}
               - {"$ref":"#/components/schemas/ErrorResponse"}
     MessageBatchError:
-      description: "Erro de autorização de instância, recurso, regra semântica ou transição do Message Batch."
+      description: "Erro de autorizaÃ§Ã£o de instÃ¢ncia, recurso, regra semÃ¢ntica ou transiÃ§Ã£o do Message Batch."
       content:
         application/json:
           schema: {"$ref":"#/components/schemas/MessageBatchErrorResponse"}
     Error400:
-      description: "Requisição inválida"
+      description: "RequisiÃ§Ã£o invÃ¡lida"
       content:
         application/json:
           schema: {"$ref":"#/components/schemas/ErrorResponse"}
     Error401:
-      description: "Não autenticado"
+      description: "NÃ£o autenticado"
       content:
         application/json:
           schema: {"$ref":"#/components/schemas/ErrorResponse"}
     Error403:
-      description: "Token de outra instância"
+      description: "Token de outra instÃ¢ncia"
       content:
         application/json:
           schema: {"$ref":"#/components/schemas/ErrorResponse"}
     Error404:
-      description: "Recurso não encontrado"
+      description: "Recurso nÃ£o encontrado"
       content:
         application/json:
           schema: {"$ref":"#/components/schemas/ErrorResponse"}
     Error406:
-      description: "Enviado, mas não persistido"
+      description: "Enviado, mas nÃ£o persistido"
       content:
         application/json:
           schema: {"$ref":"#/components/schemas/ErrorResponse"}
@@ -2873,12 +3258,12 @@ components:
         application/json:
           schema: {"$ref":"#/components/schemas/ErrorResponse"}
     Error415:
-      description: "Tipo de mídia não suportado"
+      description: "Tipo de mÃ­dia nÃ£o suportado"
       content:
         application/json:
           schema: {"$ref":"#/components/schemas/ErrorResponse"}
     Error422:
-      description: "Regra semântica inválida"
+      description: "Regra semÃ¢ntica invÃ¡lida"
       content:
         application/json:
           schema: {"$ref":"#/components/schemas/ErrorResponse"}
@@ -2888,59 +3273,188 @@ components:
         application/json:
           schema: {"$ref":"#/components/schemas/ErrorResponse"}
     Error503:
-      description: "Serviço indisponível"
+      description: "ServiÃ§o indisponÃ­vel"
       content:
         application/json:
           schema: {"$ref":"#/components/schemas/ErrorResponse"}
     MediaDataSuccess:
-      description: "Arquivo bruto quando binary=true; caso contrário, envelope multipart com metadados e file."
+      description: "Arquivo bruto quando binary=true; caso contrÃ¡rio, envelope multipart com metadados e file."
       content:
         application/octet-stream:
           schema: {"type":"string","format":"binary"}
         multipart/form-data:
           schema: {"$ref":"#/components/schemas/MediaDataEnvelope"}
   schemas:
+    CallStatus: {"type":"string","enum":["INCOMING","OUTGOING","RINGING","PREACCEPTED","CONNECTING","ACTIVE","ENDING","ENDED","REJECTED","MISSED","BUSY","FAILED","INTERRUPTED","ANSWERED_ELSEWHERE","REJECTED_ELSEWHERE"]}
+    AnsweredBy: {"type":"string","enum":["api","another_device","unknown"]}
+    EndedBy: {"type":"string","enum":["api","peer","another_device","provider","timeout","application","unknown"]}
+    AnswerRequestedBy: {"type":"string","enum":["api","another_device","unknown"]}
+    StartCallRequest: {"type":"object","properties":{"target":{"type":"string"},"video":{"type":"boolean","default":false},"externalId":{"type":"string"},"recording":{"type":"object","properties":{"enabled":{"type":"boolean"},"audio":{"type":"boolean"},"video":{"type":"boolean"}},"additionalProperties":false}},"required":["target"],"additionalProperties":false}
+    CallReasonRequest: {"type":"object","properties":{"reason":{"type":"string","maxLength":160}},"additionalProperties":false}
+    Call: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"instanceId":{"type":"integer"},"instance":{"type":"string"},"provider":{"type":"string"},"providerCallId":{"type":"string"},"direction":{"type":"string","enum":["incoming","outgoing"]},"status":{"$ref":"#/components/schemas/CallStatus"},"peer":{"type":["string","null"]},"peerJid":{"type":"string"},"audio":{"type":"boolean"},"video":{"type":"boolean"},"localVideoActive":{"type":"boolean"},"remoteVideoActive":{"type":"boolean"},"recordingEnabled":{"type":"boolean"},"recordingRequested":{"type":"boolean"},"recordingStarted":{"type":"boolean"},"recordingCompleted":{"type":"boolean"},"recordingAvailable":{"type":"boolean"},"recordingStatus":{"$ref":"#/components/schemas/RecordingStatus"},"recordingUnavailableReason":{"type":"string","enum":["media_owned_by_another_device"]},"recordingStartedAt":{"type":"string","format":"date-time"},"recordingCompletedAt":{"type":"string","format":"date-time"},"answeredBy":{"$ref":"#/components/schemas/AnsweredBy"},"endedBy":{"$ref":"#/components/schemas/EndedBy"},"answerRequestedBy":{"$ref":"#/components/schemas/AnswerRequestedBy"},"endReason":{"type":"string"},"providerReason":{"type":"string"},"stateVersion":{"type":"integer"},"lastProviderEventAt":{"type":"string","format":"date-time"},"startedAt":{"type":"string","format":"date-time"},"ringingAt":{"type":"string","format":"date-time"},"answeredAt":{"type":"string","format":"date-time"},"connectedAt":{"type":"string","format":"date-time"},"endedAt":{"type":"string","format":"date-time"},"durationSeconds":{"type":"integer"}},"required":["id","instanceId","provider","direction","status","audio","video","startedAt"],"additionalProperties":true}
+    CallEvent: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"callId":{"type":"string","format":"uuid"},"type":{"type":"string","examples":["call.answered_elsewhere","call.rejected_elsewhere"]},"sequence":{"type":"integer"},"payload":{"type":"object","additionalProperties":true},"occurredAt":{"type":"string","format":"date-time"}},"required":["id","callId","type","sequence","payload","occurredAt"],"additionalProperties":false}
+    CallConflictResponse: {"type":"object","properties":{"status":{"type":"integer","const":409},"error":{"type":"string","enum":["call_answered_elsewhere","call_rejected_elsewhere","call_already_terminal"]},"message":{"type":"string"},"call":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"status":{"$ref":"#/components/schemas/CallStatus"},"answeredBy":{"$ref":"#/components/schemas/AnsweredBy"},"endedBy":{"$ref":"#/components/schemas/EndedBy"},"endReason":{"type":"string"}},"additionalProperties":true}},"required":["status","error","message"],"additionalProperties":false,"example":{"status":409,"error":"call_answered_elsewhere","message":"This call was answered on another linked device.","call":{"id":"01900000-0000-7000-8000-000000000000","status":"ANSWERED_ELSEWHERE","answeredBy":"another_device","endReason":"accepted_elsewhere"}}}
+    RecordingStatus: {"type":"string","enum":["NOT_REQUESTED","PENDING","RECORDING","FINALIZING","PROCESSING","COMPLETED","PARTIAL","FAILED","UNAVAILABLE"]}
+    CallRecording: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"instanceId":{"type":"integer"},"callId":{"type":"string","format":"uuid"},"type":{"type":"string","enum":["AUDIO_RAW","AUDIO_MIXED","AUDIO_STEREO","AUDIO_FINAL","VIDEO_RAW","VIDEO_FINAL","CALL_FINAL","METADATA"]},"mediaType":{"type":"string","enum":["audio","video","metadata"]},"direction":{"type":"string","enum":["INCOMING","OUTGOING","MIXED","COMBINED"]},"format":{"type":"string","enum":["wav","h264","json"]},"relativePath":{"type":"string"},"sizeBytes":{"type":"integer","format":"int64"},"durationMs":{"type":"integer","format":"int64"},"durationSeconds":{"type":"integer"},"sampleRate":{"type":"integer"},"channels":{"type":"integer"},"audioCodec":{"type":"string"},"videoCodec":{"type":"string"},"checksumSha256":{"type":"string"},"status":{"$ref":"#/components/schemas/RecordingStatus"},"errorCode":{"type":"string"},"errorMessage":{"type":"string"},"downloadAvailable":{"type":"boolean"},"startedAt":{"type":"string","format":"date-time"},"completedAt":{"type":"string","format":"date-time"},"expiresAt":{"type":"string","format":"date-time"},"createdAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"}},"required":["id","callId","type","direction","format","status","downloadAvailable"],"additionalProperties":false}
+    StartCallRecordingRequest: {"type":"object","properties":{"audio":{"type":"boolean","default":true},"video":{"type":"boolean","default":false},"incomingAudio":{"type":"boolean","default":true},"outgoingAudio":{"type":"boolean","default":true},"incomingVideo":{"type":"boolean","default":true},"outgoingVideo":{"type":"boolean","default":true},"consentGranted":{"type":"boolean","default":false},"consentAt":{"type":"string","format":"date-time"},"reason":{"type":"string"}},"additionalProperties":false}
+    StopCallRecordingRequest: {"type":"object","properties":{"reason":{"type":"string"}},"additionalProperties":false}
+    InstanceCallSettings:
+      type: object
+      properties:
+        callsEnabled: {type: boolean, default: false}
+        incomingCallsEnabled: {type: boolean, default: false}
+        outgoingCallsEnabled: {type: boolean, default: false}
+        audio:
+          type: object
+          properties:
+            enabled: {type: boolean, default: true}
+            receiveEnabled: {type: boolean, default: true}
+            sendEnabled: {type: boolean, default: true}
+            playbackEnabled: {type: boolean, default: true}
+            streamingEnabled: {type: boolean, default: true}
+          required: [enabled, receiveEnabled, sendEnabled, playbackEnabled, streamingEnabled]
+          additionalProperties: false
+        video:
+          type: object
+          properties:
+            enabled: {type: boolean, default: false}
+            receiveEnabled: {type: boolean, default: false}
+            sendEnabled: {type: boolean, default: false}
+            upgradeEnabled: {type: boolean, default: false}
+            playbackEnabled: {type: boolean, default: false}
+          required: [enabled, receiveEnabled, sendEnabled, upgradeEnabled, playbackEnabled]
+          additionalProperties: false
+        reactionsEnabled: {type: boolean, default: true}
+        recording:
+          type: object
+          properties:
+            enabled: {type: boolean, default: false}
+            audioEnabled: {type: boolean, default: false}
+            videoEnabled: {type: boolean, default: false}
+            retentionDays: {type: [integer, "null"], minimum: 1}
+          required: [enabled, audioEnabled, videoEnabled]
+          additionalProperties: false
+        diagnosticsEnabled: {type: boolean, default: false}
+        autoAnswer:
+          type: object
+          properties:
+            enabled: {type: boolean, default: false}
+            delayMs: {type: integer, minimum: 0, default: 0}
+            audioMediaId: {type: [string, "null"]}
+            videoMediaId: {type: [string, "null"]}
+          required: [enabled, delayMs]
+          additionalProperties: false
+        limits:
+          type: object
+          properties:
+            maxConcurrentCalls: {type: integer, minimum: 1}
+            ringTimeoutSeconds: {type: integer, minimum: 5, maximum: 300}
+            connectTimeoutSeconds: {type: integer, minimum: 5, maximum: 120}
+            maxCallDurationSeconds: {type: integer, minimum: 30}
+          required: [maxConcurrentCalls, ringTimeoutSeconds, connectTimeoutSeconds, maxCallDurationSeconds]
+          additionalProperties: false
+      required: [callsEnabled, incomingCallsEnabled, outgoingCallsEnabled, audio, video, reactionsEnabled, recording, diagnosticsEnabled, autoAnswer, limits]
+      additionalProperties: false
+    EffectiveCallSettings:
+      type: object
+      description: "Result of global CALLS_* master locks combined with stored instance settings."
+      properties:
+        callsEnabled: {type: boolean}
+        incomingCallsEnabled: {type: boolean}
+        outgoingCallsEnabled: {type: boolean}
+        audioEnabled: {type: boolean}
+        audioReceiveEnabled: {type: boolean}
+        audioSendEnabled: {type: boolean}
+        audioPlaybackEnabled: {type: boolean}
+        audioStreamingEnabled: {type: boolean}
+        videoEnabled: {type: boolean}
+        videoReceiveEnabled: {type: boolean}
+        videoSendEnabled: {type: boolean}
+        videoUpgradeEnabled: {type: boolean}
+        videoPlaybackEnabled: {type: boolean}
+        reactionsEnabled: {type: boolean}
+        recordingEnabled: {type: boolean}
+        audioRecordingEnabled: {type: boolean}
+        videoRecordingEnabled: {type: boolean}
+        diagnosticsEnabled: {type: boolean}
+        autoAnswerEnabled: {type: boolean}
+        maxConcurrentCalls: {type: integer}
+        ringTimeoutSeconds: {type: integer}
+        connectTimeoutSeconds: {type: integer}
+        maxCallDurationSeconds: {type: integer}
+      additionalProperties: false
+    UpdateInstanceCallSettingsRequest:
+      allOf:
+        - {$ref: "#/components/schemas/InstanceCallSettings"}
+        - type: object
+          properties:
+            terminateActiveCalls:
+              type: boolean
+              default: false
+              description: "When callsEnabled changes from true to false, terminate active calls instead of only blocking new calls."
+    InstanceCallSettingsResponse:
+      type: object
+      properties:
+        instance:
+          type: object
+          properties:
+            id: {type: integer}
+            name: {type: string}
+          required: [id, name]
+          additionalProperties: false
+        settings: {$ref: "#/components/schemas/InstanceCallSettings"}
+        effective: {$ref: "#/components/schemas/EffectiveCallSettings"}
+        activeCalls:
+          type: object
+          properties:
+            found: {type: integer}
+            terminated: {type: integer}
+            failed: {type: integer}
+          required: [found, terminated, failed]
+          additionalProperties: false
+      required: [instance, settings, effective]
+      additionalProperties: false
     MessageBatchStatus: {"type":"string","enum":["DRAFT","SCHEDULED","QUEUED","PROCESSING","PAUSE_REQUESTED","PAUSED","WAITING_FOR_INSTANCE","WAITING_FOR_WINDOW","STOP_REQUESTED","STOPPED","INTERRUPTED","COMPLETED","COMPLETED_WITH_ERRORS","FAILED"]}
     MessageBatchItemStatus: {"type":"string","enum":["PENDING","SENDING","SUCCESS","FAILED","SKIPPED","INTERRUPTED","UNKNOWN"]}
     MessageBatchAttemptStatus: {"type":"string","enum":["SENDING","SUCCESS","FAILED","INSTANCE_UNAVAILABLE","INTERRUPTED","UNKNOWN"]}
     MessageBatchErrorResponse: {"type":"object","properties":{"statusCode":{"type":"integer"},"error":{"type":"string"},"message":{"type":"array","items":{"type":"string"},"minItems":1}},"required":["statusCode","error","message"],"additionalProperties":false}
     MessageBatchDelay: {"type":"object","properties":{"minMs":{"type":"integer","format":"int64","minimum":0,"default":0},"maxMs":{"type":"integer","format":"int64","minimum":0,"default":0}},"required":["minMs","maxMs"],"additionalProperties":false}
     MessageBatchDelayInput: {"type":"object","description":"Campos ausentes assumem zero. maxMs precisa ser maior ou igual a minMs e respeitar MESSAGE_BATCH_MAX_DELAY_MS.","properties":{"minMs":{"type":"integer","format":"int64","minimum":0,"default":0},"maxMs":{"type":"integer","format":"int64","minimum":0,"default":0}},"additionalProperties":false}
-    MessageBatchOptions: {"type":"object","properties":{"replicable":{"type":"boolean","description":"Preservado no contrato; não adiciona semântica própria no worker."},"presence":{"type":"string","enum":["composing","recording","paused"]},"delay":{"$ref":"#/components/schemas/MessageBatchDelay"},"quotedMessageId":{"type":"integer","format":"int64"},"quotedMessage":{"type":"object","additionalProperties":true},"externalAttributes":{"type":"object","additionalProperties":true},"mentionAll":{"type":"boolean","const":false,"description":"Somente false é aceito; true é rejeitado porque lotes não aceitam grupos."}},"additionalProperties":false}
-    MessageBatchOptionsInput: {"type":"object","properties":{"replicable":{"type":"boolean","description":"Preservado no contrato; não adiciona semântica própria no worker."},"presence":{"type":"string","enum":["composing","recording","paused"]},"delay":{"$ref":"#/components/schemas/MessageBatchDelayInput"},"quotedMessageId":{"type":"integer","format":"int64"},"quotedMessage":{"type":"object","additionalProperties":true},"externalAttributes":{"type":"object","additionalProperties":true},"mentionAll":{"type":"boolean","const":false,"description":"Somente false é aceito; true é rejeitado porque lotes não aceitam grupos."}},"additionalProperties":false}
-    MessageBatchMessage: {"type":"object","description":"Mensagem persistida do lote. O payload é direto: não envie number/chat/recipient/options nem wrappers como textMessage, mediaMessage, audioMessage, contactMessage, locationMessage ou buttonMessage. Tipos aceitos: text, link, media, audio, contact, location e interactive; ptt, whatsapp-audio e whatsapp_audio são aliases de audio.","properties":{"type":{"type":"string","enum":["text","link","media","audio","ptt","whatsapp-audio","whatsapp_audio","contact","location","interactive"]},"payload":{"description":"Objeto ou array persistente conforme message.type: text={text}; link={link,thumbnailUrl,title,description}; media={mediatype,media|mediaUploadId,fileName,caption}; audio={audio} ou {mediaUploadId,ptt:true}; contact=[{fullName,phoneNumber,wuid,organization,vcard}]; location={latitude,longitude,name,address,url}; interactive segue MessageBatchInteractivePayload.","oneOf":[{"type":"object","additionalProperties":true},{"type":"array","items":{"type":"object","additionalProperties":true}}]}},"required":["type","payload"],"additionalProperties":false}
-    MessageBatchInteractivePayload: {"$ref":"#/components/schemas/ButtonMessage","description":"Payload direto de message.type=interactive no Message Batch. Os botões podem misturar url, copyCode e id. Um mediaUploadId positivo exige lote com exatamente uma instância."}
-    MessageBatchSchedule: {"type":"object","properties":{"windowStartAt":{"type":"string","format":"date-time"},"windowEndAt":{"type":"string","format":"date-time"},"recurrence":{"type":"string","enum":["NONE","DAILY"]},"timezone":{"type":"string","description":"Timezone IANA usado no cálculo da recorrência."}},"required":["windowStartAt","windowEndAt","recurrence","timezone"],"additionalProperties":false,"description":"Janela absoluta inicial. DAILY preserva os horários locais e aceita janelas que atravessam a meia-noite."}
+    MessageBatchOptions: {"type":"object","properties":{"replicable":{"type":"boolean","description":"Preservado no contrato; nÃ£o adiciona semÃ¢ntica prÃ³pria no worker."},"presence":{"type":"string","enum":["composing","recording","paused"]},"delay":{"$ref":"#/components/schemas/MessageBatchDelay"},"quotedMessageId":{"type":"integer","format":"int64"},"quotedMessage":{"type":"object","additionalProperties":true},"externalAttributes":{"type":"object","additionalProperties":true},"mentionAll":{"type":"boolean","const":false,"description":"Somente false Ã© aceito; true Ã© rejeitado porque lotes nÃ£o aceitam grupos."}},"additionalProperties":false}
+    MessageBatchOptionsInput: {"type":"object","properties":{"replicable":{"type":"boolean","description":"Preservado no contrato; nÃ£o adiciona semÃ¢ntica prÃ³pria no worker."},"presence":{"type":"string","enum":["composing","recording","paused"]},"delay":{"$ref":"#/components/schemas/MessageBatchDelayInput"},"quotedMessageId":{"type":"integer","format":"int64"},"quotedMessage":{"type":"object","additionalProperties":true},"externalAttributes":{"type":"object","additionalProperties":true},"mentionAll":{"type":"boolean","const":false,"description":"Somente false Ã© aceito; true Ã© rejeitado porque lotes nÃ£o aceitam grupos."}},"additionalProperties":false}
+    MessageBatchMessage: {"type":"object","description":"Mensagem persistida do lote. O payload Ã© direto: nÃ£o envie number/chat/recipient/options nem wrappers como textMessage, mediaMessage, audioMessage, contactMessage, locationMessage ou buttonMessage. Tipos aceitos: text, link, media, audio, contact, location e interactive; ptt, whatsapp-audio e whatsapp_audio sÃ£o aliases de audio.","properties":{"type":{"type":"string","enum":["text","link","media","audio","ptt","whatsapp-audio","whatsapp_audio","contact","location","interactive"]},"payload":{"description":"Objeto ou array persistente conforme message.type: text={text}; link={link,thumbnailUrl,title,description}; media={mediatype,media|mediaUploadId,fileName,caption}; audio={audio} ou {mediaUploadId,ptt:true}; contact=[{fullName,phoneNumber,wuid,organization,vcard}]; location={latitude,longitude,name,address,url}; interactive segue MessageBatchInteractivePayload.","oneOf":[{"type":"object","additionalProperties":true},{"type":"array","items":{"type":"object","additionalProperties":true}}]}},"required":["type","payload"],"additionalProperties":false}
+    MessageBatchInteractivePayload: {"$ref":"#/components/schemas/ButtonMessage","description":"Payload direto de message.type=interactive no Message Batch. Os botÃµes podem misturar url, copyCode e id. Um mediaUploadId positivo exige lote com exatamente uma instÃ¢ncia."}
+    MessageBatchSchedule: {"type":"object","properties":{"windowStartAt":{"type":"string","format":"date-time"},"windowEndAt":{"type":"string","format":"date-time"},"recurrence":{"type":"string","enum":["NONE","DAILY"]},"timezone":{"type":"string","description":"Timezone IANA usado no cÃ¡lculo da recorrÃªncia."}},"required":["windowStartAt","windowEndAt","recurrence","timezone"],"additionalProperties":false,"description":"Janela absoluta inicial. DAILY preserva os horÃ¡rios locais e aceita janelas que atravessam a meia-noite."}
     MessageBatchScheduleInput: {"type":"object","properties":{"windowStartAt":{"type":"string","format":"date-time"},"windowEndAt":{"type":"string","format":"date-time"},"recurrence":{"type":"string","enum":["NONE","DAILY"]},"timezone":{"type":"string","description":"Timezone IANA. Quando omitido, usa MESSAGE_BATCH_TIMEZONE."}},"required":["windowStartAt","windowEndAt","recurrence"],"additionalProperties":false}
     CreateMessageBatchRequest:
       type: object
       properties:
         name: {"type":"string","minLength":1,"maxLength":255}
-        instances: {"type":"array","items":{"type":"string","minLength":1,"maxLength":255},"minItems":1,"uniqueItems":true,"description":"Nomes de instâncias existentes e com autenticação disponível."}
-        recipients: {"type":"array","items":{"type":"string","minLength":1},"minItems":1,"description":"Somente contatos individuais. O limite é definido por MESSAGE_BATCH_MAX_RECIPIENTS e duplicados normalizados são ignorados."}
+        instances: {"type":"array","items":{"type":"string","minLength":1,"maxLength":255},"minItems":1,"uniqueItems":true,"description":"Nomes de instÃ¢ncias existentes e com autenticaÃ§Ã£o disponÃ­vel."}
+        recipients: {"type":"array","items":{"type":"string","minLength":1},"minItems":1,"description":"Somente contatos individuais. O limite Ã© definido por MESSAGE_BATCH_MAX_RECIPIENTS e duplicados normalizados sÃ£o ignorados."}
         message: {"$ref":"#/components/schemas/MessageBatchMessage"}
         options: {"$ref":"#/components/schemas/MessageBatchOptionsInput"}
         autoStart: {"type":"boolean","default":false}
-        autoResume: {"type":"boolean","default":true,"description":"Recupera automaticamente interrupções operacionais; nunca ignora PAUSED."}
+        autoResume: {"type":"boolean","default":true,"description":"Recupera automaticamente interrupÃ§Ãµes operacionais; nunca ignora PAUSED."}
         schedule: {"$ref":"#/components/schemas/MessageBatchScheduleInput"}
-        externalAttributes: {"type":"object","additionalProperties":true,"description":"Objeto JSON com até 64 KiB."}
+        externalAttributes: {"type":"object","additionalProperties":true,"description":"Objeto JSON com atÃ© 64 KiB."}
       required: ["name","instances","recipients","message"]
       additionalProperties: false
       example:
-        name: "Aviso de manutenção"
+        name: "Aviso de manutenÃ§Ã£o"
         instances: ["codechat-01", "codechat-02"]
         recipients: ["5531999999999", "5531888888888"]
         message:
           type: "interactive"
           payload:
-            title: "Confirmação"
+            title: "ConfirmaÃ§Ã£o"
             description: "Deseja continuar?"
             footerText: "CodeChat"
             buttons:
               - {"displayText":"Repo","url":"https://github.com/code-chat-br/whatsapp-api-go"}
-              - {"displayText":"Código de barras","copyCode":"32546413216543165489869589416558645341864321365468435469465"}
+              - {"displayText":"CÃ³digo de barras","copyCode":"32546413216543165489869589416558645341864321365468435469465"}
               - {"displayText":"Sim","id":"1"}
-              - {"displayText":"Não","id":"0"}
+              - {"displayText":"NÃ£o","id":"0"}
               - {"displayText":"Talvez","id":"-1"}
         options:
           replicable: true
@@ -2956,13 +3470,13 @@ components:
         externalAttributes: {"origin":"admin-panel"}
     MessageBatchListRequest:
       type: object
-      description: "Filtros da listagem de lotes. Envie {} para usar os padrões."
+      description: "Filtros da listagem de lotes. Envie {} para usar os padrÃµes."
       properties:
         status: {"$ref":"#/components/schemas/MessageBatchStatus"}
         instanceName: {"type":"string"}
         createdFrom: {"type":"string","format":"date-time"}
         createdTo: {"type":"string","format":"date-time"}
-        name: {"type":"string","description":"Pesquisa parcial pelo nome do lote, sem diferenciar maiúsculas de minúsculas."}
+        name: {"type":"string","description":"Pesquisa parcial pelo nome do lote, sem diferenciar maiÃºsculas de minÃºsculas."}
         query: {"type":"string"}
         limit: {"type":"integer","default":50,"minimum":1,"maximum":200}
         nextCursor: {"type":"string"}
@@ -2979,12 +3493,12 @@ components:
         nextCursor: "01900000-0000-7000-8000-000000000010"
     MessageBatchCounts: {"type":"object","properties":{"received":{"type":"integer","format":"int64","minimum":0},"total":{"type":"integer","format":"int64","minimum":0},"duplicatesIgnored":{"type":"integer","format":"int64","minimum":0},"processed":{"type":"integer","format":"int64","minimum":0},"pending":{"type":"integer","format":"int64","minimum":0},"sending":{"type":"integer","format":"int64","minimum":0},"success":{"type":"integer","format":"int64","minimum":0},"failed":{"type":"integer","format":"int64","minimum":0},"skipped":{"type":"integer","format":"int64","minimum":0},"unknown":{"type":"integer","format":"int64","minimum":0}},"required":["total","processed","pending","sending","success","failed","skipped","unknown"],"additionalProperties":false}
     MessageBatchInstance: {"type":"object","properties":{"id":{"type":"integer"},"name":{"type":"string"},"connectionStatus":{"type":"string"},"selectedCount":{"type":"integer","format":"int64"},"successCount":{"type":"integer","format":"int64"},"failedCount":{"type":"integer","format":"int64"}},"required":["id","name"],"additionalProperties":false}
-    MessageBatch: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"ownerUserId":{"type":"string","format":"uuid"},"name":{"type":"string"},"status":{"$ref":"#/components/schemas/MessageBatchStatus"},"message":{"$ref":"#/components/schemas/MessageBatchMessage","description":"Presente na consulta individual, na listagem e nos eventos globais; omitido em criação e ações."},"options":{"$ref":"#/components/schemas/MessageBatchOptions","description":"Presente na consulta individual e nos eventos globais; omitido em criação, ações e listagem."},"externalAttributes":{"type":"object","additionalProperties":true},"instances":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatchInstance"}},"counts":{"$ref":"#/components/schemas/MessageBatchCounts"},"progress":{"type":"integer","minimum":0,"maximum":100,"description":"floor(processed * 100 / total)."},"autoResume":{"type":"boolean"},"schedule":{"oneOf":[{"$ref":"#/components/schemas/MessageBatchSchedule"},{"type":"null"}]},"nextRunAt":{"type":["string","null"],"format":"date-time"},"lastInterruptedAt":{"type":["string","null"],"format":"date-time"},"interruptionReason":{"type":["string","null"],"enum":["GRACEFUL_SHUTDOWN","LEASE_EXPIRED","PROCESS_CRASH","SEND_TIMEOUT_DURING_SHUTDOWN",null]},"lastRecoveredAt":{"type":["string","null"],"format":"date-time"},"currentItem":{"$ref":"#/components/schemas/MessageBatchWebhookCurrentItem","description":"Presente somente em eventos de lote associados a um item atual."},"lastError":{"type":"string"},"createdAt":{"type":"string","format":"date-time"},"startedAt":{"type":"string","format":"date-time"},"pausedAt":{"type":"string","format":"date-time"},"stoppedAt":{"type":"string","format":"date-time"},"completedAt":{"type":"string","format":"date-time"},"interruptedAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"}},"required":["id","ownerUserId","name","status","instances","counts","progress","autoResume","schedule","nextRunAt","lastInterruptedAt","interruptionReason","lastRecoveredAt","createdAt","updatedAt"],"additionalProperties":false}
+    MessageBatch: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"ownerUserId":{"type":"string","format":"uuid"},"name":{"type":"string"},"status":{"$ref":"#/components/schemas/MessageBatchStatus"},"message":{"$ref":"#/components/schemas/MessageBatchMessage","description":"Presente na consulta individual, na listagem e nos eventos globais; omitido em criaÃ§Ã£o e aÃ§Ãµes."},"options":{"$ref":"#/components/schemas/MessageBatchOptions","description":"Presente na consulta individual e nos eventos globais; omitido em criaÃ§Ã£o, aÃ§Ãµes e listagem."},"externalAttributes":{"type":"object","additionalProperties":true},"instances":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatchInstance"}},"counts":{"$ref":"#/components/schemas/MessageBatchCounts"},"progress":{"type":"integer","minimum":0,"maximum":100,"description":"floor(processed * 100 / total)."},"autoResume":{"type":"boolean"},"schedule":{"oneOf":[{"$ref":"#/components/schemas/MessageBatchSchedule"},{"type":"null"}]},"nextRunAt":{"type":["string","null"],"format":"date-time"},"lastInterruptedAt":{"type":["string","null"],"format":"date-time"},"interruptionReason":{"type":["string","null"],"enum":["GRACEFUL_SHUTDOWN","LEASE_EXPIRED","PROCESS_CRASH","SEND_TIMEOUT_DURING_SHUTDOWN",null]},"lastRecoveredAt":{"type":["string","null"],"format":"date-time"},"currentItem":{"$ref":"#/components/schemas/MessageBatchWebhookCurrentItem","description":"Presente somente em eventos de lote associados a um item atual."},"lastError":{"type":"string"},"createdAt":{"type":"string","format":"date-time"},"startedAt":{"type":"string","format":"date-time"},"pausedAt":{"type":"string","format":"date-time"},"stoppedAt":{"type":"string","format":"date-time"},"completedAt":{"type":"string","format":"date-time"},"interruptedAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"}},"required":["id","ownerUserId","name","status","instances","counts","progress","autoResume","schedule","nextRunAt","lastInterruptedAt","interruptionReason","lastRecoveredAt","createdAt","updatedAt"],"additionalProperties":false}
     MessageBatchAttempt: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"batchId":{"type":"string","format":"uuid"},"batchItemId":{"type":"string","format":"uuid"},"position":{"type":"integer"},"recipient":{"type":"string"},"instanceId":{"type":"integer"},"instanceName":{"type":"string"},"attemptNumber":{"type":"integer","minimum":1},"status":{"$ref":"#/components/schemas/MessageBatchAttemptStatus"},"clientMessageId":{"type":"string"},"whatsappMessageId":{"type":"string"},"errorCode":{"type":"string"},"errorMessage":{"type":"string"},"requestPayload":{"type":"object","additionalProperties":true},"responsePayload":{"type":"object","additionalProperties":true},"startedAt":{"type":"string","format":"date-time"},"finishedAt":{"type":"string","format":"date-time"},"createdAt":{"type":"string","format":"date-time"}},"required":["id","batchId","batchItemId","attemptNumber","status","startedAt","createdAt"],"additionalProperties":false}
     MessageBatchItem: {"type":"object","properties":{"id":{"type":"string","format":"uuid"},"batchId":{"type":"string","format":"uuid"},"position":{"type":"integer","minimum":0},"recipientInput":{"type":"string"},"normalizedRecipient":{"type":"string"},"recipientJid":{"type":"string"},"status":{"$ref":"#/components/schemas/MessageBatchItemStatus"},"selectedInstanceId":{"type":"integer"},"selectedInstanceName":{"type":"string"},"clientMessageId":{"type":"string"},"whatsappMessageId":{"type":"string"},"messageId":{"type":"integer"},"attemptCount":{"type":"integer","minimum":0},"selectedDelayMs":{"type":"integer","format":"int64","minimum":0},"lastErrorCode":{"type":"string"},"lastErrorMessage":{"type":"string"},"responsePayload":{"type":"object","additionalProperties":true},"createdAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"},"processingStartedAt":{"type":"string","format":"date-time"},"finishedAt":{"type":"string","format":"date-time"}},"required":["id","batchId","position","recipientInput","normalizedRecipient","recipientJid","status","attemptCount","createdAt","updatedAt"],"additionalProperties":false}
     MessageBatchItemDetail: {"allOf":[{"$ref":"#/components/schemas/MessageBatchItem"},{"type":"object","properties":{"attempts":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatchAttempt"}}},"required":["attempts"]}]}
-    MessageBatchProcessingRecipient: {"allOf":[{"$ref":"#/components/schemas/MessageBatchItem"},{"type":"object","properties":{"attempts":{"type":"array","description":"Histórico completo e ordenado das tentativas deste destinatário.","items":{"$ref":"#/components/schemas/MessageBatchAttempt"}}},"required":["attempts"]}]}
-    MessageBatchProcessing: {"allOf":[{"$ref":"#/components/schemas/MessageBatch"},{"type":"object","properties":{"recipients":{"type":"array","description":"Todos os destinatários do lote. O campo status identifica sucessos, falhas e demais estados do processamento.","items":{"$ref":"#/components/schemas/MessageBatchProcessingRecipient"}}},"required":["recipients"]}]}
+    MessageBatchProcessingRecipient: {"allOf":[{"$ref":"#/components/schemas/MessageBatchItem"},{"type":"object","properties":{"attempts":{"type":"array","description":"HistÃ³rico completo e ordenado das tentativas deste destinatÃ¡rio.","items":{"$ref":"#/components/schemas/MessageBatchAttempt"}}},"required":["attempts"]}]}
+    MessageBatchProcessing: {"allOf":[{"$ref":"#/components/schemas/MessageBatch"},{"type":"object","properties":{"recipients":{"type":"array","description":"Todos os destinatÃ¡rios do lote. O campo status identifica sucessos, falhas e demais estados do processamento.","items":{"$ref":"#/components/schemas/MessageBatchProcessingRecipient"}}},"required":["recipients"]}]}
     MessageBatchPage: {"type":"object","properties":{"nextCursor":{"type":["string","null"]},"previousCursor":{"type":["string","null"]},"totalRecords":{"type":"integer","format":"int64"},"records":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatch"}}},"required":["nextCursor","previousCursor","totalRecords","records"],"additionalProperties":false}
     MessageBatchItemPage: {"type":"object","properties":{"nextCursor":{"type":["string","null"]},"previousCursor":{"type":["string","null"]},"totalRecords":{"type":"integer","format":"int64"},"records":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatchItem"}}},"required":["nextCursor","previousCursor","totalRecords","records"],"additionalProperties":false}
     MessageBatchAttemptPage: {"type":"object","properties":{"nextCursor":{"type":["string","null"]},"previousCursor":{"type":["string","null"]},"totalRecords":{"type":"integer","format":"int64"},"records":{"type":"array","items":{"$ref":"#/components/schemas/MessageBatchAttempt"}}},"required":["nextCursor","previousCursor","totalRecords","records"],"additionalProperties":false}
@@ -2993,7 +3507,7 @@ components:
     MessageBatchLifecycleWebhookData: {"type":"object","properties":{"batch":{"$ref":"#/components/schemas/MessageBatch"}},"required":["batch"],"additionalProperties":false}
     MessageBatchItemWebhookData: {"type":"object","properties":{"batchId":{"type":"string","format":"uuid"},"itemId":{"type":"string","format":"uuid"},"recipient":{"type":"string"},"instance":{"type":"object","properties":{"id":{"type":"integer"},"name":{"type":"string"}},"required":["id","name"],"additionalProperties":false},"error":{"type":"object","properties":{"code":{"type":"string"},"message":{"type":"string"}},"required":["code","message"],"additionalProperties":false}},"required":["batchId","itemId","recipient","error"],"additionalProperties":false}
     MessageBatchWebhookEnvelope: {"type":"object","properties":{"event":{"$ref":"#/components/schemas/MessageBatchWebhookEvent"},"timestamp":{"type":"string","format":"date-time"},"data":{"oneOf":[{"$ref":"#/components/schemas/MessageBatchLifecycleWebhookData"},{"$ref":"#/components/schemas/MessageBatchItemWebhookData"}]}},"required":["event","timestamp","data"],"additionalProperties":false}
-    ErrorResponse: {"type":"object","properties":{"statusCode":{"type":"integer","example":400},"error":{"type":"string","example":"bad-request"},"code":{"type":"string","description":"Código opcional de máquina"},"messages":{"type":"array","items":{"type":"string"},"minItems":1,"example":["invalid request"]}},"required":["statusCode","error","messages"],"additionalProperties":false}
+    ErrorResponse: {"type":"object","properties":{"statusCode":{"type":"integer","example":400},"error":{"type":"string","example":"bad-request"},"code":{"type":"string","description":"CÃ³digo opcional de mÃ¡quina"},"messages":{"type":"array","items":{"type":"string"},"minItems":1,"example":["invalid request"]}},"required":["statusCode","error","messages"],"additionalProperties":false}
     HealthResponse: {"type":"object","properties":{"status":{"type":"string","const":"ok"}},"required":["status"],"example":{"status":"ok"}}
     ReadyResponse: {"type":"object","properties":{"status":{"type":"string","const":"ready"}},"required":["status"],"example":{"status":"ready"}}
     InstanceAuth: {"type":"object","properties":{"id":{"type":"integer"},"token":{"type":"string"},"createdAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"}},"required":["id","token","createdAt","updatedAt"],"additionalProperties":false}
@@ -3021,29 +3535,43 @@ components:
     PTTMessageOptions: {"type":"object","properties":{"delay":{"type":"integer","minimum":0,"maximum":300000},"presence":{"type":"string","enum":["recording","paused"]},"quotedMessageId":{"type":"string"},"quotedMessage":{"type":"object","additionalProperties":true},"externalAttributes":{"type":"object","additionalProperties":true},"mentionAll":{"type":"boolean","default":false}},"additionalProperties":false}
     Message: {"type":"object","properties":{"id":{"type":"integer"},"keyId":{"type":"string"},"keyRemoteJid":{"type":["string","null"]},"keyLid":{"type":["string","null"]},"keyFromMe":{"type":"boolean"},"keyParticipant":{"type":["string","null"]},"keyParticipantLid":{"type":["string","null"]},"pushName":{"type":["string","null"]},"messageType":{"type":"string"},"content":{},"messageTimestamp":{"type":"integer"},"device":{"type":"string","enum":["ios","android","web","unknown","desktop"]},"isGroup":{"type":["boolean","null"]},"instanceId":{"type":"integer"},"metadata":{},"externalAttributes":{"type":"object","additionalProperties":true}},"required":["id","keyId","keyRemoteJid","keyLid","keyFromMe","keyParticipant","keyParticipantLid","pushName","messageType","content","messageTimestamp","device","isGroup","instanceId"],"additionalProperties":false}
     AcceptedResponse: {"type":"object","properties":{"statusCode":{"type":"integer","const":202},"status":{"type":"string","const":"processing"},"message":{"type":"string"},"processId":{"type":"string"},"instanceName":{"type":"string"}},"required":["statusCode","status","message","processId","instanceName"],"additionalProperties":false}
-    SendTextRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatário"},"chat":{"type":"string","description":"Alias de destinatário"},"recipient":{"type":"string","description":"Alias de destinatário"},"textMessage":{"type":"object","properties":{"text":{"type":"string","minLength":1,"maxLength":65536}},"required":["text"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["textMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}],"example":{"number":"5511999999999","textMessage":{"text":"Olá!"}}}
-    SendLinkRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatário"},"chat":{"type":"string","description":"Alias de destinatário"},"recipient":{"type":"string","description":"Alias de destinatário"},"linkMessage":{"type":"object","properties":{"link":{"type":"string","format":"uri","pattern":"^https?://"},"title":{"type":"string"},"description":{"type":"string"},"thumbnailUrl":{"type":"string","format":"uri","pattern":"^https?://"}},"required":["link"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["linkMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
-    SendMediaRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatário"},"chat":{"type":"string","description":"Alias de destinatário"},"recipient":{"type":"string","description":"Alias de destinatário"},"mediaMessage":{"type":"object","properties":{"mediatype":{"type":"string","enum":["image","document","video","audio","ptv"]},"media":{"type":"string","format":"uri","pattern":"^https?://"},"mediaUploadId":{"type":"integer","minimum":1},"caption":{"type":"string"},"fileName":{"type":"string"}},"required":["mediatype"],"additionalProperties":false,"oneOf":[{"required":["media"]},{"required":["mediaUploadId"]}]},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["mediaMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
+    SendTextRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatÃ¡rio"},"chat":{"type":"string","description":"Alias de destinatÃ¡rio"},"recipient":{"type":"string","description":"Alias de destinatÃ¡rio"},"textMessage":{"type":"object","properties":{"text":{"type":"string","minLength":1,"maxLength":65536}},"required":["text"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["textMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}],"example":{"number":"5511999999999","textMessage":{"text":"OlÃ¡!"}}}
+    SendLinkRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatÃ¡rio"},"chat":{"type":"string","description":"Alias de destinatÃ¡rio"},"recipient":{"type":"string","description":"Alias de destinatÃ¡rio"},"linkMessage":{"type":"object","properties":{"link":{"type":"string","format":"uri","pattern":"^https?://"},"title":{"type":"string"},"description":{"type":"string"},"thumbnailUrl":{"type":"string","format":"uri","pattern":"^https?://"}},"required":["link"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["linkMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
+    SendMediaRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatÃ¡rio"},"chat":{"type":"string","description":"Alias de destinatÃ¡rio"},"recipient":{"type":"string","description":"Alias de destinatÃ¡rio"},"mediaMessage":{"type":"object","properties":{"mediatype":{"type":"string","enum":["image","document","video","audio","ptv"],"description":"ObrigatÃ³rio para media por URL. Ignorado quando mediaUploadId positivo Ã© informado; nesse caso o tipo vem do prÃ©-upload."},"media":{"type":"string","format":"uri","pattern":"^https?://"},"mediaUploadId":{"type":"integer","minimum":1},"caption":{"type":"string"},"fileName":{"type":"string"}},"additionalProperties":false,"oneOf":[{"required":["media","mediatype"]},{"required":["mediaUploadId"]}]},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["mediaMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
     SendMediaFileRequest: {"type":"object","properties":{"number":{"type":"string","minLength":1},"mediaType":{"type":"string","enum":["image","document","video","audio","ptv"]},"attachment":{"type":"string","format":"binary"},"caption":{"type":"string"},"delay":{"type":"integer","minimum":0,"maximum":120000},"presence":{"type":"string","enum":["composing","recording","paused"]},"quotedMessageId":{"type":"string"},"quotedMessage":{"type":"string","description":"JSON serializado"},"mentionAll":{"type":"boolean"}},"required":["number","mediaType","attachment"],"additionalProperties":false}
-    SendPTTRequest: {"type":"object","properties":{"number":{"type":"string","minLength":1},"audioMessage":{"type":"object","properties":{"audio":{"type":"string","format":"uri","pattern":"^https?://"},"mediaUploadId":{"type":"integer","minimum":1,"maximum":2147483647},"ptt":{"type":"boolean","const":true,"description":"Opcional; quando enviado, precisa ser true. O envio desta rota sempre gera audioMessage PTT."}},"oneOf":[{"required":["audio"]},{"required":["mediaUploadId"]}],"additionalProperties":false,"description":"Use audio para URL HTTP(S) ou mediaUploadId para reutilizar um pré-upload de áudio. Os dois campos são mutuamente exclusivos."},"options":{"$ref":"#/components/schemas/PTTMessageOptions"}},"required":["number","audioMessage"],"additionalProperties":false,"example":{"number":"5511999999999","audioMessage":{"mediaUploadId":4,"ptt":true},"options":{"presence":"recording"}}}
+    SendPTTRequest: {"type":"object","properties":{"number":{"type":"string","minLength":1},"audioMessage":{"type":"object","properties":{"audio":{"type":"string","format":"uri","pattern":"^https?://"},"mediaUploadId":{"type":"integer","minimum":1,"maximum":2147483647},"ptt":{"type":"boolean","const":true,"description":"Opcional; quando enviado, precisa ser true. O envio desta rota sempre gera audioMessage PTT."}},"oneOf":[{"required":["audio"]},{"required":["mediaUploadId"]}],"additionalProperties":false,"description":"Use audio para URL HTTP(S) ou mediaUploadId para reutilizar um prÃ©-upload de Ã¡udio. Os dois campos sÃ£o mutuamente exclusivos."},"options":{"$ref":"#/components/schemas/PTTMessageOptions"}},"required":["number","audioMessage"],"additionalProperties":false,"example":{"number":"5511999999999","audioMessage":{"mediaUploadId":4,"ptt":true},"options":{"presence":"recording"}}}
     SendPTTFileRequest: {"type":"object","properties":{"number":{"type":"string","minLength":1},"attachment":{"type":"string","format":"binary"},"delay":{"type":"integer","minimum":0,"maximum":300000},"presence":{"type":"string","enum":["recording","paused"]},"quotedMessageId":{"type":"string"},"quotedMessage":{"type":"string"},"mentionAll":{"type":"boolean"}},"required":["number","attachment"],"additionalProperties":false}
     ContactItem: {"type":"object","properties":{"fullName":{"type":"string","minLength":1},"phoneNumber":{"type":"string"},"wuid":{"type":"string"},"organization":{"type":"string"},"vcard":{"type":"string"}},"required":["fullName"],"additionalProperties":false,"anyOf":[{"required":["vcard"]},{"required":["phoneNumber"]},{"required":["wuid"]}]}
-    SendContactRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatário"},"chat":{"type":"string","description":"Alias de destinatário"},"recipient":{"type":"string","description":"Alias de destinatário"},"contactMessage":{"type":"array","items":{"$ref":"#/components/schemas/ContactItem"},"minItems":1},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["contactMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
-    SendLocationRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatário"},"chat":{"type":"string","description":"Alias de destinatário"},"recipient":{"type":"string","description":"Alias de destinatário"},"locationMessage":{"type":"object","properties":{"latitude":{"type":"number","minimum":-90,"maximum":90},"longitude":{"type":"number","minimum":-180,"maximum":180},"name":{"type":"string"},"address":{"type":"string"}},"required":["latitude","longitude"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["locationMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
+    SendContactRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatÃ¡rio"},"chat":{"type":"string","description":"Alias de destinatÃ¡rio"},"recipient":{"type":"string","description":"Alias de destinatÃ¡rio"},"contactMessage":{"type":"array","items":{"$ref":"#/components/schemas/ContactItem"},"minItems":1},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["contactMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
+    SendLocationRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatÃ¡rio"},"chat":{"type":"string","description":"Alias de destinatÃ¡rio"},"recipient":{"type":"string","description":"Alias de destinatÃ¡rio"},"locationMessage":{"type":"object","properties":{"latitude":{"type":"number","minimum":-90,"maximum":90},"longitude":{"type":"number","minimum":-180,"maximum":180},"name":{"type":"string"},"address":{"type":"string"}},"required":["latitude","longitude"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["locationMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
     SendReactionRequest: {"type":"object","properties":{"reactionMessage":{"type":"object","properties":{"key":{"type":"object","properties":{"remoteJid":{"type":"string","minLength":1},"id":{"type":"string","minLength":1},"fromMe":{"type":"boolean"},"participant":{"type":"string"}},"required":["remoteJid","id"],"additionalProperties":false},"reaction":{"type":"string"}},"required":["key","reaction"],"additionalProperties":false}},"required":["reactionMessage"],"additionalProperties":false}
+    NativeFlowMessage: {"type":"object","description":"Payload nativo de fluxo interativo do WhatsApp.","additionalProperties":true}
+    SendNativeFlowRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatario"},"chat":{"type":"string","description":"Alias de destinatario"},"recipient":{"type":"string","description":"Alias de destinatario"},"options":{"$ref":"#/components/schemas/MessageOptions"},"message":{"$ref":"#/components/schemas/NativeFlowMessage"}},"required":["message"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
     IsAccountRequest: {"type":"object","properties":{"numbers":{"type":"array","items":{"type":"string","minLength":1},"minItems":1,"maxItems":100}},"required":["numbers"],"additionalProperties":false}
     IsAccountResponse: {"type":"array","items":{"type":"object","properties":{"jid":{"type":"string"},"lid":{"type":["string","null"]},"exists":{"type":"boolean"}},"required":["jid","exists"],"additionalProperties":false}}
     ReadMessagesRequest: {"oneOf":[{"type":"object","properties":{"ids":{"type":"array","items":{"type":"integer","minimum":1},"minItems":1}},"required":["ids"],"additionalProperties":false},{"type":"object","properties":{"sender":{"type":"string","minLength":1},"chat":{"type":"string","minLength":1},"messageIds":{"type":"array","items":{"type":"string","minLength":1},"minItems":1}},"required":["sender","chat","messageIds"],"additionalProperties":false}]}
     ReadMessagesResponse: {"type":"object","properties":{"message":{"type":"string","const":"Read messages"},"read":{"type":"string","const":"success"}},"required":["message","read"],"additionalProperties":false}
+    FindMessagesRequest: {"type":"object","description":"Todos os campos sao opcionais. O body vazio {} retorna as mensagens mais recentes da instancia com limite padrao 50. Nao aceita where, page, offset, keyid legado, messageStatus legado, device ou instanceId vindo do cliente.","properties":{"filter":{"$ref":"#/components/schemas/FindMessagesFilter"},"cursor":{"$ref":"#/components/schemas/MessageCursorRequest"},"limit":{"type":"integer","minimum":1,"maximum":100,"default":50}},"additionalProperties":false}
+    FindMessagesFilter: {"type":"object","properties":{"id":{"type":"integer","minimum":1,"description":"ID interno exato da mensagem."},"keyId":{"type":"string","description":"ID da mensagem no protocolo WhatsApp."},"keyRemoteJid":{"type":"string","description":"JID remoto da conversa."},"keyFromMe":{"type":"string","enum":["true","false"],"description":"Recebido como string; comparacao case-insensitive apos trim e convertido internamente para booleano."},"messageType":{"type":"string","description":"Tipo exato persistido, sem enum fechada."},"status":{"type":"string","description":"Status filtrado por relacionamento com MessageUpdate usando EXISTS, sem duplicar mensagens."}},"additionalProperties":false}
+    MessageCursorRequest: {"type":"object","properties":{"type":{"type":"string","enum":["next","previous"],"description":"next busca ids menores que o cursor; previous busca ids maiores e devolve a pagina novamente em id DESC."},"id":{"type":"integer","minimum":1,"description":"ID interno da mensagem usado como cursor."}},"required":["type","id"],"additionalProperties":false}
+    MessageCursor: {"type":"object","properties":{"type":{"type":"string","enum":["next","previous"]},"id":{"type":"integer","minimum":1}},"required":["type","id"],"additionalProperties":false}
+    FindMessagesResponse: {"type":"object","properties":{"messages":{"$ref":"#/components/schemas/FindMessagesPage"}},"required":["messages"],"additionalProperties":false}
+    FindMessagesPage: {"type":"object","properties":{"records":{"type":"array","items":{"$ref":"#/components/schemas/PersistedMessage"}},"pageInfo":{"$ref":"#/components/schemas/FindMessagesPageInfo"}},"required":["records","pageInfo"],"additionalProperties":false}
+    FindMessagesPageInfo: {"type":"object","properties":{"limit":{"type":"integer","minimum":1,"maximum":100},"hasNext":{"type":"boolean","description":"Existem mensagens mais antigas."},"hasPrevious":{"type":"boolean","description":"Existem mensagens mais recentes."},"nextCursor":{"oneOf":[{"$ref":"#/components/schemas/MessageCursor"},{"type":"null"}]},"previousCursor":{"oneOf":[{"$ref":"#/components/schemas/MessageCursor"},{"type":"null"}]}},"required":["limit","hasNext","hasPrevious","nextCursor","previousCursor"],"additionalProperties":false}
+    PersistedMessageUpdate: {"type":"object","properties":{"status":{"type":"string"},"dateTime":{"type":"string","format":"date-time"}},"required":["status","dateTime"],"additionalProperties":false}
+    PersistedMessage: {"type":"object","properties":{"id":{"type":"integer"},"keyId":{"type":"string"},"keyRemoteJid":{"type":["string","null"]},"keyLid":{"type":["string","null"]},"keyFromMe":{"type":"boolean"},"keyParticipant":{"type":["string","null"]},"keyParticipantLid":{"type":["string","null"]},"pushName":{"type":["string","null"]},"messageType":{"type":"string"},"content":{},"messageTimestamp":{"type":"integer"},"instanceId":{"type":"integer"},"device":{"type":"string","enum":["ios","android","web","unknown","desktop"]},"isGroup":{"type":["boolean","null"]},"metadata":{},"externalAttributes":{"type":"object","additionalProperties":true},"messageUpdates":{"type":"array","items":{"$ref":"#/components/schemas/PersistedMessageUpdate"}}},"required":["id","keyId","keyRemoteJid","keyFromMe","keyParticipant","pushName","messageType","content","messageTimestamp","instanceId","device","messageUpdates"],"additionalProperties":false}
+    LegacyFindMessagesRequest: {"type":"object","properties":{"where":{"type":"object","properties":{"id":{"type":"integer","minimum":1},"keyid":{"type":"string"},"keyRemoteJid":{"type":"string"},"keyFromMe":{"type":"string","enum":["true","false"]},"messageType":{"type":"string"},"device":{"type":"string","enum":["web","ios","android","unknown","desktop"]},"messageStatus":{"type":"string"}},"additionalProperties":false},"offset":{"type":"integer","minimum":1,"maximum":100,"default":50},"page":{"type":"integer","minimum":1,"default":1}},"additionalProperties":false}
+    LegacyMessage: {"allOf":[{"$ref":"#/components/schemas/Message"},{"type":"object","properties":{"MessageUpdate":{"type":"array","items":{"$ref":"#/components/schemas/PersistedMessageUpdate"}}},"required":["MessageUpdate"]}]}
+    LegacyFindMessagesResponse: {"type":"object","properties":{"messages":{"type":"object","properties":{"total":{"type":"integer","format":"int64"},"pages":{"type":"integer","format":"int64"},"currentPage":{"type":"integer","format":"int64"},"records":{"type":"array","items":{"$ref":"#/components/schemas/LegacyMessage"}}},"required":["total","pages","currentPage","records"],"additionalProperties":false}},"required":["messages"],"additionalProperties":false}
     MessageKey: {"type":"object","properties":{"remoteJid":{"type":"string","minLength":1},"fromMe":{"type":"boolean"},"id":{"type":"string","minLength":1}},"required":["remoteJid","fromMe","id"],"additionalProperties":false}
     ArchiveChatRequest: {"type":"object","properties":{"archive":{"type":"boolean"},"lastMessage":{"type":"object","properties":{"key":{"$ref":"#/components/schemas/MessageKey"}},"required":["key"],"additionalProperties":true}},"required":["archive","lastMessage"],"additionalProperties":false}
-    RecipientRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatário"},"chat":{"type":"string","description":"Alias de destinatário"},"recipient":{"type":"string","description":"Alias de destinatário"}},"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
+    RecipientRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatÃ¡rio"},"chat":{"type":"string","description":"Alias de destinatÃ¡rio"},"recipient":{"type":"string","description":"Alias de destinatÃ¡rio"}},"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
     ProfilePictureResponse: {"type":"object","properties":{"profilePictureUrl":{"type":["string","null"]}},"required":["profilePictureUrl"],"additionalProperties":false}
     RejectCallRequest: {"type":"object","properties":{"callId":{"type":"string","minLength":1},"callFrom":{"type":"string","minLength":1,"pattern":"@"}},"required":["callId","callFrom"],"additionalProperties":false}
     EditMessageRequest: {"type":"object","properties":{"id":{"oneOf":[{"type":"integer","minimum":1},{"type":"string","minLength":1}]},"text":{"type":"string","minLength":1,"maxLength":65536}},"required":["id","text"],"additionalProperties":false}
     MediaDataRequest: {"oneOf":[{"type":"object","properties":{"id":{"type":"integer","minimum":1,"maximum":2147483647}},"required":["id"],"additionalProperties":false},{"type":"object","properties":{"keyId":{"type":"string","minLength":1,"maxLength":256}},"required":["keyId"],"additionalProperties":false},{"type":"object","properties":{"messageType":{"type":"string","enum":["imageMessage","videoMessage","documentMessage","stickerMessage","audioMessage"]},"content":{"type":"object","properties":{},"additionalProperties":true,"minProperties":1},"keyId":{"type":"string","maxLength":256}},"required":["messageType","content"],"additionalProperties":false}]}
     MediaDataEnvelope: {"type":"object","properties":{"mediaType":{"type":"string"},"fileName":{"type":"string"},"size":{"type":"object","additionalProperties":true},"mimetype":{"type":"string"},"file":{"type":"string","format":"binary"}},"required":["mediaType","fileName","size","mimetype","file"],"additionalProperties":false}
-    CreateMediaUploadRequest: {"type":"object","properties":{"file":{"type":"string","format":"binary"},"mediaType":{"type":"string","enum":["image","video","audio","document"]},"externalId":{"type":"string","maxLength":255},"externalAttributes":{"type":"string","description":"Objeto JSON serializado, máximo 16 KB"}},"required":["file","mediaType"],"additionalProperties":false}
+    CreateMediaUploadRequest: {"type":"object","properties":{"file":{"type":"string","format":"binary"},"mediaType":{"type":"string","enum":["image","video","audio","document"]},"externalId":{"type":"string","maxLength":255},"externalAttributes":{"type":"string","description":"Objeto JSON serializado, mÃ¡ximo 16 KB"}},"required":["file","mediaType"],"additionalProperties":false}
     WhatsAppUpload: {"type":"object","properties":{"url":{"type":"string"},"directPath":{"type":"string"},"handle":{"type":"string"},"objectId":{"type":"string"},"mediaKey":{"type":"string"},"fileEncSHA256":{"type":"string"},"fileSHA256":{"type":"string"},"fileLength":{"type":"integer","minimum":0}},"required":["url","directPath","mediaKey","fileEncSHA256","fileSHA256","fileLength"],"additionalProperties":false}
     MediaUpload: {"type":"object","properties":{"id":{"type":"integer"},"instanceId":{"type":"integer"},"externalId":{"type":["string","null"]},"mediaType":{"type":"string","enum":["image","video","audio","document"]},"mimeType":{"type":["string","null"]},"originalFileName":{"type":["string","null"]},"originalFileSize":{"type":"integer"},"originalFileSHA256":{"type":"string"},"jpegThumbnail":{"type":"string"},"upload":{"$ref":"#/components/schemas/WhatsAppUpload"},"externalAttributes":{"type":"object","additionalProperties":true},"createdAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"},"expiresAt":{"type":"string","format":"date-time"},"expired":{"type":"boolean"}},"required":["id","instanceId","mediaType","originalFileSize","upload","createdAt","updatedAt","expiresAt","expired"],"additionalProperties":false}
     MediaUploadList: {"type":"object","properties":{"nextCursor":{"type":["string","null"]},"previousCursor":{"type":["string","null"]},"totalRecords":{"type":"integer"},"records":{"type":"array","items":{"$ref":"#/components/schemas/MediaUpload"}}},"required":["nextCursor","previousCursor","totalRecords","records"],"additionalProperties":false}
@@ -3058,13 +3586,13 @@ components:
     PaymentSetting: {"type":"object","properties":{"type":{"type":"string","enum":["boleto","pix_dynamic_code","payment_link"]},"boleto":{"type":"object","properties":{"digitableLine":{"type":"string","pattern":"^[0-9]{44,48}$"}},"required":["digitableLine"],"additionalProperties":false},"pixDynamicCode":{"type":"object","properties":{"keyType":{"type":"string","enum":["CPF","CNPJ","EVP","EMAIL","PHONE"]},"code":{"type":"string","minLength":1,"maxLength":4096},"merchantName":{"type":"string","minLength":1,"maxLength":255}},"required":["keyType","code","merchantName"],"additionalProperties":false},"paymentLink":{"type":"object","properties":{"url":{"type":"string","format":"uri","pattern":"^https?://"}},"required":["url"],"additionalProperties":false}},"required":["type"],"additionalProperties":false}
     OrderItem: {"type":"object","properties":{"retailerId":{"type":"string","minLength":1,"maxLength":255},"name":{"type":"string","minLength":1,"maxLength":255},"amount":{"$ref":"#/components/schemas/Amount"},"quantity":{"type":"integer","minimum":1}},"required":["retailerId","name","amount","quantity"],"additionalProperties":false}
     PaymentOrder: {"type":"object","properties":{"status":{"type":"string","const":"payment_requested"},"items":{"type":"array","items":{"$ref":"#/components/schemas/OrderItem"},"minItems":1,"maxItems":100},"subtotal":{"$ref":"#/components/schemas/Amount"},"tax":{"$ref":"#/components/schemas/Amount"},"shipping":{"$ref":"#/components/schemas/Amount"},"discount":{"$ref":"#/components/schemas/Amount"}},"required":["status","items","subtotal"],"additionalProperties":false}
-    PaymentRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatário"},"chat":{"type":"string","description":"Alias de destinatário"},"recipient":{"type":"string","description":"Alias de destinatário"},"paymentRequestMessage":{"type":"object","properties":{"presentation":{"$ref":"#/components/schemas/Presentation"},"referenceId":{"type":"string","maxLength":255},"type":{"type":"string","const":"physical-goods"},"paymentType":{"type":"string","const":"br"},"currency":{"type":"string","const":"BRL"},"paymentSettings":{"type":"array","items":{"$ref":"#/components/schemas/PaymentSetting"},"minItems":1,"maxItems":3},"totalAmount":{"$ref":"#/components/schemas/Amount"},"order":{"$ref":"#/components/schemas/PaymentOrder"},"mediaUploadId":{"type":"integer","minimum":1}},"required":["presentation","referenceId","type","paymentType","currency","paymentSettings","totalAmount","order"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["paymentRequestMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
+    PaymentRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatÃ¡rio"},"chat":{"type":"string","description":"Alias de destinatÃ¡rio"},"recipient":{"type":"string","description":"Alias de destinatÃ¡rio"},"paymentRequestMessage":{"type":"object","properties":{"presentation":{"$ref":"#/components/schemas/Presentation"},"referenceId":{"type":"string","maxLength":255},"type":{"type":"string","const":"physical-goods"},"paymentType":{"type":"string","const":"br"},"currency":{"type":"string","const":"BRL"},"paymentSettings":{"type":"array","items":{"$ref":"#/components/schemas/PaymentSetting"},"minItems":1,"maxItems":3},"totalAmount":{"$ref":"#/components/schemas/Amount"},"order":{"$ref":"#/components/schemas/PaymentOrder"},"mediaUploadId":{"type":"integer","minimum":1}},"required":["presentation","referenceId","type","paymentType","currency","paymentSettings","totalAmount","order"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["paymentRequestMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
     ReviewOrderRequest: {"type":"object","properties":{"messageId":{"type":"integer","minimum":1},"status":{"type":"string","enum":["preparing_to_ship","shipped","delivered","completed","canceled"]},"note":{"type":"string","maxLength":4096}},"required":["messageId","status"],"additionalProperties":false,"example":{"messageId":101,"status":"shipped","note":"Enviado pela transportadora"}}
     ReviewOrderResult: {"type":"object","properties":{"messageId":{"type":"string"},"databaseMessageId":{"type":"integer"},"orderMessageId":{"type":"integer"},"referenceId":{"type":"string"},"previousStatus":{"type":"string"},"status":{"type":"string"},"chatJid":{"type":"string"},"timestamp":{"type":"string","format":"date-time"}},"required":["messageId","databaseMessageId","orderMessageId","referenceId","previousStatus","status","chatJid","timestamp"],"additionalProperties":false}
-    PixRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatário"},"chat":{"type":"string","description":"Alias de destinatário"},"recipient":{"type":"string","description":"Alias de destinatário"},"pixMessage":{"type":"object","properties":{"presentation":{"$ref":"#/components/schemas/Presentation"},"keyType":{"type":"string","enum":["CPF","CNPJ","EVP","EMAIL","PHONE"]},"key":{"type":"string","minLength":1,"maxLength":4096},"merchantName":{"type":"string","minLength":1,"maxLength":255},"referenceId":{"type":"string","maxLength":255},"mediaUploadId":{"type":"integer","minimum":1}},"required":["presentation","keyType","key","merchantName"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["pixMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
-    FormRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatário"},"chat":{"type":"string","description":"Alias de destinatário"},"recipient":{"type":"string","description":"Alias de destinatário"},"formMessage":{"type":"object","properties":{"formId":{"type":"string","minLength":1,"maxLength":255},"description":{"type":"string","minLength":1,"maxLength":4096},"buttonText":{"type":"string","minLength":1,"maxLength":256},"footerText":{"type":"string","maxLength":1024},"innerForm":{"type":"object","properties":{"title":{"type":"string"},"description":{"type":"string"},"enableName":{"type":"boolean"},"enableEmail":{"type":"boolean"}},"additionalProperties":false}},"required":["formId","description","buttonText","innerForm"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["formMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
+    PixRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatÃ¡rio"},"chat":{"type":"string","description":"Alias de destinatÃ¡rio"},"recipient":{"type":"string","description":"Alias de destinatÃ¡rio"},"pixMessage":{"type":"object","properties":{"presentation":{"$ref":"#/components/schemas/Presentation"},"keyType":{"type":"string","enum":["CPF","CNPJ","EVP","EMAIL","PHONE"]},"key":{"type":"string","minLength":1,"maxLength":4096},"merchantName":{"type":"string","minLength":1,"maxLength":255},"referenceId":{"type":"string","maxLength":255},"mediaUploadId":{"type":"integer","minimum":1}},"required":["presentation","keyType","key","merchantName"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["pixMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
+    FormRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatÃ¡rio"},"chat":{"type":"string","description":"Alias de destinatÃ¡rio"},"recipient":{"type":"string","description":"Alias de destinatÃ¡rio"},"formMessage":{"type":"object","properties":{"formId":{"type":"string","minLength":1,"maxLength":255},"description":{"type":"string","minLength":1,"maxLength":4096},"buttonText":{"type":"string","minLength":1,"maxLength":256},"footerText":{"type":"string","maxLength":1024},"innerForm":{"type":"object","properties":{"title":{"type":"string"},"description":{"type":"string"},"enableName":{"type":"boolean"},"enableEmail":{"type":"boolean"}},"additionalProperties":false}},"required":["formId","description","buttonText","innerForm"],"additionalProperties":false},"options":{"$ref":"#/components/schemas/MessageOptions"}},"required":["formMessage"],"additionalProperties":false,"oneOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
     InteractiveButton: {"type":"object","properties":{"type":{"type":"string","enum":["reply","copy","url"]},"displayText":{"type":"string","minLength":1,"maxLength":256},"id":{"type":"string","maxLength":4096},"copyCode":{"type":"string","maxLength":4096},"url":{"type":"string","format":"uri","pattern":"^https?://","maxLength":4096},"value":{"type":"string","maxLength":4096}},"required":["displayText"],"additionalProperties":false}
-    ButtonMessage: {"type":"object","properties":{"title":{"type":"string","maxLength":1024},"description":{"type":"string","minLength":1,"maxLength":4096},"footerText":{"type":"string","maxLength":1024},"mediaUploadId":{"description":"Opcional. Omitido, 0 ou string vazia não anexam mídia; valor positivo referencia um pré-upload da instância selecionada.","oneOf":[{"type":"integer","minimum":0},{"type":"string","pattern":"^$|^[0-9]+$"}]},"buttons":{"type":"array","description":"No modo buttons, cada item é inferido por url, copyCode ou id.","items":{"$ref":"#/components/schemas/InteractiveButton"},"minItems":1,"maxItems":10}},"required":["description","buttons"],"additionalProperties":false}
+    ButtonMessage: {"type":"object","properties":{"title":{"type":"string","maxLength":1024},"description":{"type":"string","minLength":1,"maxLength":4096},"footerText":{"type":"string","maxLength":1024},"mediaUploadId":{"description":"Opcional. Omitido, 0 ou string vazia nÃ£o anexam mÃ­dia; valor positivo referencia um prÃ©-upload da instÃ¢ncia selecionada.","oneOf":[{"type":"integer","minimum":0},{"type":"string","pattern":"^$|^[0-9]+$"}]},"buttons":{"type":"array","description":"No modo buttons, cada item Ã© inferido por url, copyCode ou id.","items":{"$ref":"#/components/schemas/InteractiveButton"},"minItems":1,"maxItems":10}},"required":["description","buttons"],"additionalProperties":false}
     CarouselCard: {"type":"object","properties":{"description":{"type":"string","minLength":1,"maxLength":4096},"mediaUploadId":{"oneOf":[{"type":"integer","minimum":1},{"type":"string","pattern":"^[1-9][0-9]*$"}]},"buttons":{"type":"array","items":{"$ref":"#/components/schemas/InteractiveButton"},"minItems":1,"maxItems":10}},"required":["description","buttons"],"additionalProperties":false}
     CarouselMessage: {"type":"object","properties":{"title":{"type":"string","maxLength":1024},"description":{"type":"string","maxLength":4096},"footer":{"type":"string","maxLength":1024},"cards":{"type":"array","items":{"$ref":"#/components/schemas/CarouselCard"},"minItems":1,"maxItems":10}},"required":["cards"],"additionalProperties":false}
-    InteractiveRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatário"},"chat":{"type":"string","description":"Alias de destinatário"},"recipient":{"type":"string","description":"Alias de destinatário"},"buttonMessage":{"$ref":"#/components/schemas/ButtonMessage"},"carouselMessage":{"$ref":"#/components/schemas/CarouselMessage"},"options":{"$ref":"#/components/schemas/MessageOptions"}},"additionalProperties":false,"oneOf":[{"required":["buttonMessage"]},{"required":["carouselMessage"]}],"anyOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}
+    InteractiveRequest: {"type":"object","properties":{"number":{"type":"string","description":"Telefone ou JID do destinatÃ¡rio"},"chat":{"type":"string","description":"Alias de destinatÃ¡rio"},"recipient":{"type":"string","description":"Alias de destinatÃ¡rio"},"buttonMessage":{"$ref":"#/components/schemas/ButtonMessage"},"carouselMessage":{"$ref":"#/components/schemas/CarouselMessage"},"options":{"$ref":"#/components/schemas/MessageOptions"}},"additionalProperties":false,"oneOf":[{"required":["buttonMessage"]},{"required":["carouselMessage"]}],"anyOf":[{"required":["number"]},{"required":["chat"]},{"required":["recipient"]}]}

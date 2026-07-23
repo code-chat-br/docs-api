@@ -2,7 +2,11 @@
 title: "Autenticação"
 description: "Token global, JWT da instância e regras de autorização."
 ---
-A API possui dois mecanismos independentes. O token global administra o cadastro de instâncias e os envios em lote; o JWT da instância autoriza conexão, mensagens individuais, chats, grupos, mídia e webhooks por instância.
+A API possui tres mecanismos independentes:
+
+- Token global: administra criacao e listagem de instancias.
+- JWT da instancia: autoriza conexao, mensagens individuais, chats, grupos, midia e webhooks por instancia.
+- JWT de usuario: autoriza o fluxo de envio em lote e os eventos globais.
 
 ## Token global
 
@@ -12,31 +16,42 @@ Configure `AUTHENTICATION_GLOBAL_AUTH_TOKEN` e envie um dos headers abaixo:
 apikey: <token-global>
 ```
 
-Também são aceitos `x-api-key` e `apiKey`. `apikey` é a forma recomendada. Se mais de um alias for enviado, todos precisam ter exatamente o mesmo valor.
+Tambem sao aceitos `x-api-key` e `apiKey`. `apikey` e a forma recomendada. Se mais de um alias for enviado, todos precisam ter exatamente o mesmo valor.
 
 Rotas protegidas pelo token global:
 
-| Método | Rota | Situação |
+| Metodo | Rota | Situacao |
 | --- | --- | --- |
 | `POST` | `/instance` | Atual |
 | `GET` | `/instance` | Atual |
 | `POST` | `/instance/create` | Legada |
 | `GET` | `/instance/fetchInstances` | Legada |
-| `POST/GET` | `/message/batches...` | Recurso Pro de envio em lote: criação, consultas e controle do worker. |
 
-Falhas: `401` quando o header não existe ou o token é inválido; `400` quando aliases enviados ao mesmo tempo divergem.
+Falhas: `401` quando o header nao existe ou o token e invalido; `400` quando aliases enviados ao mesmo tempo divergem.
 
-## Token da instância
+## Token da instancia
 
-Todas as demais rotas funcionais usam:
+As rotas por instancia usam:
 
 ```http
 Authorization: Bearer <jwt-da-instancia>
 ```
 
-O JWT é assinado com HS256 e contém `instanceName`. O middleware compara esse claim com o nome presente na rota. Token ausente, malformado, expirado ou inválido retorna `401`; claim referente a outra instância retorna `403`.
+O JWT e assinado com HS256 e contem `instanceName`. O middleware compara esse claim com o nome presente na rota. Token ausente, malformado, expirado ou invalido retorna `401`; claim referente a outra instancia retorna `403`.
 
-`AUTHENTICATION_JWT_EXPIRES_IN=0` gera tokens sem `exp` e faz o validador ignorar expiração. A validação de `nbf` continua ativa.
+`AUTHENTICATION_JWT_EXPIRES_IN=0` gera tokens de instancia sem `exp` e faz o validador de instancia ignorar expiracao. A validacao de `nbf` continua ativa.
+
+## Token de usuario
+
+As rotas `/message/batches...` e `/ws/global/events` usam:
+
+```http
+Authorization: Bearer <jwt-do-usuario>
+```
+
+O JWT e assinado com HS256, precisa conter `userId` em formato UUID e precisa conter `exp`. A expiracao e sempre validada nesse fluxo, mesmo quando `AUTHENTICATION_JWT_EXPIRES_IN=0`.
+
+Em Message Batch, `userId` e persistido como `"ownerUserId"` e limita criacao, consultas, itens, tentativas e acoes ao dono do lote.
 
 ## Exemplo
 
@@ -47,6 +62,6 @@ curl "http://localhost:8084/instance/codechat/connection/status" \
 
 ## Planos Basic e Pro
 
-O runtime auditado não diferencia planos. Não existe claim de plano, middleware de entitlement, `402`, URL de upgrade ou bloqueio por feature. Os endpoints Pro por instância aceitam qualquer JWT de instância válido, sujeito às mesmas validações e ao estado da conexão. O recurso Pro `/message/batches...` é a exceção de autenticação: ele usa o token global administrativo descrito acima.
+O runtime auditado nao diferencia planos. Nao existe claim de plano, middleware de entitlement, `402`, URL de upgrade ou bloqueio por feature. Os endpoints Pro por instancia aceitam qualquer JWT de instancia valido, sujeitos as mesmas validacoes e ao estado da conexao. O recurso Pro `/message/batches...` usa o JWT de usuario descrito acima.
 
-Consulte [Endpoints Pro](/docs/pro-endpoints) para a classificação comercial e [Erros](/docs/errors) para o envelope real.
+Consulte [Endpoints Pro](/docs/pro-endpoints) para a classificacao comercial e [Erros](/docs/errors) para o envelope real.

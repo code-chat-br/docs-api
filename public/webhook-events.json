@@ -1123,6 +1123,7 @@
           "dateTime": "2026-07-04T18:00:00Z",
           "deleteMedia": true,
           "fromFullSync": false,
+          "id": 1024,
           "keyFromMe": false,
           "messageId": "ABC123",
           "messageTime": "2026-07-04T17:59:00Z",
@@ -1139,6 +1140,11 @@
         "timestamp": "2026-07-04T18:00:00Z"
       },
       "fields": [
+        {
+          "name": "id",
+          "type": "number",
+          "description": "opcional, não aceita `null`. ID interno da mensagem persistida quando encontrada no banco."
+        },
         {
           "name": "chatJid",
           "type": "string",
@@ -1382,6 +1388,7 @@
           "id": 1024,
           "isGroup": false,
           "keyFromMe": false,
+          "keyId": "ABC123",
           "keyLid": null,
           "keyParticipant": null,
           "keyParticipantLid": null,
@@ -1406,6 +1413,11 @@
           "name": "id",
           "type": "number",
           "description": "obrigatório, não aceita `null`. ID interno da mensagem."
+        },
+        {
+          "name": "keyId",
+          "type": "string",
+          "description": "obrigatório, não aceita `null`. ID da mensagem no protocolo WhatsApp."
         },
         {
           "name": "keyRemoteJid",
@@ -1753,6 +1765,11 @@
           "description": "obrigatório, não aceita `null`. ID interno da mensagem."
         },
         {
+          "name": "keyId",
+          "type": "string",
+          "description": "obrigatório, não aceita `null`. ID da mensagem no protocolo WhatsApp."
+        },
+        {
           "name": "keyRemoteJid",
           "type": "string | null",
           "description": "obrigatório, aceita `null`. JID remoto da mensagem."
@@ -2097,7 +2114,7 @@
           "batch": {
             "id": "01900000-0000-7000-8000-000000000001",
             "ownerUserId": "11111111-1111-4111-8111-111111111111",
-            "name": "Aviso de manutenção",
+            "name": "Aviso de manutenÃ§Ã£o",
             "status": "PROCESSING",
             "autoResume": true,
             "schedule": null,

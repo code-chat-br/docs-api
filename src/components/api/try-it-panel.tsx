@@ -107,7 +107,8 @@ export function TryItPanel({
   const headers = useMemo(() => {
     const values: Record<string, string> = {};
     if (security.has('GlobalApiKey') && credentials.apiKey) values.apikey = credentials.apiKey;
-    if (security.has('InstanceBearer') && credentials.bearer) values.Authorization = `Bearer ${credentials.bearer}`;
+    if ((security.has('InstanceBearer') || security.has('UserBearer')) && credentials.bearer)
+      values.Authorization = `Bearer ${credentials.bearer}`;
     if (body) values['Content-Type'] = 'application/json';
     for (const line of extraHeaders.split('\n')) {
       const separator = line.indexOf(':');
@@ -130,11 +131,12 @@ export function TryItPanel({
       return undefined;
     }
   }, [baseUrl, body, headers, operation.method, operation.path, pathValues, queryValues]);
+  const authorizationPlaceholder = security.has('UserBearer') ? 'Bearer <USER_TOKEN>' : 'Bearer <INSTANCE_TOKEN>';
   const curl = request
     ? `curl --request ${request.method} '${request.url}'${Object.keys(headers)
         .map(
           (name) =>
-            ` \\\n  --header '${name}: ${name.toLowerCase() === 'authorization' ? 'Bearer <INSTANCE_TOKEN>' : name.toLowerCase().includes('api') ? '<GLOBAL_API_KEY>' : headers[name]}'`,
+            ` \\\n  --header '${name}: ${name.toLowerCase() === 'authorization' ? authorizationPlaceholder : name.toLowerCase().includes('api') ? '<GLOBAL_API_KEY>' : headers[name]}'`,
         )
         .join('')}${request.body ? ` \\\n  --data '${request.body.replace(/\s+/g, ' ')}'` : ''}`
     : '';
@@ -229,9 +231,9 @@ export function TryItPanel({
                 />
               </label>
             )}
-            {security.has('InstanceBearer') && (
+            {(security.has('InstanceBearer') || security.has('UserBearer')) && (
               <label>
-                Bearer token
+                {security.has('UserBearer') ? 'Bearer token de usuário' : 'Bearer token da instância'}
                 <input
                   type="password"
                   autoComplete="off"
@@ -241,7 +243,7 @@ export function TryItPanel({
               </label>
             )}
           </div>
-          {(security.has('GlobalApiKey') || security.has('InstanceBearer')) && (
+          {(security.has('GlobalApiKey') || security.has('InstanceBearer') || security.has('UserBearer')) && (
             <label className="storage-option">
               <input
                 type="checkbox"

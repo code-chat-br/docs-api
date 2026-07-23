@@ -14,16 +14,16 @@ Authorization: Bearer <jwt-do-usuario>
 
 O token precisa ser assinado com HS256, conter `userId` em formato UUID e conter `exp`. A expiração sempre é validada, mesmo quando `AUTHENTICATION_JWT_EXPIRES_IN=0`. `apikey`, `x-api-key` e `apiKey` não autenticam esse fluxo.
 
-Na criação, `userId` é persistido como `owner_user_id` e retornado como `ownerUserId`. Consultas, itens, tentativas e ações (`start`, `pause`, `stop`) só acessam lotes desse mesmo usuário. O mesmo `userId` isola eventos de WebSocket em `/ws/global/events`.
+Na criação, `userId` é persistido como `"ownerUserId"` e retornado como `ownerUserId`. Consultas, itens, tentativas e ações (`start`, `pause`, `stop`) só acessam lotes desse mesmo usuário. O mesmo `userId` isola eventos de WebSocket em `/ws/global/events`.
 
 ## Arquitetura e persistência
 
-- `message_batches`: definição, estado, lease e contadores derivados.
-- `message_batch_instances`: IDs internos permitidos, snapshot do nome e contadores por instância.
-- `message_batch_items`: destinatários normalizados, ordem, estado e resultado.
-- `message_batch_attempts`: uma linha por tentativa, inclusive indisponibilidade da instância.
-- `message_batch_outbox`: eventos globais entregues após o commit.
-- `Message.message_batch_id` e `Message.message_batch_item_id`: vínculo opcional com a mensagem persistida já existente.
+- `"MessageBatch"`: definição, estado, lease e contadores derivados.
+- `"MessageBatchInstance"`: IDs internos permitidos, snapshot do nome e contadores por instância.
+- `"MessageBatchItem"`: destinatários normalizados, ordem, estado e resultado.
+- `"MessageBatchAttempt"`: uma linha por tentativa, inclusive indisponibilidade da instância.
+- `"MessageBatchOutbox"`: eventos globais entregues após o commit.
+- `"Message"."messageBatchId"` e `"Message"."messageBatchItemId"`: vínculo opcional com a mensagem persistida já existente.
 
 Contadores são recalculados dos itens na mesma transação que conclui uma tentativa. O progresso é `floor(processed * 100 / total)`, em que `processed = success + failed + skipped + unknown`.
 
@@ -224,7 +224,6 @@ Exemplo `media` por pré-upload:
   "message": {
     "type": "media",
     "payload": {
-      "mediatype": "document",
       "mediaUploadId": 42,
       "fileName": "contrato.pdf",
       "caption": "Contrato"
@@ -233,7 +232,7 @@ Exemplo `media` por pré-upload:
 }
 ```
 
-`mediaUploadId` em `media` precisa pertencer à instância que fará o envio e o tipo salvo no pré-upload precisa bater com `mediatype`. Como a escolha de instância é feita item a item, use pré-upload em lote apenas quando o lote tiver uma única instância ou quando houver garantia operacional de que o ID é válido para a instância selecionada. Para várias instâncias, a forma mais portátil é usar URL em `media`.
+`mediaUploadId` em `media` precisa pertencer à instância que fará o envio e o tipo salvo no pré-upload. Como a escolha de instância é feita item a item, use pré-upload em lote apenas quando o lote tiver uma única instância ou quando houver garantia operacional de que o ID é válido para a instância selecionada. Para várias instâncias, a forma mais portátil é usar URL em `media`.
 
 Exemplo `audio`:
 

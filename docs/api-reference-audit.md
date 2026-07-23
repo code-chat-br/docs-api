@@ -6,12 +6,12 @@ Gerado exclusivamente a partir da especificação versionada em `source-docs/ope
 
 | Item | Quantidade |
 | --- | ---: |
-| Operações HTTP no OpenAPI | 96 |
-| Operações atuais, sem classificação Pro | 43 |
+| Operações HTTP no OpenAPI | 113 |
+| Operações atuais, sem classificação Pro | 59 |
 | Operações Pro | 15 |
-| Operações marcadas como deprecated | 37 |
+| Operações marcadas como deprecated | 38 |
 | Operações de webhook no OpenAPI | 1 |
-| Schemas em components.schemas | 105 |
+| Schemas em components.schemas | 136 |
 | Eventos de webhook por instância | 27 |
 | Eventos globais de Message Batch | 18 |
 
@@ -50,6 +50,7 @@ Resultado: **a especificação local está estruturalmente consistente e sincron
 | `POST` | `/instance/{instance}/chat/profile-picture` | `getProfilePicture` | Atual |
 | `POST` | `/instance/{instance}/chat/reject-call` | `rejectCall` | Atual |
 | `POST` | `/instance/{instance}/chat/edit-message` | `editMessage` | Atual |
+| `POST` | `/instance/{instance}/db/messages` | `findPersistedMessages` | Atual |
 | `POST` | `/instance/{instance}/send/text` | `sendTextMessage` | Atual |
 | `POST` | `/instance/{instance}/send/link` | `sendLinkMessage` | Atual |
 | `POST` | `/instance/{instance}/send/media` | `sendMediaMessage` | Atual |
@@ -108,6 +109,7 @@ Resultado: **a especificação local está estruturalmente consistente e sincron
 | `POST` | `/chat/rejectCall/{instanceName}` | `legacyRejectCall` | Legado |
 | `POST` | `/chat/editMessage/{instanceName}` | `legacyEditMessage` | Legado |
 | `POST` | `/chat/mediaData/{instanceName}` | `legacyDownloadMessageMedia` | Legado |
+| `POST` | `/chat/findMessages/{instanceName}` | `legacyFindMessages` | Legado |
 | `DELETE` | `/chat/deleteMessage/{instanceName}` | `legacyDeleteChatMessage` | Legado |
 | `POST` | `/group/create/{instanceName}` | `legacyCreateGroup` | Legado |
 | `PUT` | `/group/updateGroupPicture/{instanceName}` | `legacyUpdateGroupPicture` | Legado |
@@ -125,10 +127,25 @@ Resultado: **a especificação local está estruturalmente consistente e sincron
 | `POST` | `/message/batches/{batchId}/start` | `startMessageBatch` | Pro |
 | `POST` | `/message/batches/{batchId}/pause` | `pauseMessageBatch` | Pro |
 | `POST` | `/message/batches/{batchId}/stop` | `stopMessageBatch` | Pro |
+| `GET` | `/call/{instanceName}` | `listCalls` | Atual |
+| `POST` | `/call/{instanceName}` | `startCall` | Atual |
+| `GET` | `/call/{instanceName}/config` | `getInstanceCallSettings` | Atual |
+| `PUT` | `/call/{instanceName}/config` | `updateInstanceCallSettings` | Atual |
+| `GET` | `/call/{instanceName}/{callId}` | `getCall` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/events` | `listCallEvents` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/answer` | `answerCall` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/reject` | `rejectManagedCall` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/hangup` | `hangupCall` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/recordings` | `listCallRecordings` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/recording/start` | `startCallRecording` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/recording/stop` | `stopCallRecording` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/recordings/{recordingId}` | `getCallRecording` | Atual |
+| `DELETE` | `/call/{instanceName}/{callId}/recordings/{recordingId}` | `deleteCallRecording` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/recordings/{recordingId}/download` | `downloadCallRecording` | Atual |
 
 ## Endpoints possivelmente obsoletos
 
-Os 37 endpoints abaixo continuam documentados, mas estão marcados como `deprecated` por possuírem substitutos atuais:
+Os 38 endpoints abaixo continuam documentados, mas estão marcados como `deprecated` por possuírem substitutos atuais:
 
 - `POST /instance/create` (`legacyCreateInstance`)
 - `GET /instance/fetchInstances` (`legacyListInstances`)
@@ -160,6 +177,7 @@ Os 37 endpoints abaixo continuam documentados, mas estão marcados como `depreca
 - `POST /chat/rejectCall/{instanceName}` (`legacyRejectCall`)
 - `POST /chat/editMessage/{instanceName}` (`legacyEditMessage`)
 - `POST /chat/mediaData/{instanceName}` (`legacyDownloadMessageMedia`)
+- `POST /chat/findMessages/{instanceName}` (`legacyFindMessages`)
 - `DELETE /chat/deleteMessage/{instanceName}` (`legacyDeleteChatMessage`)
 - `POST /group/create/{instanceName}` (`legacyCreateGroup`)
 - `PUT /group/updateGroupPicture/{instanceName}` (`legacyUpdateGroupPicture`)
@@ -170,8 +188,24 @@ Os 37 endpoints abaixo continuam documentados, mas estão marcados como `depreca
 
 ## Schemas sem exemplos explícitos
 
-92 schemas não possuem `example` explícito. A interface gera exemplos a partir de tipos, enums, formatos, defaults e contexto da CodeChat:
+122 schemas não possuem `example` explícito. A interface gera exemplos a partir de tipos, enums, formatos, defaults e contexto da CodeChat:
 
+- `CallStatus`
+- `AnsweredBy`
+- `EndedBy`
+- `AnswerRequestedBy`
+- `StartCallRequest`
+- `CallReasonRequest`
+- `Call`
+- `CallEvent`
+- `RecordingStatus`
+- `CallRecording`
+- `StartCallRecordingRequest`
+- `StopCallRecordingRequest`
+- `InstanceCallSettings`
+- `EffectiveCallSettings`
+- `UpdateInstanceCallSettingsRequest`
+- `InstanceCallSettingsResponse`
 - `MessageBatchStatus`
 - `MessageBatchItemStatus`
 - `MessageBatchAttemptStatus`
@@ -228,10 +262,24 @@ Os 37 endpoints abaixo continuam documentados, mas estão marcados como `depreca
 - `SendContactRequest`
 - `SendLocationRequest`
 - `SendReactionRequest`
+- `NativeFlowMessage`
+- `SendNativeFlowRequest`
 - `IsAccountRequest`
 - `IsAccountResponse`
 - `ReadMessagesRequest`
 - `ReadMessagesResponse`
+- `FindMessagesRequest`
+- `FindMessagesFilter`
+- `MessageCursorRequest`
+- `MessageCursor`
+- `FindMessagesResponse`
+- `FindMessagesPage`
+- `FindMessagesPageInfo`
+- `PersistedMessageUpdate`
+- `PersistedMessage`
+- `LegacyFindMessagesRequest`
+- `LegacyMessage`
+- `LegacyFindMessagesResponse`
 - `MessageKey`
 - `ArchiveChatRequest`
 - `RecipientRequest`
@@ -270,7 +318,7 @@ Os 37 endpoints abaixo continuam documentados, mas estão marcados como `depreca
 - Operações sem `summary` e sem `description`: 0.
 - Operações sem tag: 0.
 - Operações sem resposta: 0.
-- Operações sem exemplo explícito no nível da operação: 96. A referência prioriza exemplos de mídia/schema e usa o gerador como fallback.
+- Operações sem exemplo explícito no nível da operação: 112. A referência prioriza exemplos de mídia/schema e usa o gerador como fallback.
 - Parâmetros de caminho inconsistentes: 0.
 - `operationId` ausente ou duplicado: 0.
 

@@ -16,6 +16,7 @@
     "connections",
     "messages",
     "chats",
+    "calls",
     "media",
     "groups",
     "---Envio em lotes---",

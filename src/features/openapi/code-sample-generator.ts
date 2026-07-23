@@ -49,6 +49,7 @@ export function sampleRequest(operation: NormalizedOperation, spec: ReferenceSpe
   const securityNames = new Set((operation.security || []).flatMap((item) => Object.keys(item)));
   if (securityNames.has('GlobalApiKey')) headers.apikey = '<GLOBAL_API_KEY>';
   if (securityNames.has('InstanceBearer')) headers.Authorization = 'Bearer <INSTANCE_TOKEN>';
+  if (securityNames.has('UserBearer')) headers.Authorization = 'Bearer <USER_TOKEN>';
   const body = operationExample(operation, spec);
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   return { method: operation.method, url, headers, body };

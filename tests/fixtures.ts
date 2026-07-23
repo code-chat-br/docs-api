@@ -31,6 +31,15 @@ export const minimalDocument: OpenAPIV3_1.Document = {
         security: [{ InstanceBearer: [] }],
       },
     },
+    '/message/batches': {
+      get: {
+        operationId: 'listBatches',
+        tags: ['Message'],
+        summary: 'Listar lotes',
+        responses: { '200': { description: 'OK' } },
+        security: [{ UserBearer: [] }],
+      },
+    },
   },
   components: {
     schemas: {
