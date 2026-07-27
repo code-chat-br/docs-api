@@ -102,13 +102,13 @@ Nao use segredos de desenvolvimento em producao. JWTs, chaves de API, tokens glo
 
 | Variavel | Obrigatoria | Default | Exemplo | Descricao |
 | --- | ---: | --- | --- | --- |
-| `WEBSOCKET_ENABLED` | Nao | `true` | `true` | Habilita rotas WebSocket de eventos. |
+| `WEBSOCKET_ENABLED` | Nao | `true` | `true` | Habilita rotas WebSocket de eventos e midia de chamadas. |
 | `WEBSOCKET_ALLOWED_ORIGINS` | Nao | vazio | `http://localhost:3000,http://localhost:5173` | Lista separada por virgulas de origens aceitas para browsers. |
 | `WEBSOCKET_ALLOW_EMPTY_ORIGIN` | Nao | `true` | `true` | Permite clientes backend sem header `Origin`. |
 | `WEBSOCKET_PING_INTERVAL` | Nao | `25s` | `25s` | Intervalo de ping. Usa formato de duracao Go. |
 | `WEBSOCKET_PONG_TIMEOUT` | Nao | `60s` | `60s` | Prazo maximo para receber pong. Usa formato de duracao Go. |
 | `WEBSOCKET_WRITE_TIMEOUT` | Nao | `10s` | `10s` | Timeout de escrita de frames. Usa formato de duracao Go. |
-| `WEBSOCKET_SEND_BUFFER` | Nao | `256` | `256` | Tamanho do buffer por cliente WebSocket. Deve ser inteiro positivo. |
+| `WEBSOCKET_SEND_BUFFER` | Nao | `256` | `256` | Tamanho do buffer por cliente WebSocket. Em midia de chamadas, cliente lento pode ser desconectado quando esse buffer lota. Deve ser inteiro positivo. |
 
 ## Processamento de mensagens
 
@@ -158,6 +158,12 @@ Chamadas sao desligadas por padrao e tambem dependem da configuracao por instanc
 | `CALLS_MEDIA_DOWNLOAD_TIMEOUT_SECONDS` | Nao | `60` | `60` | Timeout de download de midia de chamada, em segundos. |
 | `CALLS_DIAGNOSTICS_DIRECTORY` | Nao | `./data/call-diagnostics` | `./data/call-diagnostics` | Diretorio base dos diagnosticos do provider. |
 | `CALLS_ALLOW_PRIVATE_MEDIA_DOWNLOADS` | Nao | `false` | `false` | Permite downloads de midia a partir de hosts privados/loopback/link-local. Deixe `false` em producao. |
+| `CALLS_HANGUP_SEND_TIMEOUT_SECONDS` | Nao | `5` | `5` | Tempo maximo para transmitir o `<terminate>` com contexto de sinalizacao independente. |
+| `CALLS_HANGUP_ACK_TIMEOUT_SECONDS` | Nao | `5` | `5` | Tempo maximo aguardando o `<ack class="call">` correlacionado pelo stanza ID do `<terminate>`. |
+| `CALLS_HANGUP_REMOTE_EVENT_TIMEOUT_SECONDS` | Nao | `2` | `2` | Janela de observacao independente para o evento remoto de encerramento. |
+| `CALLS_HANGUP_CONFIRM_TIMEOUT_SECONDS` | Nao | - | - | Alias legado, usado somente se `CALLS_HANGUP_ACK_TIMEOUT_SECONDS` nao estiver definido. |
+| `CALLS_HANGUP_RETRY_ENABLED` | Nao | `true` | `true` | Habilita retry limitado quando o envio do terminate falha antes de confirmacao. |
+| `CALLS_HANGUP_MAX_ATTEMPTS` | Nao | `2` | `2` | Maximo de tentativas de envio do terminate. |
 
 ## Calls recording
 

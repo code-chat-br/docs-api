@@ -14,13 +14,13 @@ Esta pasta descreve o contrato observado no código executável atual. A referê
 8. [Grupos](./groups.md): criação, participantes, convite, foto e saída.
 9. [Webhooks](./webhooks.md): configuração, eventos, envelopes e entrega.
 10. [WebSocket](./websocket.md): eventos em tempo real por instancia e por dono de lote.
-11. [Chamadas](./calls.md): chamadas individuais experimentais com áudio, vídeo, reações e eventos.
+11. [Chamadas](./calls.md): chamadas individuais experimentais com áudio, vídeo, reações e eventos. Para o passo a passo de chamada de saida, chamada recebida, atendimento, WebSocket de midia e encerramento, veja [Fluxos de chamadas diretas](./calls-flows.md).
 
 ## CodeChat API Go Pro
 
-- [Endpoints Pro](./pro-endpoints.md): pagamento, PIX, revisão de pedido, formulário, mensagens interativas, Message Batch e Chamadas.
+- [Endpoints Pro](./pro-endpoints.md): pagamento, PIX, revisão de pedido, formulário, mensagens interativas e Message Batch.
 
-`Pro` é uma classificação comercial solicitada para a documentação. O código auditado não possui claim, middleware, tabela ou feature flag de plano e não retorna `402 Payment Required`. Os recursos Pro por instância, incluindo Chamadas, usam o JWT da instância; Message Batch usa JWT de usuário com `userId` em formato UUID. O OpenAPI registra `x-codechat-plan: pro` e `x-codechat-plan-enforced: false` para não confundir classificação com bloqueio executável.
+`Pro` é uma classificação comercial solicitada para a documentação. O código auditado não possui claim, middleware, tabela ou feature flag de plano e não retorna `402 Payment Required`. Os recursos Pro por instância usam o JWT da instância; Message Batch usa JWT de usuário com `userId` em formato UUID. O OpenAPI registra `x-codechat-plan: pro` e `x-codechat-plan-enforced: false` para não confundir classificação com bloqueio executável.
 
 ## Compatibilidade
 
@@ -29,8 +29,9 @@ Esta pasta descreve o contrato observado no código executável atual. A referê
 - [Variáveis de ambiente](./environment.md).
 - [Pareamento por Passkey](./passkey-pairing.md).
 - [Migrações](./migrations.md).
-- [Dependências de chamadas](./calls.md#dependências).
-- [Chamadas multi-device](./calls.md#comportamento-multi-device).
+- [Chamadas: fluxos diretos](./calls-flows.md).
+- [Chamadas: runtime e dependencias](./calls-runtime.md).
+- [Chamadas multi-device](./calls.md#multi-device-behavior).
 
 ## Convenções
 

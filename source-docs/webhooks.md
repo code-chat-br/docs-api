@@ -1409,7 +1409,7 @@ Atualizacao de chamada de voz ou video.
 
 **Flag:** `callUpsert`
 
-**Eventos internos:** `*events.CallOffer`, `*events.CallAccept`, `*events.CallOfferNotice`, `*events.CallPreAccept`, `*events.CallTransport`, `*events.CallTerminate`, `*events.CallReject`, `*events.CallRelayLatency`, `*events.UnknownCallEvent`
+**Eventos internos:** `*events.CallOffer`, `*events.CallAccept`, `*events.CallOfferNotice`, `*events.CallPreAccept`, `*events.CallTerminate`, `*events.CallReject`, `*events.UnknownCallEvent`
 
 **Persistência:** Nao persiste dados especificos antes da entrega do webhook.
 
@@ -1468,13 +1468,13 @@ x-webhook-event: call.upsert
 - `id`: `string`, obrigatório, não aceita `null`. ID da chamada.
 - `date`: `string`, obrigatório, não aceita `null`. Timestamp RFC3339 da chamada/processamento.
 - `isVideo`: `boolean | null`, obrigatório, aceita `null`. Indica chamada de video quando o normalizador consegue inferir.
-- `status`: `string`, obrigatório, não aceita `null`. Status normalizado da chamada. Valores possíveis: `offer`, `ringing`, `preaccept`, `transport`, `relaylatency`, `timeout`, `reject`, `accept`, `terminate`, `unknown`.
+- `status`: `string`, obrigatório, não aceita `null`. Status normalizado da chamada. Telemetria de transporte nao publica call.upsert. Valores possíveis: `offer`, `ringing`, `preaccept`, `timeout`, `reject`, `accept`, `terminate`, `unknown`.
 - `offline`: `boolean`, obrigatório, não aceita `null`. Indica se o evento veio como offline.
 - `latencyMs`: `number | null`, obrigatório, aceita `null`. Latencia em milissegundos quando reportada.
 
 #### Valores possíveis
 
-- `status`: `offer`, `ringing`, `preaccept`, `transport`, `relaylatency`, `timeout`, `reject`, `accept`, `terminate`, `unknown`
+- `status`: `offer`, `ringing`, `preaccept`, `timeout`, `reject`, `accept`, `terminate`, `unknown`
 
 #### Observações
 

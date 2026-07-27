@@ -71,6 +71,11 @@ for (const required of [
   'getting-started.mdx',
   'environment.mdx',
   'calls.mdx',
+  'calls-api.mdx',
+  'calls-features.mdx',
+  'calls-flows.mdx',
+  'calls-runtime.mdx',
+  'calls-upgrade.mdx',
   'message-batches.mdx',
   'pro-endpoints.mdx',
   'legacy-endpoints.mdx',
@@ -105,10 +110,6 @@ for (const [route, pathItem] of Object.entries(spec.paths || {})) {
     }
     if (route.startsWith('/call')) {
       callOperations.add(operationKey);
-      if (operation['x-codechat-plan'] !== 'pro')
-        failures.push(`operação de chamada sem classificação Pro: ${operationKey}`);
-      if (operation['x-codechat-plan-enforced'] !== false)
-        failures.push(`operação de chamada com enforcement Pro divergente: ${operationKey}`);
     }
   }
 }

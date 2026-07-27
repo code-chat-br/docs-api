@@ -1,0 +1,168 @@
+---
+title: "Runtime de chamadas"
+description: "Arquitetura, configuracao, concorrencia, encerramento controlado e troubleshooting."
+---
+Este guia concentra arquitetura, dependencias, variaveis, limites, concorrencia, encerramento controlado e troubleshooting.
+
+## Arquitetura
+
+`GroupCallingProvider` e uma capability interface opcional; handlers nao importam tipos do meowcaller. `GroupRepository` tambem e aditivo. O adapter normaliza roster, JIDs/devices, lobby, mao, screen share e video atribuido. `ParticipantMediaRegistry` gerencia sinks dinamicos sem bloquear a escrita sob o lock global.
+
+Componentes principais:
+
+- `CallService`: orquestra dominio, settings, provider, gravacao, eventos e limiter.
+- `Manager`: registry em memoria dos runtimes por chamada.
+- `InstanceCallSlots`: controlador explicito de concorrencia por `instanceID/callID`.
+- `Repository`: historico, eventos e reconciliacao com banco.
+- `MeowcallerProvider`: adapter para `meowcaller`.
+- `third_party/meowcaller`: fork local usado para hangup controlado.
+
+O cleanup terminal e centralizado pelo servico: parar video, limpar provider, finalizar gravacao, remover fanout/midia, remover runtime e liberar slot. Operacoes duplicadas sao toleradas e idempotentes.
+
+## Dependencias
+
+- Go da aplicacao: `1.26`
+- meowcaller: `v0.0.0-20260726180203-6d9b7b2c1807`
+- whatsmeow: `v0.0.0-20260722203353-e9a033b24933`
+- replace auditado: `github.com/purpshell/meowcaller => ./third_party/meowcaller`
+
+Nao atualizar meowcaller e whatsmeow independentemente. O diretorio `third_party` corresponde ao commit fixado e nao depende de branch mutavel. O patch local adiciona `Call.HangupContext`, roteamento para o dispositivo que atendeu e correlacao de `<ack class="call">` pelo stanza ID.
+
+Ao atualizar a dependencia, mantenha juntos:
+
+- a versao pseudo-semver exata no `require`;
+- o `replace` local;
+- os testes de `hangup_control_test.go` e `engine_hook_test.go`;
+- a revisao pinada de whatsmeow, porque o hook auditado depende do layout de `nodeHandlers` dessa revisao.
+
+## Configuracao global
+
+Recursos novos sao flags por instancia e ficam `false` por padrao: grupos/audio/video de grupo, ad hoc, links/preview/aprovacao, scheduling, invite/re-ring/late join, mao, screen share send/receive/recording e reacoes ampliadas. Limites conservadores: um grupo, oito participantes, oito no lobby, tres re-rings e cooldown de 30 segundos.
+
+Variaveis globais relacionadas ao limite e encerramento:
+
+- `CALLS_MAX_CONCURRENT_GLOBAL`: limite global de slots.
+- `CALLS_MAX_CONCURRENT_PER_INSTANCE`: limite maximo permitido para `maxConcurrentCalls` por instancia.
+- `CALLS_HANGUP_SEND_TIMEOUT_SECONDS`: tempo maximo para transmitir o terminate em um contexto de sinalizacao independente. Default: `5`.
+- `CALLS_HANGUP_ACK_TIMEOUT_SECONDS`: tempo maximo aguardando ACK do stanza `<terminate>` pelo mesmo `id`. Default: `5`.
+- `CALLS_HANGUP_REMOTE_EVENT_TIMEOUT_SECONDS`: janela de observacao do evento remoto de lifecycle, independente do ACK. Default: `2`.
+- `CALLS_HANGUP_CONFIRM_TIMEOUT_SECONDS`: alias legado usado somente quando `CALLS_HANGUP_ACK_TIMEOUT_SECONDS` nao esta definido.
+- `CALLS_HANGUP_RETRY_ENABLED`: habilita retry limitado de terminate quando o envio falha antes de confirmacao. Default: `true`.
+- `CALLS_HANGUP_MAX_ATTEMPTS`: numero maximo de tentativas. Default: `2`.
+- `CALLS_RECORDING_CLOSE_TIMEOUT_SECONDS`: timeout para finalizar gravacoes em estado terminal. Default: `15`.
+
+## Configuracao por instancia
+
+`maxConcurrentCalls` define quantas chamadas concorrentes a instancia pode manter no runtime local. O valor deve estar entre `1` e `CALLS_MAX_CONCURRENT_PER_INSTANCE`.
+
+`maxGroupCalls` e independente de `maxConcurrentCalls`; cada sessao de grupo ocupa um slot. `maxGroupCallParticipants` nao consome slots adicionais. Todos os novos booleans permanecem desligados ate opt-in explicito, e `scheduledCallsEnabled` permanece efetivamente falso enquanto o provider nao oferecer scheduling.
+
+Chamadas recebidas e chamadas de saida usam o mesmo controlador de slots. O raw observer do WhatsApp e observacional: ele pode criar ou reconciliar historico, mas nao reserva vaga sozinho.
+
+Ao desabilitar chamadas por instancia com encerramento de ativas, a API tenta enviar terminate pelo provider e depois marca as chamadas como interrompidas conforme o fluxo de configuracao existente.
+
+## Concorrencia
+
+A API controla concorrencia com slots em memoria por instancia:
+
+```text
+map[instanceID]map[callID]CallSlot
+```
+
+Cada slot pertence a um `callID` interno. `Release()` e idempotente, entao uma finalizacao duplicada por callback, timeout ou cleanup nao corrompe contadores.
+
+Estados que ocupam vaga: `INCOMING`, `OUTGOING`, `RINGING`, `PREACCEPTED`, `CONNECTING`, `ACTIVE` e `ENDING`.
+
+Estados que nao ocupam vaga: `ENDED`, `ENDED_UNCONFIRMED`, `REJECTED`, `MISSED`, `BUSY`, `FAILED`, `INTERRUPTED`, `ANSWERED_ELSEWHERE` e `REJECTED_ELSEWHERE`.
+
+A fonte primaria e o runtime em memoria da instancia. O banco e usado para historico, recuperacao, reconciliacao e diagnostico. A API nao soma banco + runtime sem deduplicar, porque uma mesma chamada pode aparecer nos dois lugares.
+
+Antes de rejeitar uma nova chamada por limite excedido, a API reconcilia slots contra o runtime e remove slots cuja chamada nao existe mais no runtime, esta terminal ou esta com contexto cancelado. Chamadas em `ENDING` continuam ocupando vaga ate confirmacao, timeout ou finalizacao explicita.
+
+Endpoint diagnostico:
+
+```http
+GET /call/{instanceName}/active
+```
+
+Resposta:
+
+```json
+{
+  "instance": {"id": "42", "name": "codechat"},
+  "limit": 1,
+  "activeCount": 1,
+  "calls": [
+    {
+      "id": "01900000-0000-7000-8000-000000000000",
+      "providerCallId": "ABC123",
+      "status": "ACTIVE",
+      "direction": "incoming",
+      "startedAt": "2026-07-24T22:40:00Z",
+      "ending": false,
+      "source": "manager"
+    }
+  ]
+}
+```
+
+Quando o limite permanece cheio apos reconciliacao, a API retorna `409 call_concurrency_limit_exceeded` com `limit` e `activeCalls`.
+
+## Encerramento controlado
+
+O hangup controlado evita limpar o runtime local antes de enviar o `<terminate>` ao remoto.
+
+```text
+ACTIVE/RINGING/CONNECTING
+  -> dashboard solicita hangup
+  -> status ENDING
+  -> resolve o dispositivo remoto e preserva o call-creator
+  -> registra pending ACK pelo stanza ID
+  -> provider envia <terminate>
+  -> API responde ENDING com termination.sent=true
+  -> correlaciona <ack class="call" id="MESMO_STANZA_ID">
+  -> cleanup local
+  -> slot liberado
+  -> publica ENDED ou ENDED_UNCONFIRMED
+```
+
+O provider usa o fork local de `github.com/purpshell/meowcaller` em `third_party/meowcaller`. `Call.HangupContext` e `HangupWithOptions` transmitem o `<terminate>` antes de chamar `finishCall`. O envio usa um contexto de sinalizacao proprio, independente do contexto da midia e da requisicao HTTP.
+
+Para chamadas diretas, o destino e escolhido nesta ordem, preferindo sempre candidatos com `Device != 0`: `peerLID`, peer do relay, ultimo `CallAccept`, `from` e peer original. Chamadas em grupo preservam o endereco da sessao `@call`; nao recebem um terminate 1:1 sintetizado por participante.
+
+O `call-creator` vem exclusivamente do runtime preservado. A ausencia desse valor aborta o envio com `terminate_call_creator_unavailable`.
+
+O motivo interno da API, como `hangup_from_dashboard`, nao e serializado no atributo `reason`. Um hangup comum envia o terminate sem esse atributo. O fork separa `Reason` (lifecycle local) de `ProtocolReason` (somente valores definidos pelo protocolo WhatsApp).
+
+A confirmacao primaria e o ACK simples do stanza enviado:
+
+```xml
+<ack class="call" id="MESMO_STANZA_ID" from="..."/>
+```
+
+O registry `pendingCallSignals` e concorrente, idempotente e remove a entrada no ACK, erro de envio ou timeout. Um ACK com outro ID nao confirma a chamada. `CallTerminate` remoto continua sendo observado como confirmacao adicional, mas nao e obrigatorio quando o ACK correto ja chegou.
+
+Se o terminate foi enviado, mas nao houve ACK nem termino remoto ate `CALLS_HANGUP_ACK_TIMEOUT_SECONDS`, o status final e `ENDED_UNCONFIRMED` e o evento publicado e `call.ended_unconfirmed`.
+
+Todo estado terminal finaliza gravacoes ativas com `CALLS_RECORDING_CLOSE_TIMEOUT_SECONDS`. O agregado da chamada passa para `COMPLETED`, `PARTIAL` ou `FAILED`; nunca permanece `RECORDING`. Timeout de fechamento gera `PARTIAL` com `recording_close_timeout` sem prender o encerramento da chamada.
+
+Na revisao pinada de whatsmeow/meowcaller nao existe constante ou enum que de um nome semantico ao valor `transport-message-type="3"`. Ele e recebido dentro de `CallTransport`, portanto e tratado como sinalizacao de transporte: recebe o ACK exigido pelo handler, mas nao recria runtime, nao altera lifecycle e nao publica `call.upsert` em `ENDING` ou estados terminais. O log e `late call transport ignored`.
+
+Se o node nao foi transmitido, o endpoint retorna `502 Bad Gateway` com `call_terminate_send_failed`. Nesse caso a chamada permanece em `ENDING` e o slot continua ocupado para permitir nova tentativa explicita. Retries so ocorrem quando o envio falha antes de qualquer confirmacao. Nao ha retry ilimitado.
+
+O dashboard nao deve fechar a interface apenas por receber `ENDING`: o botao de desligar entra em loading, o endpoint retorna `termination.sent`, `stanzaId`, `to`, `callCreator`, `signalAcknowledged` e `attempts` ou erro, e a UI aguarda `call.ended` ou `call.ended_unconfirmed` via WebSocket.
+
+## Troubleshooting
+
+Para grupos, confirme primeiro `/capabilities` e os effective settings. 501 indica ausencia real no provider; 403 indica feature desligada. Grupo exige WebSocket v2. Audio sem participant ID e esperado porque o provider fornece mix, nao canais brutos. DELETE de link nao revoga a URL remota.
+
+Para `call_concurrency_limit_exceeded`:
+
+1. consulte `GET /call/{instanceName}/active`;
+2. verifique `activeCount`, `status` e `ending`;
+3. confira logs `call concurrency reconciliation` e `call concurrency limit exceeded`;
+4. lembre que chamada `ENDING` ocupa vaga ate confirmacao ou timeout.
+
+Se `activeCount=0` e o POST de chamada ainda retornar limite excedido, capture `instance_id`, `configured_limit`, `active_call_ids`, `active_provider_call_ids`, `active_statuses` e `slot_sources`.
+
+Quando o peer remoto fica em `Reconectando`, procure os logs `call hangup requested`, `call terminate sending`, `call terminate sent`, `call terminate confirmed`, `call terminate timed out`, `call finalizing` e `call slot released`. Se `call.terminate.failed` ocorrer, o terminate nao foi transmitido e o endpoint deve retornar erro. Se `call.ended_unconfirmed` ocorrer, o terminate foi enviado, mas a API nao recebeu confirmacao remota no timeout configurado.

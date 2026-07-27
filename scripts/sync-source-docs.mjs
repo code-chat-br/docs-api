@@ -28,6 +28,31 @@ const documents = {
     'Chamadas WhatsApp',
     'Recurso Pro experimental para chamadas individuais com áudio, vídeo, reações, gravações e eventos.',
   ],
+  'calls-api.md': [
+    'calls-api.mdx',
+    'API de chamadas',
+    'Endpoints, eventos e contrato do dashboard de chamadas.',
+  ],
+  'calls-features.md': [
+    'calls-features.mdx',
+    'Recursos de chamadas',
+    'Grupos, links, participantes, lobby, midia, tela, gravacao e reacoes.',
+  ],
+  'calls-flows.md': [
+    'calls-flows.mdx',
+    'Fluxos de chamadas diretas',
+    'Passo a passo para chamada de saida, recebida, atendimento, midia e encerramento.',
+  ],
+  'calls-runtime.md': [
+    'calls-runtime.mdx',
+    'Runtime de chamadas',
+    'Arquitetura, configuracao, concorrencia, encerramento controlado e troubleshooting.',
+  ],
+  'calls-upgrade.md': [
+    'calls-upgrade.mdx',
+    'Upgrade de chamadas',
+    'Upgrade do meowcaller, validacao, rollback, baseline automatizado e testes reais.',
+  ],
   'media.md': ['media.mdx', 'Mídia', 'Download e upload antecipado de arquivos.'],
   'groups.md': ['groups.mdx', 'Grupos', 'Criação, participantes, convites, foto e saída.'],
   'webhooks.md': ['webhooks.mdx', 'Webhooks', 'Configuração, entrega e os 45 eventos implementados.'],

@@ -88,12 +88,436 @@
     "search": "planos basic e pro autenticação  "
   },
   {
+    "id": "doc:calls-api.mdx",
+    "type": "Guia",
+    "title": "API de chamadas",
+    "description": "Endpoints, eventos e contrato do dashboard de chamadas. Este guia concentra o contrato HTTP, eventos em tempo real, WebSocket de midia e orientacoes para o codechat-dashboard . Para os fluxos operacionais de chamada de saida, chamada recebida, atendimento, midia e encerramento, consulte calls-flows.md . A referencia extensa continua em calls.md . Capacidades e erros GET /call/ instanceName /capabilities descreve o provider instalado. Fluxos de grupo, links, lobby, participantes, mao levantada, screen share, WebSocket v2 e gravacao atribuida dependem de capabilities e flags por instancia. Quando o provider nao possui uma extensao opcional, a API retorna 501 call feature not supported . Quando a capability existe mas a instancia nao habilitou a fla",
+    "href": "/docs/calls-api",
+    "search": "api de chamadas endpoints, eventos e contrato do dashboard de chamadas. este guia concentra o contrato http, eventos em tempo real, websocket de midia e orientacoes para o codechat-dashboard . para os fluxos operacionais de chamada de saida, chamada recebida, atendimento, midia e encerramento, consulte calls-flows.md . a referencia extensa continua em calls.md . capacidades e erros get /call/ instancename /capabilities descreve o provider instalado. fluxos de grupo, links, lobby, participantes, mao levantada, screen share, websocket v2 e gravacao atribuida dependem de capabilities e flags por instancia. quando o provider nao possui uma extensao opcional, a api retorna 501 call feature not supported . quando a capability existe mas a instancia nao habilitou a fla  "
+  },
+  {
+    "id": "heading:calls-api.mdx:capacidades-e-erros",
+    "type": "Seção",
+    "title": "Capacidades e erros",
+    "description": "API de chamadas",
+    "href": "/docs/calls-api#capacidades-e-erros",
+    "search": "capacidades e erros api de chamadas  "
+  },
+  {
+    "id": "heading:calls-api.mdx:endpoints-principais",
+    "type": "Seção",
+    "title": "Endpoints principais",
+    "description": "API de chamadas",
+    "href": "/docs/calls-api#endpoints-principais",
+    "search": "endpoints principais api de chamadas  "
+  },
+  {
+    "id": "heading:calls-api.mdx:grupos-links-e-participantes",
+    "type": "Seção",
+    "title": "Grupos, links e participantes",
+    "description": "API de chamadas",
+    "href": "/docs/calls-api#grupos-links-e-participantes",
+    "search": "grupos, links e participantes api de chamadas  "
+  },
+  {
+    "id": "heading:calls-api.mdx:mao-reacoes-screen-share-e-agendamento",
+    "type": "Seção",
+    "title": "Mao, reacoes, screen share e agendamento",
+    "description": "API de chamadas",
+    "href": "/docs/calls-api#mao-reacoes-screen-share-e-agendamento",
+    "search": "mao, reacoes, screen share e agendamento api de chamadas  "
+  },
+  {
+    "id": "heading:calls-api.mdx:gravacoes",
+    "type": "Seção",
+    "title": "Gravacoes",
+    "description": "API de chamadas",
+    "href": "/docs/calls-api#gravacoes",
+    "search": "gravacoes api de chamadas  "
+  },
+  {
+    "id": "heading:calls-api.mdx:eventos",
+    "type": "Seção",
+    "title": "Eventos",
+    "description": "API de chamadas",
+    "href": "/docs/calls-api#eventos",
+    "search": "eventos api de chamadas  "
+  },
+  {
+    "id": "heading:calls-api.mdx:websocket-de-midia",
+    "type": "Seção",
+    "title": "WebSocket de midia",
+    "description": "API de chamadas",
+    "href": "/docs/calls-api#websocket-de-midia",
+    "search": "websocket de midia api de chamadas  "
+  },
+  {
+    "id": "heading:calls-api.mdx:contrato-para-dashboard",
+    "type": "Seção",
+    "title": "Contrato para dashboard",
+    "description": "API de chamadas",
+    "href": "/docs/calls-api#contrato-para-dashboard",
+    "search": "contrato para dashboard api de chamadas  "
+  },
+  {
+    "id": "doc:calls-features.mdx",
+    "type": "Guia",
+    "title": "Recursos de chamadas",
+    "description": "Grupos, links, participantes, lobby, midia, tela, gravacao e reacoes. Este guia concentra os recursos opcionais adicionados ao subsistema de chamadas: grupos, links, lobby, participantes, midia, video, screen share, gravacao, mao levantada, reacoes e scheduling reservado. Chamadas em grupo Recursos de grupo sao opt-in por instancia. Habilite groupCallsEnabled e groupAudioEnabled ; video exige tambem groupVideoEnabled . Grupo ad hoc exige adHocGroupCallsEnabled . Iniciar: - POST /call/ instanceName /groups/ groupId : grupo existente. O servico consulta o roster da conta conectada, verifica membership, deduplica devices/identidades e aplica o limite configurado. - POST /call/ instanceName /group : grupo ad hoc com pelo menos dois participantes. Payload: Uma sess",
+    "href": "/docs/calls-features",
+    "search": "recursos de chamadas grupos, links, participantes, lobby, midia, tela, gravacao e reacoes. este guia concentra os recursos opcionais adicionados ao subsistema de chamadas: grupos, links, lobby, participantes, midia, video, screen share, gravacao, mao levantada, reacoes e scheduling reservado. chamadas em grupo recursos de grupo sao opt-in por instancia. habilite groupcallsenabled e groupaudioenabled ; video exige tambem groupvideoenabled . grupo ad hoc exige adhocgroupcallsenabled . iniciar: - post /call/ instancename /groups/ groupid : grupo existente. o servico consulta o roster da conta conectada, verifica membership, deduplica devices/identidades e aplica o limite configurado. - post /call/ instancename /group : grupo ad hoc com pelo menos dois participantes. payload: uma sess  "
+  },
+  {
+    "id": "heading:calls-features.mdx:chamadas-em-grupo",
+    "type": "Seção",
+    "title": "Chamadas em grupo",
+    "description": "Recursos de chamadas",
+    "href": "/docs/calls-features#chamadas-em-grupo",
+    "search": "chamadas em grupo recursos de chamadas  "
+  },
+  {
+    "id": "heading:calls-features.mdx:participantes",
+    "type": "Seção",
+    "title": "Participantes",
+    "description": "Recursos de chamadas",
+    "href": "/docs/calls-features#participantes",
+    "search": "participantes recursos de chamadas  "
+  },
+  {
+    "id": "heading:calls-features.mdx:call-links",
+    "type": "Seção",
+    "title": "Call links",
+    "description": "Recursos de chamadas",
+    "href": "/docs/calls-features#call-links",
+    "search": "call links recursos de chamadas  "
+  },
+  {
+    "id": "heading:calls-features.mdx:sala-de-espera",
+    "type": "Seção",
+    "title": "Sala de espera",
+    "description": "Recursos de chamadas",
+    "href": "/docs/calls-features#sala-de-espera",
+    "search": "sala de espera recursos de chamadas  "
+  },
+  {
+    "id": "heading:calls-features.mdx:midia-e-video",
+    "type": "Seção",
+    "title": "Midia e video",
+    "description": "Recursos de chamadas",
+    "href": "/docs/calls-features#midia-e-video",
+    "search": "midia e video recursos de chamadas  "
+  },
+  {
+    "id": "heading:calls-features.mdx:screen-share",
+    "type": "Seção",
+    "title": "Screen share",
+    "description": "Recursos de chamadas",
+    "href": "/docs/calls-features#screen-share",
+    "search": "screen share recursos de chamadas  "
+  },
+  {
+    "id": "heading:calls-features.mdx:gravacao",
+    "type": "Seção",
+    "title": "Gravacao",
+    "description": "Recursos de chamadas",
+    "href": "/docs/calls-features#gravacao",
+    "search": "gravacao recursos de chamadas  "
+  },
+  {
+    "id": "heading:calls-features.mdx:mao-levantada-e-reacoes",
+    "type": "Seção",
+    "title": "Mao levantada e reacoes",
+    "description": "Recursos de chamadas",
+    "href": "/docs/calls-features#mao-levantada-e-reacoes",
+    "search": "mao levantada e reacoes recursos de chamadas  "
+  },
+  {
+    "id": "heading:calls-features.mdx:scheduling-reservado",
+    "type": "Seção",
+    "title": "Scheduling reservado",
+    "description": "Recursos de chamadas",
+    "href": "/docs/calls-features#scheduling-reservado",
+    "search": "scheduling reservado recursos de chamadas  "
+  },
+  {
+    "id": "doc:calls-flows.mdx",
+    "type": "Guia",
+    "title": "Fluxos de chamadas diretas",
+    "description": "Passo a passo para chamada de saida, recebida, atendimento, midia e encerramento. Este documento mostra os dois fluxos mais comuns de chamada 1:1: 1. a API origina a chamada para um destinatario; 2. um cliente externo liga para o numero conectado na API e a API atende. O objetivo aqui e documentar o caminho que o dashboard precisa seguir: endpoints HTTP, eventos recebidos no WebSocket de eventos e o momento correto de abrir o WebSocket binario de midia para enviar buffers de audio para o backend. WebSockets usados no fluxo Existem dois WebSockets diferentes: - WebSocket de eventos: - WebSocket de midia da chamada: Cada conexao de eventos assina exatamente um evento. Nao existe wildcard. Na pratica, para uma tela de chamadas diretas, o front normalmente abre conexoes para ",
+    "href": "/docs/calls-flows",
+    "search": "fluxos de chamadas diretas passo a passo para chamada de saida, recebida, atendimento, midia e encerramento. este documento mostra os dois fluxos mais comuns de chamada 1:1: 1. a api origina a chamada para um destinatario; 2. um cliente externo liga para o numero conectado na api e a api atende. o objetivo aqui e documentar o caminho que o dashboard precisa seguir: endpoints http, eventos recebidos no websocket de eventos e o momento correto de abrir o websocket binario de midia para enviar buffers de audio para o backend. websockets usados no fluxo existem dois websockets diferentes: - websocket de eventos: - websocket de midia da chamada: cada conexao de eventos assina exatamente um evento. nao existe wildcard. na pratica, para uma tela de chamadas diretas, o front normalmente abre conexoes para   "
+  },
+  {
+    "id": "heading:calls-flows.mdx:websockets-usados-no-fluxo",
+    "type": "Seção",
+    "title": "WebSockets usados no fluxo",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#websockets-usados-no-fluxo",
+    "search": "websockets usados no fluxo fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:body-dos-eventos-call",
+    "type": "Seção",
+    "title": "Body dos eventos call.",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#body-dos-eventos-call",
+    "search": "body dos eventos call. fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:fluxo-1-api-origina-a-chamada",
+    "type": "Seção",
+    "title": "Fluxo 1: API origina a chamada",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#fluxo-1-api-origina-a-chamada",
+    "search": "fluxo 1: api origina a chamada fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:1-iniciar-a-chamada",
+    "type": "Seção",
+    "title": "1. Iniciar a chamada",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#1-iniciar-a-chamada",
+    "search": "1. iniciar a chamada fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:2-acompanhar-toque-no-destinatario",
+    "type": "Seção",
+    "title": "2. Acompanhar toque no destinatario",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#2-acompanhar-toque-no-destinatario",
+    "search": "2. acompanhar toque no destinatario fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:3-destinatario-atende",
+    "type": "Seção",
+    "title": "3. Destinatario atende",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#3-destinatario-atende",
+    "search": "3. destinatario atende fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:4-abrir-websocket-de-midia-e-enviar-audio",
+    "type": "Seção",
+    "title": "4. Abrir WebSocket de midia e enviar audio",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#4-abrir-websocket-de-midia-e-enviar-audio",
+    "search": "4. abrir websocket de midia e enviar audio fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:5-encerrar-a-chamada-de-saida",
+    "type": "Seção",
+    "title": "5. Encerrar a chamada de saida",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#5-encerrar-a-chamada-de-saida",
+    "search": "5. encerrar a chamada de saida fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:fluxo-2-cliente-externo-liga-para-o-numero-conectado-na-api",
+    "type": "Seção",
+    "title": "Fluxo 2: cliente externo liga para o numero conectado na API",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#fluxo-2-cliente-externo-liga-para-o-numero-conectado-na-api",
+    "search": "fluxo 2: cliente externo liga para o numero conectado na api fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:1-receber-evento-de-chamada-tocando",
+    "type": "Seção",
+    "title": "1. Receber evento de chamada tocando",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#1-receber-evento-de-chamada-tocando",
+    "search": "1. receber evento de chamada tocando fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:2-atender-pela-api",
+    "type": "Seção",
+    "title": "2. Atender pela API",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#2-atender-pela-api",
+    "search": "2. atender pela api fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:3-chamada-atendida-e-midia-pronta",
+    "type": "Seção",
+    "title": "3. Chamada atendida e midia pronta",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#3-chamada-atendida-e-midia-pronta",
+    "search": "3. chamada atendida e midia pronta fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:4-encerrar-a-chamada-recebida",
+    "type": "Seção",
+    "title": "4. Encerrar a chamada recebida",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#4-encerrar-a-chamada-recebida",
+    "search": "4. encerrar a chamada recebida fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:resumo-de-eventos-por-fluxo",
+    "type": "Seção",
+    "title": "Resumo de eventos por fluxo",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#resumo-de-eventos-por-fluxo",
+    "search": "resumo de eventos por fluxo fluxos de chamadas diretas  "
+  },
+  {
+    "id": "heading:calls-flows.mdx:reconciliacao-apos-reconnect",
+    "type": "Seção",
+    "title": "Reconciliacao apos reconnect",
+    "description": "Fluxos de chamadas diretas",
+    "href": "/docs/calls-flows#reconciliacao-apos-reconnect",
+    "search": "reconciliacao apos reconnect fluxos de chamadas diretas  "
+  },
+  {
+    "id": "doc:calls-runtime.mdx",
+    "type": "Guia",
+    "title": "Runtime de chamadas",
+    "description": "Arquitetura, configuracao, concorrencia, encerramento controlado e troubleshooting. Este guia concentra arquitetura, dependencias, variaveis, limites, concorrencia, encerramento controlado e troubleshooting. Arquitetura GroupCallingProvider e uma capability interface opcional; handlers nao importam tipos do meowcaller. GroupRepository tambem e aditivo. O adapter normaliza roster, JIDs/devices, lobby, mao, screen share e video atribuido. ParticipantMediaRegistry gerencia sinks dinamicos sem bloquear a escrita sob o lock global. Componentes principais: - CallService : orquestra dominio, settings, provider, gravacao, eventos e limiter. - Manager : registry em memoria dos runtimes por chamada. - InstanceCallSlots : controlador explicito de concorrencia por instanceID/callID . -",
+    "href": "/docs/calls-runtime",
+    "search": "runtime de chamadas arquitetura, configuracao, concorrencia, encerramento controlado e troubleshooting. este guia concentra arquitetura, dependencias, variaveis, limites, concorrencia, encerramento controlado e troubleshooting. arquitetura groupcallingprovider e uma capability interface opcional; handlers nao importam tipos do meowcaller. grouprepository tambem e aditivo. o adapter normaliza roster, jids/devices, lobby, mao, screen share e video atribuido. participantmediaregistry gerencia sinks dinamicos sem bloquear a escrita sob o lock global. componentes principais: - callservice : orquestra dominio, settings, provider, gravacao, eventos e limiter. - manager : registry em memoria dos runtimes por chamada. - instancecallslots : controlador explicito de concorrencia por instanceid/callid . -  "
+  },
+  {
+    "id": "heading:calls-runtime.mdx:arquitetura",
+    "type": "Seção",
+    "title": "Arquitetura",
+    "description": "Runtime de chamadas",
+    "href": "/docs/calls-runtime#arquitetura",
+    "search": "arquitetura runtime de chamadas  "
+  },
+  {
+    "id": "heading:calls-runtime.mdx:dependencias",
+    "type": "Seção",
+    "title": "Dependencias",
+    "description": "Runtime de chamadas",
+    "href": "/docs/calls-runtime#dependencias",
+    "search": "dependencias runtime de chamadas  "
+  },
+  {
+    "id": "heading:calls-runtime.mdx:configuracao-global",
+    "type": "Seção",
+    "title": "Configuracao global",
+    "description": "Runtime de chamadas",
+    "href": "/docs/calls-runtime#configuracao-global",
+    "search": "configuracao global runtime de chamadas  "
+  },
+  {
+    "id": "heading:calls-runtime.mdx:configuracao-por-instancia",
+    "type": "Seção",
+    "title": "Configuracao por instancia",
+    "description": "Runtime de chamadas",
+    "href": "/docs/calls-runtime#configuracao-por-instancia",
+    "search": "configuracao por instancia runtime de chamadas  "
+  },
+  {
+    "id": "heading:calls-runtime.mdx:concorrencia",
+    "type": "Seção",
+    "title": "Concorrencia",
+    "description": "Runtime de chamadas",
+    "href": "/docs/calls-runtime#concorrencia",
+    "search": "concorrencia runtime de chamadas  "
+  },
+  {
+    "id": "heading:calls-runtime.mdx:encerramento-controlado",
+    "type": "Seção",
+    "title": "Encerramento controlado",
+    "description": "Runtime de chamadas",
+    "href": "/docs/calls-runtime#encerramento-controlado",
+    "search": "encerramento controlado runtime de chamadas  "
+  },
+  {
+    "id": "heading:calls-runtime.mdx:troubleshooting",
+    "type": "Seção",
+    "title": "Troubleshooting",
+    "description": "Runtime de chamadas",
+    "href": "/docs/calls-runtime#troubleshooting",
+    "search": "troubleshooting runtime de chamadas  "
+  },
+  {
+    "id": "doc:calls-upgrade.mdx",
+    "type": "Guia",
+    "title": "Upgrade de chamadas",
+    "description": "Upgrade do meowcaller, validacao, rollback, baseline automatizado e testes reais. Este guia concentra o historico do upgrade do meowcaller para recursos de grupo, breaking changes, baseline automatizado e matriz de testes reais. Revisoes fixadas - meowcaller anterior: 10cb9858d9d7 - meowcaller selecionado: 6d9b7b2c18072155a4581ab8c7fccc51b4fd0a73 - referencia: main , merge do PR purpshell/meowcaller 18 - pseudo-versao: v0.0.0-20260726180203-6d9b7b2c1807 - whatsmeow: v0.0.0-20260722203353-e9a033b24933 ( e9a033b2493356741a604a09e50c34b371882338 ) - Go minimo do meowcaller: 1.25.0 ; a aplicacao ja usa Go 1.26 O target foi escolhido depois da inspecao de branches, PRs, testes, datasheets e exemplos. Ele e a implementacao mesclada pelo mantenedor, nao apenas um commit contendo",
+    "href": "/docs/calls-upgrade",
+    "search": "upgrade de chamadas upgrade do meowcaller, validacao, rollback, baseline automatizado e testes reais. este guia concentra o historico do upgrade do meowcaller para recursos de grupo, breaking changes, baseline automatizado e matriz de testes reais. revisoes fixadas - meowcaller anterior: 10cb9858d9d7 - meowcaller selecionado: 6d9b7b2c18072155a4581ab8c7fccc51b4fd0a73 - referencia: main , merge do pr purpshell/meowcaller 18 - pseudo-versao: v0.0.0-20260726180203-6d9b7b2c1807 - whatsmeow: v0.0.0-20260722203353-e9a033b24933 ( e9a033b2493356741a604a09e50c34b371882338 ) - go minimo do meowcaller: 1.25.0 ; a aplicacao ja usa go 1.26 o target foi escolhido depois da inspecao de branches, prs, testes, datasheets e exemplos. ele e a implementacao mesclada pelo mantenedor, nao apenas um commit contendo  "
+  },
+  {
+    "id": "heading:calls-upgrade.mdx:revisoes-fixadas",
+    "type": "Seção",
+    "title": "Revisoes fixadas",
+    "description": "Upgrade de chamadas",
+    "href": "/docs/calls-upgrade#revisoes-fixadas",
+    "search": "revisoes fixadas upgrade de chamadas  "
+  },
+  {
+    "id": "heading:calls-upgrade.mdx:seguranca-e-rollback",
+    "type": "Seção",
+    "title": "Seguranca e rollback",
+    "description": "Upgrade de chamadas",
+    "href": "/docs/calls-upgrade#seguranca-e-rollback",
+    "search": "seguranca e rollback upgrade de chamadas  "
+  },
+  {
+    "id": "heading:calls-upgrade.mdx:o-que-esta-implementado",
+    "type": "Seção",
+    "title": "O que esta implementado",
+    "description": "Upgrade de chamadas",
+    "href": "/docs/calls-upgrade#o-que-esta-implementado",
+    "search": "o que esta implementado upgrade de chamadas  "
+  },
+  {
+    "id": "heading:calls-upgrade.mdx:limites-comprovados-do-target",
+    "type": "Seção",
+    "title": "Limites comprovados do target",
+    "description": "Upgrade de chamadas",
+    "href": "/docs/calls-upgrade#limites-comprovados-do-target",
+    "search": "limites comprovados do target upgrade de chamadas  "
+  },
+  {
+    "id": "heading:calls-upgrade.mdx:breaking-changes-observados",
+    "type": "Seção",
+    "title": "Breaking changes observados",
+    "description": "Upgrade de chamadas",
+    "href": "/docs/calls-upgrade#breaking-changes-observados",
+    "search": "breaking changes observados upgrade de chamadas  "
+  },
+  {
+    "id": "heading:calls-upgrade.mdx:resultado-pos-upgrade",
+    "type": "Seção",
+    "title": "Resultado pos-upgrade",
+    "description": "Upgrade de chamadas",
+    "href": "/docs/calls-upgrade#resultado-pos-upgrade",
+    "search": "resultado pos-upgrade upgrade de chamadas  "
+  },
+  {
+    "id": "heading:calls-upgrade.mdx:checkpoint",
+    "type": "Seção",
+    "title": "Checkpoint",
+    "description": "Upgrade de chamadas",
+    "href": "/docs/calls-upgrade#checkpoint",
+    "search": "checkpoint upgrade de chamadas  "
+  },
+  {
+    "id": "heading:calls-upgrade.mdx:toolchain-e-baseline-automatizado",
+    "type": "Seção",
+    "title": "Toolchain e baseline automatizado",
+    "description": "Upgrade de chamadas",
+    "href": "/docs/calls-upgrade#toolchain-e-baseline-automatizado",
+    "search": "toolchain e baseline automatizado upgrade de chamadas  "
+  },
+  {
+    "id": "heading:calls-upgrade.mdx:matriz-de-testes-reais",
+    "type": "Seção",
+    "title": "Matriz de testes reais",
+    "description": "Upgrade de chamadas",
+    "href": "/docs/calls-upgrade#matriz-de-testes-reais",
+    "search": "matriz de testes reais upgrade de chamadas  "
+  },
+  {
     "id": "doc:calls.mdx",
     "type": "Guia",
     "title": "Chamadas WhatsApp",
-    "description": "Recurso Pro experimental para chamadas individuais com áudio, vídeo, reações, gravações e eventos. Recurso Pro: todas as rotas /call... são classificadas comercialmente como CodeChat API Go Pro. O runtime atual não aplica entitlement de plano nem retorna 402 ; a autenticação executável é feita por JWT da instância. Este documento consolida a documentação do subsistema experimental de chamadas WhatsApp da API. Sumário - Visão Geral - Arquitetura - Dependências - Configuração - Configuração Por Instância - Ciclo de Vida - Comportamento Multi-Device - API - Eventos - WebSocket - Mídia - Vídeo - Gravação - Armazenamento de Gravações - Retenção de Gravações - Recuperação de Gravações - Segurança - Validação Manual - Solução de Problemas Visão Geral O suporte a chamadas 1:1 do WhatsApp é experi",
+    "description": "Recurso Pro experimental para chamadas individuais com áudio, vídeo, reações, gravações e eventos. Recursos de grupo, links, participantes, lobby, WebSocket v2 e gravacao atribuida agora estao consolidados em calls-features.md . API, eventos e dashboard ficam em calls-api.md ; fluxos operacionais de chamada direta ficam em calls-flows.md ; runtime, configuracao e troubleshooting ficam em calls-runtime.md ; upgrade e validacao ficam em calls-upgrade.md . As chamadas diretas mantem o contrato anterior. Este documento consolida a documentação do subsistema experimental de chamadas WhatsApp da API. Sumário - Visão Geral - Arquitetura - Dependências - Configuração - Configuração Por Instância - Ciclo de Vida - Comportamento Multi-Device - API - Eventos - WebSocket - Mídia - Vídeo - Gravação - ",
     "href": "/docs/calls",
-    "search": "chamadas whatsapp recurso pro experimental para chamadas individuais com áudio, vídeo, reações, gravações e eventos. recurso pro: todas as rotas /call... são classificadas comercialmente como codechat api go pro. o runtime atual não aplica entitlement de plano nem retorna 402 ; a autenticação executável é feita por jwt da instância. este documento consolida a documentação do subsistema experimental de chamadas whatsapp da api. sumário - visão geral - arquitetura - dependências - configuração - configuração por instância - ciclo de vida - comportamento multi-device - api - eventos - websocket - mídia - vídeo - gravação - armazenamento de gravações - retenção de gravações - recuperação de gravações - segurança - validação manual - solução de problemas visão geral o suporte a chamadas 1:1 do whatsapp é experi  "
+    "search": "chamadas whatsapp recurso pro experimental para chamadas individuais com áudio, vídeo, reações, gravações e eventos. recursos de grupo, links, participantes, lobby, websocket v2 e gravacao atribuida agora estao consolidados em calls-features.md . api, eventos e dashboard ficam em calls-api.md ; fluxos operacionais de chamada direta ficam em calls-flows.md ; runtime, configuracao e troubleshooting ficam em calls-runtime.md ; upgrade e validacao ficam em calls-upgrade.md . as chamadas diretas mantem o contrato anterior. este documento consolida a documentação do subsistema experimental de chamadas whatsapp da api. sumário - visão geral - arquitetura - dependências - configuração - configuração por instância - ciclo de vida - comportamento multi-device - api - eventos - websocket - mídia - vídeo - gravação -   "
   },
   {
     "id": "heading:calls.mdx:sumario",
@@ -368,6 +792,30 @@
     "search": "get /call/{instancename}/{callid}/recordings/{recordingid}/download chamadas whatsapp  "
   },
   {
+    "id": "heading:calls.mdx:get-callinstancenamecallidrecordingsaudiodownload",
+    "type": "Seção",
+    "title": "GET /call/{instanceName}/{callId}/recordings/audio/download",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#get-callinstancenamecallidrecordingsaudiodownload",
+    "search": "get /call/{instancename}/{callid}/recordings/audio/download chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:get-callinstancenamecallidrecordingsvideoincomingdownload",
+    "type": "Seção",
+    "title": "GET /call/{instanceName}/{callId}/recordings/video/incoming/download",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#get-callinstancenamecallidrecordingsvideoincomingdownload",
+    "search": "get /call/{instancename}/{callid}/recordings/video/incoming/download chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:get-callinstancenamecallidrecordingsvideooutgoingdownload",
+    "type": "Seção",
+    "title": "GET /call/{instanceName}/{callId}/recordings/video/outgoing/download",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#get-callinstancenamecallidrecordingsvideooutgoingdownload",
+    "search": "get /call/{instancename}/{callid}/recordings/video/outgoing/download chamadas whatsapp  "
+  },
+  {
     "id": "heading:calls.mdx:delete-callinstancenamecallidrecordingsrecordingid",
     "type": "Seção",
     "title": "DELETE /call/{instanceName}/{callId}/recordings/{recordingId}",
@@ -462,6 +910,14 @@
     "description": "Chamadas WhatsApp",
     "href": "/docs/calls#solucao-de-problemas",
     "search": "solução de problemas chamadas whatsapp  "
+  },
+  {
+    "id": "heading:calls.mdx:concorrencia-e-encerramento-controlado",
+    "type": "Seção",
+    "title": "Concorrência e encerramento controlado",
+    "description": "Chamadas WhatsApp",
+    "href": "/docs/calls#concorrencia-e-encerramento-controlado",
+    "search": "concorrência e encerramento controlado chamadas whatsapp  "
   },
   {
     "id": "doc:changelog.mdx",
@@ -1555,9 +2011,9 @@
     "id": "doc:openapi.mdx",
     "type": "Guia",
     "title": "OpenAPI",
-    "description": "Como o portal consome e valida o contrato OpenAPI 3.1. O arquivo publicado em /openapi.yml é uma cópia sincronizada de source-docs/openapi.yml , versionado neste repositório. Ele é validado com Redocly antes do build e alimenta a referência própria da CodeChat, a busca global e o resumo de operações. Separação visível - Operações atuais usam as tags funcionais Instances , Connections , Messages , Message Batches , Chats , Calls , Media , Groups e Webhooks . - Os 14 eventos globais de lote aparecem no objeto webhooks do OpenAPI 3.1, com headers, envelopes e exemplos próprios. - As operações Pro, incluindo Message Batches e Chamadas, usam x-codechat-plan: pro e x-codechat-plan-enforced: false . - Aliases antigos ficam em tags Legacy - … ; deprecat",
+    "description": "Como o portal consome e valida o contrato OpenAPI 3.1. O arquivo publicado em /openapi.yml é uma cópia sincronizada de source-docs/openapi.yml , versionado neste repositório. Ele é validado com Redocly antes do build e alimenta a referência própria da CodeChat, a busca global e o resumo de operações. Separação visível - Operações atuais usam as tags funcionais Instances , Connections , Messages , Message Batches , Chats , Calls , Media , Groups e Webhooks . - Os 14 eventos globais de lote aparecem no objeto webhooks do OpenAPI 3.1, com headers, envelopes e exemplos próprios. - As operações Pro, como Message Batches, usam x-codechat-plan: pro e x-codechat-plan-enforced: false . - Aliases antigos ficam em tags Legacy - … ; deprecated: true aparece",
     "href": "/docs/openapi",
-    "search": "openapi como o portal consome e valida o contrato openapi 3.1. o arquivo publicado em /openapi.yml é uma cópia sincronizada de source-docs/openapi.yml , versionado neste repositório. ele é validado com redocly antes do build e alimenta a referência própria da codechat, a busca global e o resumo de operações. separação visível - operações atuais usam as tags funcionais instances , connections , messages , message batches , chats , calls , media , groups e webhooks . - os 14 eventos globais de lote aparecem no objeto webhooks do openapi 3.1, com headers, envelopes e exemplos próprios. - as operações pro, incluindo message batches e chamadas, usam x-codechat-plan: pro e x-codechat-plan-enforced: false . - aliases antigos ficam em tags legacy - … ; deprecat  "
+    "search": "openapi como o portal consome e valida o contrato openapi 3.1. o arquivo publicado em /openapi.yml é uma cópia sincronizada de source-docs/openapi.yml , versionado neste repositório. ele é validado com redocly antes do build e alimenta a referência própria da codechat, a busca global e o resumo de operações. separação visível - operações atuais usam as tags funcionais instances , connections , messages , message batches , chats , calls , media , groups e webhooks . - os 14 eventos globais de lote aparecem no objeto webhooks do openapi 3.1, com headers, envelopes e exemplos próprios. - as operações pro, como message batches, usam x-codechat-plan: pro e x-codechat-plan-enforced: false . - aliases antigos ficam em tags legacy - … ; deprecated: true aparece  "
   },
   {
     "id": "heading:openapi.mdx:separacao-visivel",
@@ -1710,14 +2166,6 @@
     "description": "Recursos Pro",
     "href": "/docs/pro-endpoints#message-batch",
     "search": "message batch recursos pro  "
-  },
-  {
-    "id": "heading:pro-endpoints.mdx:chamadas",
-    "type": "Seção",
-    "title": "Chamadas",
-    "description": "Recursos Pro",
-    "href": "/docs/pro-endpoints#chamadas",
-    "search": "chamadas recursos pro  "
   },
   {
     "id": "heading:pro-endpoints.mdx:solicitacao-de-pagamento",
@@ -2267,9 +2715,9 @@
     "id": "doc:websocket.mdx",
     "type": "Guia",
     "title": "WebSocket de eventos",
-    "description": "Assinatura em tempo real de eventos por instância e eventos globais de Message Batch. O WebSocket entrega, em tempo real e em modo best-effort, o mesmo JSON serializado para os webhooks. Headers HTTP de webhook nao sao enviados pelo WebSocket. URLs Local: Producao deve usar wss:// : Cada conexao assina exatamente um evento por query string. Nao ha wildcard, , multiplos eventos separados por virgula ou troca de assinatura depois do upgrade. Autenticacao /ws/instance/events aceita somente JWT de instancia. O token e validado com HS256 e AUTHENTICATION JWT SECRET , precisa conter instanceName , precisa pertencer ao registro Auth.token da instancia encontrada e entrega apenas eventos desse Instance.id . Quando AUTHENTICATION JWT EXPIRES IN 0 , a expiracao do token de instancia e ",
+    "description": "Assinatura em tempo real de eventos por instância e eventos globais de Message Batch. O WebSocket entrega, em tempo real e em modo best-effort, o mesmo JSON serializado para os webhooks. Headers HTTP de webhook nao sao enviados pelo WebSocket. URLs Local: Producao deve usar wss:// : Cada conexao de eventos assina exatamente um evento por query string. Nao ha wildcard, , multiplos eventos separados por virgula ou troca de assinatura depois do upgrade. A rota /ws/instance/ /calls/ /media nao assina eventos; ela transporta midia binaria da chamada. Autenticacao /ws/instance/events aceita somente JWT de instancia. O token e validado com HS256 e AUTHENTICATION JWT SECRET , precisa conter instanceName , precisa pertencer ao registro Auth.token da instancia encontrada e entrega apen",
     "href": "/docs/websocket",
-    "search": "websocket de eventos assinatura em tempo real de eventos por instância e eventos globais de message batch. o websocket entrega, em tempo real e em modo best-effort, o mesmo json serializado para os webhooks. headers http de webhook nao sao enviados pelo websocket. urls local: producao deve usar wss:// : cada conexao assina exatamente um evento por query string. nao ha wildcard, , multiplos eventos separados por virgula ou troca de assinatura depois do upgrade. autenticacao /ws/instance/events aceita somente jwt de instancia. o token e validado com hs256 e authentication jwt secret , precisa conter instancename , precisa pertencer ao registro auth.token da instancia encontrada e entrega apenas eventos desse instance.id . quando authentication jwt expires in 0 , a expiracao do token de instancia e   "
+    "search": "websocket de eventos assinatura em tempo real de eventos por instância e eventos globais de message batch. o websocket entrega, em tempo real e em modo best-effort, o mesmo json serializado para os webhooks. headers http de webhook nao sao enviados pelo websocket. urls local: producao deve usar wss:// : cada conexao de eventos assina exatamente um evento por query string. nao ha wildcard, , multiplos eventos separados por virgula ou troca de assinatura depois do upgrade. a rota /ws/instance/ /calls/ /media nao assina eventos; ela transporta midia binaria da chamada. autenticacao /ws/instance/events aceita somente jwt de instancia. o token e validado com hs256 e authentication jwt secret , precisa conter instancename , precisa pertencer ao registro auth.token da instancia encontrada e entrega apen  "
   },
   {
     "id": "heading:websocket.mdx:urls",
@@ -2294,6 +2742,14 @@
     "description": "WebSocket de eventos",
     "href": "/docs/websocket#parametros",
     "search": "parametros websocket de eventos  "
+  },
+  {
+    "id": "heading:websocket.mdx:midia-de-chamadas",
+    "type": "Seção",
+    "title": "Midia de chamadas",
+    "description": "WebSocket de eventos",
+    "href": "/docs/websocket#midia-de-chamadas",
+    "search": "midia de chamadas websocket de eventos  "
   },
   {
     "id": "heading:websocket.mdx:eventos-de-instancia",
@@ -2354,92 +2810,92 @@
   {
     "id": "operation:get:/health",
     "type": "ATUAL",
-    "title": "Verifica se o processo estÃ¡ ativo",
+    "title": "Verifica se o processo está ativo",
     "description": "System getHealth",
     "href": "/api-reference/getHealth",
     "method": "GET",
     "path": "/health",
-    "search": "verifica se o processo estã¡ ativo system gethealth get /health"
+    "search": "verifica se o processo está ativo system gethealth get /health"
   },
   {
     "id": "operation:get:/ready",
     "type": "ATUAL",
-    "title": "Verifica dependÃªncias necessÃ¡rias para receber trÃ¡fego",
+    "title": "Verifica dependências necessárias para receber tráfego",
     "description": "System getReadiness",
     "href": "/api-reference/getReadiness",
     "method": "GET",
     "path": "/ready",
-    "search": "verifica dependãªncias necessã¡rias para receber trã¡fego system getreadiness get /ready"
+    "search": "verifica dependências necessárias para receber tráfego system getreadiness get /ready"
   },
   {
     "id": "operation:get:/instance",
     "type": "ATUAL",
-    "title": "Lista instÃ¢ncias",
+    "title": "Lista instâncias",
     "description": "Instances listInstances InstanceFilter",
     "href": "/api-reference/listInstances",
     "method": "GET",
     "path": "/instance",
-    "search": "lista instã¢ncias instances listinstances instancefilter get /instance"
+    "search": "lista instâncias instances listinstances instancefilter get /instance"
   },
   {
     "id": "operation:post:/instance",
     "type": "ATUAL",
-    "title": "Cria uma instÃ¢ncia",
+    "title": "Cria uma instância",
     "description": "Instances createInstance",
     "href": "/api-reference/createInstance",
     "method": "POST",
     "path": "/instance",
-    "search": "cria uma instã¢ncia instances createinstance post /instance"
+    "search": "cria uma instância instances createinstance post /instance"
   },
   {
     "id": "operation:get:/instance/{instance}",
     "type": "ATUAL",
-    "title": "Consulta uma instÃ¢ncia",
+    "title": "Consulta uma instância",
     "description": "Instances getInstance Instance",
     "href": "/api-reference/getInstance",
     "method": "GET",
     "path": "/instance/{instance}",
-    "search": "consulta uma instã¢ncia instances getinstance instance get /instance/{instance}"
+    "search": "consulta uma instância instances getinstance instance get /instance/{instance}"
   },
   {
     "id": "operation:delete:/instance/{instance}",
     "type": "ATUAL",
-    "title": "Exclui uma instÃ¢ncia",
+    "title": "Exclui uma instância",
     "description": "Instances deleteInstance Instance Force",
     "href": "/api-reference/deleteInstance",
     "method": "DELETE",
     "path": "/instance/{instance}",
-    "search": "exclui uma instã¢ncia instances deleteinstance instance force delete /instance/{instance}"
+    "search": "exclui uma instância instances deleteinstance instance force delete /instance/{instance}"
   },
   {
     "id": "operation:get:/instance/{instance}/connection/status",
     "type": "ATUAL",
-    "title": "Consulta o estado da conexÃ£o",
+    "title": "Consulta o estado da conexão",
     "description": "Connections getConnectionStatus Instance",
     "href": "/api-reference/getConnectionStatus",
     "method": "GET",
     "path": "/instance/{instance}/connection/status",
-    "search": "consulta o estado da conexã£o connections getconnectionstatus instance get /instance/{instance}/connection/status"
+    "search": "consulta o estado da conexão connections getconnectionstatus instance get /instance/{instance}/connection/status"
   },
   {
     "id": "operation:get:/instance/{instance}/connect",
     "type": "ATUAL",
-    "title": "Inicia ou acompanha conexÃ£o por QR Code",
+    "title": "Inicia ou acompanha conexão por QR Code",
     "description": "Connections connectInstanceByQrGet Instance",
     "href": "/api-reference/connectInstanceByQrGet",
     "method": "GET",
     "path": "/instance/{instance}/connect",
-    "search": "inicia ou acompanha conexã£o por qr code connections connectinstancebyqrget instance get /instance/{instance}/connect"
+    "search": "inicia ou acompanha conexão por qr code connections connectinstancebyqrget instance get /instance/{instance}/connect"
   },
   {
     "id": "operation:post:/instance/{instance}/connect",
     "type": "ATUAL",
-    "title": "Inicia ou acompanha conexÃ£o por QR Code",
+    "title": "Inicia ou acompanha conexão por QR Code",
     "description": "Connections connectInstanceByQrPost Instance",
     "href": "/api-reference/connectInstanceByQrPost",
     "method": "POST",
     "path": "/instance/{instance}/connect",
-    "search": "inicia ou acompanha conexã£o por qr code connections connectinstancebyqrpost instance post /instance/{instance}/connect"
+    "search": "inicia ou acompanha conexão por qr code connections connectinstancebyqrpost instance post /instance/{instance}/connect"
   },
   {
     "id": "operation:get:/instance/{instance}/connect/code/{phoneNumber}",
@@ -2464,12 +2920,12 @@
   {
     "id": "operation:post:/instance/{instance}/connect/passkey/challenge",
     "type": "ATUAL",
-    "title": "ObtÃ©m challenge WebAuthn",
+    "title": "Obtém challenge WebAuthn",
     "description": "Connections createPasskeyChallenge Instance",
     "href": "/api-reference/createPasskeyChallenge",
     "method": "POST",
     "path": "/instance/{instance}/connect/passkey/challenge",
-    "search": "obtã©m challenge webauthn connections createpasskeychallenge instance post /instance/{instance}/connect/passkey/challenge"
+    "search": "obtém challenge webauthn connections createpasskeychallenge instance post /instance/{instance}/connect/passkey/challenge"
   },
   {
     "id": "operation:post:/instance/{instance}/connect/passkey/assertion",
@@ -2484,22 +2940,22 @@
   {
     "id": "operation:delete:/instance/{instance}/logout/{instanceName}",
     "type": "ATUAL",
-    "title": "Desconecta a sessÃ£o WhatsApp",
-    "description": "A rota possui dois nomes de instÃ¢ncia. O middleware e o handler preferem {instanceName}; envie o mesmo valor nos dois segmentos. Connections logoutInstance Instance LegacyInstanceName",
+    "title": "Desconecta a sessão WhatsApp",
+    "description": "A rota possui dois nomes de instância. O middleware e o handler preferem {instanceName}; envie o mesmo valor nos dois segmentos. Connections logoutInstance Instance LegacyInstanceName",
     "href": "/api-reference/logoutInstance",
     "method": "DELETE",
     "path": "/instance/{instance}/logout/{instanceName}",
-    "search": "desconecta a sessã£o whatsapp a rota possui dois nomes de instã¢ncia. o middleware e o handler preferem {instancename}; envie o mesmo valor nos dois segmentos. connections logoutinstance instance legacyinstancename delete /instance/{instance}/logout/{instancename}"
+    "search": "desconecta a sessão whatsapp a rota possui dois nomes de instância. o middleware e o handler preferem {instancename}; envie o mesmo valor nos dois segmentos. connections logoutinstance instance legacyinstancename delete /instance/{instance}/logout/{instancename}"
   },
   {
     "id": "operation:post:/instance/{instance}/chat/is-account",
     "type": "ATUAL",
-    "title": "Verifica nÃºmeros cadastrados no WhatsApp",
+    "title": "Verifica números cadastrados no WhatsApp",
     "description": "Chats checkWhatsAppAccounts Instance",
     "href": "/api-reference/checkWhatsAppAccounts",
     "method": "POST",
     "path": "/instance/{instance}/chat/is-account",
-    "search": "verifica nãºmeros cadastrados no whatsapp chats checkwhatsappaccounts instance post /instance/{instance}/chat/is-account"
+    "search": "verifica números cadastrados no whatsapp chats checkwhatsappaccounts instance post /instance/{instance}/chat/is-account"
   },
   {
     "id": "operation:patch:/instance/{instance}/chat/read-message",
@@ -2594,42 +3050,42 @@
   {
     "id": "operation:post:/instance/{instance}/send/media",
     "type": "ATUAL",
-    "title": "Envia mÃ­dia por URL ou upload antecipado",
+    "title": "Envia mídia por URL ou upload antecipado",
     "description": "Messages sendMediaMessage Instance",
     "href": "/api-reference/sendMediaMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/media",
-    "search": "envia mã­dia por url ou upload antecipado messages sendmediamessage instance post /instance/{instance}/send/media"
+    "search": "envia mídia por url ou upload antecipado messages sendmediamessage instance post /instance/{instance}/send/media"
   },
   {
     "id": "operation:post:/instance/{instance}/send/media-file",
     "type": "ATUAL",
-    "title": "Envia mÃ­dia multipart",
+    "title": "Envia mídia multipart",
     "description": "Messages sendMediaFileMessage Instance",
     "href": "/api-reference/sendMediaFileMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/media-file",
-    "search": "envia mã­dia multipart messages sendmediafilemessage instance post /instance/{instance}/send/media-file"
+    "search": "envia mídia multipart messages sendmediafilemessage instance post /instance/{instance}/send/media-file"
   },
   {
     "id": "operation:post:/instance/{instance}/send/ppt",
     "type": "ATUAL",
-    "title": "Envia Ã¡udio Push-to-Talk por URL",
+    "title": "Envia áudio Push-to-Talk por URL",
     "description": "Messages sendPushToTalkMessage Instance",
     "href": "/api-reference/sendPushToTalkMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/ppt",
-    "search": "envia ã¡udio push-to-talk por url messages sendpushtotalkmessage instance post /instance/{instance}/send/ppt"
+    "search": "envia áudio push-to-talk por url messages sendpushtotalkmessage instance post /instance/{instance}/send/ppt"
   },
   {
     "id": "operation:post:/instance/{instance}/send/ppt-file",
     "type": "ATUAL",
-    "title": "Envia Ã¡udio Push-to-Talk multipart",
+    "title": "Envia áudio Push-to-Talk multipart",
     "description": "Messages sendPushToTalkFileMessage Instance",
     "href": "/api-reference/sendPushToTalkFileMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/ppt-file",
-    "search": "envia ã¡udio push-to-talk multipart messages sendpushtotalkfilemessage instance post /instance/{instance}/send/ppt-file"
+    "search": "envia áudio push-to-talk multipart messages sendpushtotalkfilemessage instance post /instance/{instance}/send/ppt-file"
   },
   {
     "id": "operation:post:/instance/{instance}/send/contact",
@@ -2644,52 +3100,52 @@
   {
     "id": "operation:post:/instance/{instance}/send/location",
     "type": "ATUAL",
-    "title": "Envia localizaÃ§Ã£o",
+    "title": "Envia localização",
     "description": "Messages sendLocationMessage Instance",
     "href": "/api-reference/sendLocationMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/location",
-    "search": "envia localizaã§ã£o messages sendlocationmessage instance post /instance/{instance}/send/location"
+    "search": "envia localização messages sendlocationmessage instance post /instance/{instance}/send/location"
   },
   {
     "id": "operation:post:/instance/{instance}/send/reaction",
     "type": "ATUAL",
-    "title": "Envia ou remove reaÃ§Ã£o",
+    "title": "Envia ou remove reação",
     "description": "Messages sendReactionMessage Instance",
     "href": "/api-reference/sendReactionMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/reaction",
-    "search": "envia ou remove reaã§ã£o messages sendreactionmessage instance post /instance/{instance}/send/reaction"
+    "search": "envia ou remove reação messages sendreactionmessage instance post /instance/{instance}/send/reaction"
   },
   {
     "id": "operation:post:/instance/{instance}/media/data",
     "type": "ATUAL",
-    "title": "Baixa mÃ­dia de uma mensagem",
+    "title": "Baixa mídia de uma mensagem",
     "description": "Media downloadMessageMedia Instance Binary",
     "href": "/api-reference/downloadMessageMedia",
     "method": "POST",
     "path": "/instance/{instance}/media/data",
-    "search": "baixa mã­dia de uma mensagem media downloadmessagemedia instance binary post /instance/{instance}/media/data"
+    "search": "baixa mídia de uma mensagem media downloadmessagemedia instance binary post /instance/{instance}/media/data"
   },
   {
     "id": "operation:get:/instance/{instance}/media/uploads",
     "type": "ATUAL",
     "title": "Lista uploads antecipados",
-    "description": "Lista uploads com paginaÃ§Ã£o bidirecional. Use nextCursor para avanÃ§ar ou previousCursor para voltar; eles sÃ£o mutuamente exclusivos. O parÃ¢metro cursor Ã© um alias legado de nextCursor. Media listMediaUploads Instance ExternalID MediaTypeFilter Expired CreatedFrom CreatedTo Limit MediaUploadNextCursor MediaUploadPreviousCursor Cursor",
+    "description": "Lista uploads com paginação bidirecional. Use nextCursor para avançar ou previousCursor para voltar; eles são mutuamente exclusivos. O parâmetro cursor é um alias legado de nextCursor. Media listMediaUploads Instance ExternalID MediaTypeFilter Expired CreatedFrom CreatedTo Limit MediaUploadNextCursor MediaUploadPreviousCursor Cursor",
     "href": "/api-reference/listMediaUploads",
     "method": "GET",
     "path": "/instance/{instance}/media/uploads",
-    "search": "lista uploads antecipados lista uploads com paginaã§ã£o bidirecional. use nextcursor para avanã§ar ou previouscursor para voltar; eles sã£o mutuamente exclusivos. o parã¢metro cursor ã© um alias legado de nextcursor. media listmediauploads instance externalid mediatypefilter expired createdfrom createdto limit mediauploadnextcursor mediauploadpreviouscursor cursor get /instance/{instance}/media/uploads"
+    "search": "lista uploads antecipados lista uploads com paginação bidirecional. use nextcursor para avançar ou previouscursor para voltar; eles são mutuamente exclusivos. o parâmetro cursor é um alias legado de nextcursor. media listmediauploads instance externalid mediatypefilter expired createdfrom createdto limit mediauploadnextcursor mediauploadpreviouscursor cursor get /instance/{instance}/media/uploads"
   },
   {
     "id": "operation:post:/instance/{instance}/media/uploads",
     "type": "ATUAL",
-    "title": "Faz upload antecipado de mÃ­dia",
+    "title": "Faz upload antecipado de mídia",
     "description": "Media createMediaUpload Instance",
     "href": "/api-reference/createMediaUpload",
     "method": "POST",
     "path": "/instance/{instance}/media/uploads",
-    "search": "faz upload antecipado de mã­dia media createmediaupload instance post /instance/{instance}/media/uploads"
+    "search": "faz upload antecipado de mídia media createmediaupload instance post /instance/{instance}/media/uploads"
   },
   {
     "id": "operation:get:/instance/{instance}/media/{id}/uploads",
@@ -2734,22 +3190,22 @@
   {
     "id": "operation:get:/instance/{instance}/group/invitation-code",
     "type": "ATUAL",
-    "title": "Consulta cÃ³digo de convite",
+    "title": "Consulta código de convite",
     "description": "Groups getGroupInviteCode Instance GroupJID",
     "href": "/api-reference/getGroupInviteCode",
     "method": "GET",
     "path": "/instance/{instance}/group/invitation-code",
-    "search": "consulta cã³digo de convite groups getgroupinvitecode instance groupjid get /instance/{instance}/group/invitation-code"
+    "search": "consulta código de convite groups getgroupinvitecode instance groupjid get /instance/{instance}/group/invitation-code"
   },
   {
     "id": "operation:put:/instance/{instance}/group/revoke-invitation",
     "type": "ATUAL",
-    "title": "Revoga cÃ³digo de convite",
+    "title": "Revoga código de convite",
     "description": "Groups revokeGroupInviteCode Instance GroupJID",
     "href": "/api-reference/revokeGroupInviteCode",
     "method": "PUT",
     "path": "/instance/{instance}/group/revoke-invitation",
-    "search": "revoga cã³digo de convite groups revokegroupinvitecode instance groupjid put /instance/{instance}/group/revoke-invitation"
+    "search": "revoga código de convite groups revokegroupinvitecode instance groupjid put /instance/{instance}/group/revoke-invitation"
   },
   {
     "id": "operation:put:/instance/{instance}/group/update-participants",
@@ -2774,42 +3230,42 @@
   {
     "id": "operation:get:/instance/{instance}/webhook",
     "type": "ATUAL",
-    "title": "Consulta webhook da instÃ¢ncia",
+    "title": "Consulta webhook da instância",
     "description": "Webhooks getInstanceWebhook Instance",
     "href": "/api-reference/getInstanceWebhook",
     "method": "GET",
     "path": "/instance/{instance}/webhook",
-    "search": "consulta webhook da instã¢ncia webhooks getinstancewebhook instance get /instance/{instance}/webhook"
+    "search": "consulta webhook da instância webhooks getinstancewebhook instance get /instance/{instance}/webhook"
   },
   {
     "id": "operation:put:/instance/{instance}/webhook",
     "type": "ATUAL",
-    "title": "Configura webhook da instÃ¢ncia",
+    "title": "Configura webhook da instância",
     "description": "Webhooks setInstanceWebhook Instance",
     "href": "/api-reference/setInstanceWebhook",
     "method": "PUT",
     "path": "/instance/{instance}/webhook",
-    "search": "configura webhook da instã¢ncia webhooks setinstancewebhook instance put /instance/{instance}/webhook"
+    "search": "configura webhook da instância webhooks setinstancewebhook instance put /instance/{instance}/webhook"
   },
   {
     "id": "operation:post:/instance/{instance}/send/payment-request",
     "type": "PRO",
-    "title": "Envia solicitaÃ§Ã£o de pagamento",
+    "title": "Envia solicitação de pagamento",
     "description": "CodeChat API Go Pro sendPaymentRequest Instance",
     "href": "/api-reference/sendPaymentRequest",
     "method": "POST",
     "path": "/instance/{instance}/send/payment-request",
-    "search": "envia solicitaã§ã£o de pagamento codechat api go pro sendpaymentrequest instance post /instance/{instance}/send/payment-request"
+    "search": "envia solicitação de pagamento codechat api go pro sendpaymentrequest instance post /instance/{instance}/send/payment-request"
   },
   {
     "id": "operation:post:/instance/{instance}/send/review-order",
     "type": "PRO",
     "title": "Atualiza o status de um pedido",
-    "description": "Atualiza uma mensagem de pedido jÃ¡ persistida. O body, as validaÃ§Ãµes e a resposta sÃ£o compartilhados com o alias legado PATCH /message/reviewOrder/{instanceName}. CodeChat API Go Pro reviewOrder Instance",
+    "description": "Atualiza uma mensagem de pedido já persistida. O body, as validações e a resposta são compartilhados com o alias legado PATCH /message/reviewOrder/{instanceName}. CodeChat API Go Pro reviewOrder Instance",
     "href": "/api-reference/reviewOrder",
     "method": "POST",
     "path": "/instance/{instance}/send/review-order",
-    "search": "atualiza o status de um pedido atualiza uma mensagem de pedido jã¡ persistida. o body, as validaã§ãµes e a resposta sã£o compartilhados com o alias legado patch /message/revieworder/{instancename}. codechat api go pro revieworder instance post /instance/{instance}/send/review-order"
+    "search": "atualiza o status de um pedido atualiza uma mensagem de pedido já persistida. o body, as validações e a resposta são compartilhados com o alias legado patch /message/revieworder/{instancename}. codechat api go pro revieworder instance post /instance/{instance}/send/review-order"
   },
   {
     "id": "operation:post:/instance/{instance}/send/pix",
@@ -2824,72 +3280,72 @@
   {
     "id": "operation:post:/instance/{instance}/send/form",
     "type": "PRO",
-    "title": "Envia formulÃ¡rio nativo",
+    "title": "Envia formulário nativo",
     "description": "CodeChat API Go Pro sendFormMessage Instance",
     "href": "/api-reference/sendFormMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/form",
-    "search": "envia formulã¡rio nativo codechat api go pro sendformmessage instance post /instance/{instance}/send/form"
+    "search": "envia formulário nativo codechat api go pro sendformmessage instance post /instance/{instance}/send/form"
   },
   {
     "id": "operation:post:/instance/{instance}/send/{type}",
     "type": "PRO",
     "title": "Envia mensagem interativa",
-    "description": "Tipos confirmados: reply, copy, url, buttons e carousel. Esta rota Ã© registrada depois de todas as rotas /send explÃ­citas. CodeChat API Go Pro sendInteractiveMessage Instance InteractiveType",
+    "description": "Tipos confirmados: reply, copy, url, buttons e carousel. Esta rota é registrada depois de todas as rotas /send explícitas. CodeChat API Go Pro sendInteractiveMessage Instance InteractiveType",
     "href": "/api-reference/sendInteractiveMessage",
     "method": "POST",
     "path": "/instance/{instance}/send/{type}",
-    "search": "envia mensagem interativa tipos confirmados: reply, copy, url, buttons e carousel. esta rota ã© registrada depois de todas as rotas /send explã­citas. codechat api go pro sendinteractivemessage instance interactivetype post /instance/{instance}/send/{type}"
+    "search": "envia mensagem interativa tipos confirmados: reply, copy, url, buttons e carousel. esta rota é registrada depois de todas as rotas /send explícitas. codechat api go pro sendinteractivemessage instance interactivetype post /instance/{instance}/send/{type}"
   },
   {
     "id": "operation:post:/instance/create",
     "type": "LEGADO",
-    "title": "Cria uma instÃ¢ncia pelo alias legado",
+    "title": "Cria uma instância pelo alias legado",
     "description": "Legacy - Instances legacyCreateInstance",
     "href": "/api-reference/legacyCreateInstance",
     "method": "POST",
     "path": "/instance/create",
-    "search": "cria uma instã¢ncia pelo alias legado legacy - instances legacycreateinstance post /instance/create"
+    "search": "cria uma instância pelo alias legado legacy - instances legacycreateinstance post /instance/create"
   },
   {
     "id": "operation:get:/instance/fetchInstances",
     "type": "LEGADO",
-    "title": "Lista instÃ¢ncias pelo alias legado",
+    "title": "Lista instâncias pelo alias legado",
     "description": "Legacy - Instances legacyListInstances InstanceFilter",
     "href": "/api-reference/legacyListInstances",
     "method": "GET",
     "path": "/instance/fetchInstances",
-    "search": "lista instã¢ncias pelo alias legado legacy - instances legacylistinstances instancefilter get /instance/fetchinstances"
+    "search": "lista instâncias pelo alias legado legacy - instances legacylistinstances instancefilter get /instance/fetchinstances"
   },
   {
     "id": "operation:get:/instance/fetchInstance/{instanceName}",
     "type": "LEGADO",
-    "title": "Consulta uma instÃ¢ncia pelo alias legado",
+    "title": "Consulta uma instância pelo alias legado",
     "description": "Legacy - Instances legacyGetInstance LegacyInstanceName",
     "href": "/api-reference/legacyGetInstance",
     "method": "GET",
     "path": "/instance/fetchInstance/{instanceName}",
-    "search": "consulta uma instã¢ncia pelo alias legado legacy - instances legacygetinstance legacyinstancename get /instance/fetchinstance/{instancename}"
+    "search": "consulta uma instância pelo alias legado legacy - instances legacygetinstance legacyinstancename get /instance/fetchinstance/{instancename}"
   },
   {
     "id": "operation:put:/instance/refreshToken/{instanceName}",
     "type": "ATUAL",
-    "title": "Rotaciona o JWT da instÃ¢ncia",
-    "description": "Rota antiga ainda sem substituto atual equivalente; por isso nÃ£o estÃ¡ marcada como deprecated. Legacy - Instances refreshInstanceToken LegacyInstanceName",
+    "title": "Rotaciona o JWT da instância",
+    "description": "Rota antiga ainda sem substituto atual equivalente; por isso não está marcada como deprecated. Legacy - Instances refreshInstanceToken LegacyInstanceName",
     "href": "/api-reference/refreshInstanceToken",
     "method": "PUT",
     "path": "/instance/refreshToken/{instanceName}",
-    "search": "rotaciona o jwt da instã¢ncia rota antiga ainda sem substituto atual equivalente; por isso nã£o estã¡ marcada como deprecated. legacy - instances refreshinstancetoken legacyinstancename put /instance/refreshtoken/{instancename}"
+    "search": "rotaciona o jwt da instância rota antiga ainda sem substituto atual equivalente; por isso não está marcada como deprecated. legacy - instances refreshinstancetoken legacyinstancename put /instance/refreshtoken/{instancename}"
   },
   {
     "id": "operation:delete:/instance/delete/{instanceName}",
     "type": "LEGADO",
-    "title": "Exclui uma instÃ¢ncia pelo alias legado",
+    "title": "Exclui uma instância pelo alias legado",
     "description": "Legacy - Instances legacyDeleteInstance LegacyInstanceName Force",
     "href": "/api-reference/legacyDeleteInstance",
     "method": "DELETE",
     "path": "/instance/delete/{instanceName}",
-    "search": "exclui uma instã¢ncia pelo alias legado legacy - instances legacydeleteinstance legacyinstancename force delete /instance/delete/{instancename}"
+    "search": "exclui uma instância pelo alias legado legacy - instances legacydeleteinstance legacyinstancename force delete /instance/delete/{instancename}"
   },
   {
     "id": "operation:get:/instance/connect/{instanceName}/code/{phoneNumber}",
@@ -2914,12 +3370,12 @@
   {
     "id": "operation:post:/instance/connect/{instanceName}/passkey/challenge",
     "type": "LEGADO",
-    "title": "ObtÃ©m challenge pela rota legada",
+    "title": "Obtém challenge pela rota legada",
     "description": "Legacy - Connections legacyCreatePasskeyChallenge LegacyInstanceName",
     "href": "/api-reference/legacyCreatePasskeyChallenge",
     "method": "POST",
     "path": "/instance/connect/{instanceName}/passkey/challenge",
-    "search": "obtã©m challenge pela rota legada legacy - connections legacycreatepasskeychallenge legacyinstancename post /instance/connect/{instancename}/passkey/challenge"
+    "search": "obtém challenge pela rota legada legacy - connections legacycreatepasskeychallenge legacyinstancename post /instance/connect/{instancename}/passkey/challenge"
   },
   {
     "id": "operation:post:/instance/connect/{instanceName}/passkey/assertion",
@@ -3004,22 +3460,22 @@
   {
     "id": "operation:post:/message/sendMedia/{instanceName}",
     "type": "LEGADO",
-    "title": "Envia mÃ­dia pelo alias legado",
+    "title": "Envia mídia pelo alias legado",
     "description": "Legacy - Messages legacySendMediaMessage LegacyInstanceName",
     "href": "/api-reference/legacySendMediaMessage",
     "method": "POST",
     "path": "/message/sendMedia/{instanceName}",
-    "search": "envia mã­dia pelo alias legado legacy - messages legacysendmediamessage legacyinstancename post /message/sendmedia/{instancename}"
+    "search": "envia mídia pelo alias legado legacy - messages legacysendmediamessage legacyinstancename post /message/sendmedia/{instancename}"
   },
   {
     "id": "operation:post:/message/sendMediaFile/{instanceName}",
     "type": "LEGADO",
-    "title": "Envia mÃ­dia multipart pelo alias legado",
+    "title": "Envia mídia multipart pelo alias legado",
     "description": "Legacy - Messages legacySendMediaFileMessage LegacyInstanceName",
     "href": "/api-reference/legacySendMediaFileMessage",
     "method": "POST",
     "path": "/message/sendMediaFile/{instanceName}",
-    "search": "envia mã­dia multipart pelo alias legado legacy - messages legacysendmediafilemessage legacyinstancename post /message/sendmediafile/{instancename}"
+    "search": "envia mídia multipart pelo alias legado legacy - messages legacysendmediafilemessage legacyinstancename post /message/sendmediafile/{instancename}"
   },
   {
     "id": "operation:post:/message/sendWhatsAppAudio/{instanceName}",
@@ -3054,32 +3510,32 @@
   {
     "id": "operation:post:/message/sendLocation/{instanceName}",
     "type": "LEGADO",
-    "title": "Envia localizaÃ§Ã£o pelo alias legado",
+    "title": "Envia localização pelo alias legado",
     "description": "Legacy - Messages legacySendLocationMessage LegacyInstanceName",
     "href": "/api-reference/legacySendLocationMessage",
     "method": "POST",
     "path": "/message/sendLocation/{instanceName}",
-    "search": "envia localizaã§ã£o pelo alias legado legacy - messages legacysendlocationmessage legacyinstancename post /message/sendlocation/{instancename}"
+    "search": "envia localização pelo alias legado legacy - messages legacysendlocationmessage legacyinstancename post /message/sendlocation/{instancename}"
   },
   {
     "id": "operation:post:/message/sendReaction/{instanceName}",
     "type": "LEGADO",
-    "title": "Envia reaÃ§Ã£o pelo alias legado",
+    "title": "Envia reação pelo alias legado",
     "description": "Legacy - Messages legacySendReactionMessage LegacyInstanceName",
     "href": "/api-reference/legacySendReactionMessage",
     "method": "POST",
     "path": "/message/sendReaction/{instanceName}",
-    "search": "envia reaã§ã£o pelo alias legado legacy - messages legacysendreactionmessage legacyinstancename post /message/sendreaction/{instancename}"
+    "search": "envia reação pelo alias legado legacy - messages legacysendreactionmessage legacyinstancename post /message/sendreaction/{instancename}"
   },
   {
     "id": "operation:patch:/message/reviewOrder/{instanceName}",
     "type": "LEGADO",
     "title": "Atualiza pedido pelo alias legado",
-    "description": "Alias legado ainda registrado para o mesmo handler de revisÃ£o de pedido da rota atual. Somente mÃ©todo e caminho diferem. Legacy - Messages legacyReviewOrder LegacyInstanceName",
+    "description": "Alias legado ainda registrado para o mesmo handler de revisão de pedido da rota atual. Somente método e caminho diferem. Legacy - Messages legacyReviewOrder LegacyInstanceName",
     "href": "/api-reference/legacyReviewOrder",
     "method": "PATCH",
     "path": "/message/reviewOrder/{instanceName}",
-    "search": "atualiza pedido pelo alias legado alias legado ainda registrado para o mesmo handler de revisã£o de pedido da rota atual. somente mã©todo e caminho diferem. legacy - messages legacyrevieworder legacyinstancename patch /message/revieworder/{instancename}"
+    "search": "atualiza pedido pelo alias legado alias legado ainda registrado para o mesmo handler de revisão de pedido da rota atual. somente método e caminho diferem. legacy - messages legacyrevieworder legacyinstancename patch /message/revieworder/{instancename}"
   },
   {
     "id": "operation:post:/chat/whatsappNumbers/{instanceName}",
@@ -3144,12 +3600,12 @@
   {
     "id": "operation:post:/chat/mediaData/{instanceName}",
     "type": "LEGADO",
-    "title": "Baixa mÃ­dia pelo alias legado",
+    "title": "Baixa mídia pelo alias legado",
     "description": "Legacy - Chats legacyDownloadMessageMedia LegacyInstanceName Binary",
     "href": "/api-reference/legacyDownloadMessageMedia",
     "method": "POST",
     "path": "/chat/mediaData/{instanceName}",
-    "search": "baixa mã­dia pelo alias legado legacy - chats legacydownloadmessagemedia legacyinstancename binary post /chat/mediadata/{instancename}"
+    "search": "baixa mídia pelo alias legado legacy - chats legacydownloadmessagemedia legacyinstancename binary post /chat/mediadata/{instancename}"
   },
   {
     "id": "operation:post:/chat/findMessages/{instanceName}",
@@ -3235,105 +3691,105 @@
     "id": "operation:post:/message/batches",
     "type": "PRO",
     "title": "Cria um lote persistente",
-    "description": "Persiste a definiÃ§Ã£o, os destinatÃ¡rios normalizados, as instÃ¢ncias permitidas e a agenda opcional. Com autoStart=true, o estado inicial Ã© QUEUED, SCHEDULED ou WAITING_FOR_WINDOW conforme a janela. Message Batches createMessageBatch",
+    "description": "Persiste a definição, os destinatários normalizados, as instâncias permitidas e a agenda opcional. Com autoStart=true, o estado inicial é QUEUED, SCHEDULED ou WAITING_FOR_WINDOW conforme a janela. Message Batches createMessageBatch",
     "href": "/api-reference/createMessageBatch",
     "method": "POST",
     "path": "/message/batches",
-    "search": "cria um lote persistente persiste a definiã§ã£o, os destinatã¡rios normalizados, as instã¢ncias permitidas e a agenda opcional. com autostart=true, o estado inicial ã© queued, scheduled ou waiting_for_window conforme a janela. message batches createmessagebatch post /message/batches"
+    "search": "cria um lote persistente persiste a definição, os destinatários normalizados, as instâncias permitidas e a agenda opcional. com autostart=true, o estado inicial é queued, scheduled ou waiting_for_window conforme a janela. message batches createmessagebatch post /message/batches"
   },
   {
     "id": "operation:post:/message/batches/list",
     "type": "PRO",
     "title": "Lista lotes",
-    "description": "Lista lotes por filtros enviados no body e cursor opaco. nextCursor e previousCursor sÃ£o mutuamente exclusivos; o limite padrÃ£o Ã© 50 e o mÃ¡ximo Ã© 200. Message Batches listMessageBatches",
+    "description": "Lista lotes por filtros enviados no body e cursor opaco. nextCursor e previousCursor são mutuamente exclusivos; o limite padrão é 50 e o máximo é 200. Message Batches listMessageBatches",
     "href": "/api-reference/listMessageBatches",
     "method": "POST",
     "path": "/message/batches/list",
-    "search": "lista lotes lista lotes por filtros enviados no body e cursor opaco. nextcursor e previouscursor sã£o mutuamente exclusivos; o limite padrã£o ã© 50 e o mã¡ximo ã© 200. message batches listmessagebatches post /message/batches/list"
+    "search": "lista lotes lista lotes por filtros enviados no body e cursor opaco. nextcursor e previouscursor são mutuamente exclusivos; o limite padrão é 50 e o máximo é 200. message batches listmessagebatches post /message/batches/list"
   },
   {
     "id": "operation:get:/message/batches/{batchId}",
     "type": "PRO",
     "title": "Consulta um lote sem incorporar seus itens",
-    "description": "Retorna a definiÃ§Ã£o completa do lote, incluindo message e options, mas mantÃ©m os itens em recursos paginados separados. Message Batches getMessageBatch MessageBatchID",
+    "description": "Retorna a definição completa do lote, incluindo message e options, mas mantém os itens em recursos paginados separados. Message Batches getMessageBatch MessageBatchID",
     "href": "/api-reference/getMessageBatch",
     "method": "GET",
     "path": "/message/batches/{batchId}",
-    "search": "consulta um lote sem incorporar seus itens retorna a definiã§ã£o completa do lote, incluindo message e options, mas mantã©m os itens em recursos paginados separados. message batches getmessagebatch messagebatchid get /message/batches/{batchid}"
+    "search": "consulta um lote sem incorporar seus itens retorna a definição completa do lote, incluindo message e options, mas mantém os itens em recursos paginados separados. message batches getmessagebatch messagebatchid get /message/batches/{batchid}"
   },
   {
     "id": "operation:get:/message/batches/{batchId}/processing",
     "type": "PRO",
     "title": "Consulta o processamento completo de um lote",
-    "description": "Retorna a definiÃ§Ã£o do lote, mensagem, opÃ§Ãµes, instÃ¢ncias, contadores e todos os destinatÃ¡rios sem paginaÃ§Ã£o. Cada destinatÃ¡rio inclui seu resultado e o histÃ³rico ordenado de tentativas, com payloads, IDs e erros persistidos. A resposta pode ser grande em lotes com muitos destinatÃ¡rios. Message Batches getMessageBatchProcessing MessageBatchID",
+    "description": "Retorna a definição do lote, mensagem, opções, instâncias, contadores e todos os destinatários sem paginação. Cada destinatário inclui seu resultado e o histórico ordenado de tentativas, com payloads, IDs e erros persistidos. A resposta pode ser grande em lotes com muitos destinatários. Message Batches getMessageBatchProcessing MessageBatchID",
     "href": "/api-reference/getMessageBatchProcessing",
     "method": "GET",
     "path": "/message/batches/{batchId}/processing",
-    "search": "consulta o processamento completo de um lote retorna a definiã§ã£o do lote, mensagem, opã§ãµes, instã¢ncias, contadores e todos os destinatã¡rios sem paginaã§ã£o. cada destinatã¡rio inclui seu resultado e o histã³rico ordenado de tentativas, com payloads, ids e erros persistidos. a resposta pode ser grande em lotes com muitos destinatã¡rios. message batches getmessagebatchprocessing messagebatchid get /message/batches/{batchid}/processing"
+    "search": "consulta o processamento completo de um lote retorna a definição do lote, mensagem, opções, instâncias, contadores e todos os destinatários sem paginação. cada destinatário inclui seu resultado e o histórico ordenado de tentativas, com payloads, ids e erros persistidos. a resposta pode ser grande em lotes com muitos destinatários. message batches getmessagebatchprocessing messagebatchid get /message/batches/{batchid}/processing"
   },
   {
     "id": "operation:get:/message/batches/{batchId}/items",
     "type": "PRO",
     "title": "Lista itens do lote",
-    "description": "Lista destinatÃ¡rios e resultados por cursor opaco. O cursor de itens Ã© derivado da posiÃ§Ã£o original do destinatÃ¡rio. Message Batches listMessageBatchItems MessageBatchID status recipient instanceName MessageBatchLimit NextCursor PreviousCursor",
+    "description": "Lista destinatários e resultados por cursor opaco. O cursor de itens é derivado da posição original do destinatário. Message Batches listMessageBatchItems MessageBatchID status recipient instanceName MessageBatchLimit NextCursor PreviousCursor",
     "href": "/api-reference/listMessageBatchItems",
     "method": "GET",
     "path": "/message/batches/{batchId}/items",
-    "search": "lista itens do lote lista destinatã¡rios e resultados por cursor opaco. o cursor de itens ã© derivado da posiã§ã£o original do destinatã¡rio. message batches listmessagebatchitems messagebatchid status recipient instancename messagebatchlimit nextcursor previouscursor get /message/batches/{batchid}/items"
+    "search": "lista itens do lote lista destinatários e resultados por cursor opaco. o cursor de itens é derivado da posição original do destinatário. message batches listmessagebatchitems messagebatchid status recipient instancename messagebatchlimit nextcursor previouscursor get /message/batches/{batchid}/items"
   },
   {
     "id": "operation:get:/message/batches/{batchId}/items/{itemId}",
     "type": "PRO",
     "title": "Consulta item e suas tentativas",
-    "description": "Retorna um destinatÃ¡rio do lote com o histÃ³rico completo de tentativas de envio. Message Batches getMessageBatchItem MessageBatchID MessageBatchItemID",
+    "description": "Retorna um destinatário do lote com o histórico completo de tentativas de envio. Message Batches getMessageBatchItem MessageBatchID MessageBatchItemID",
     "href": "/api-reference/getMessageBatchItem",
     "method": "GET",
     "path": "/message/batches/{batchId}/items/{itemId}",
-    "search": "consulta item e suas tentativas retorna um destinatã¡rio do lote com o histã³rico completo de tentativas de envio. message batches getmessagebatchitem messagebatchid messagebatchitemid get /message/batches/{batchid}/items/{itemid}"
+    "search": "consulta item e suas tentativas retorna um destinatário do lote com o histórico completo de tentativas de envio. message batches getmessagebatchitem messagebatchid messagebatchitemid get /message/batches/{batchid}/items/{itemid}"
   },
   {
     "id": "operation:get:/message/batches/{batchId}/attempts",
     "type": "PRO",
     "title": "Lista tentativas do lote",
-    "description": "Lista tentativas persistidas, incluindo indisponibilidade de instÃ¢ncia e resultados UNKNOWN apÃ³s recovery. Message Batches listMessageBatchAttempts MessageBatchID status recipient instanceName MessageBatchLimit NextCursor PreviousCursor",
+    "description": "Lista tentativas persistidas, incluindo indisponibilidade de instância e resultados UNKNOWN após recovery. Message Batches listMessageBatchAttempts MessageBatchID status recipient instanceName MessageBatchLimit NextCursor PreviousCursor",
     "href": "/api-reference/listMessageBatchAttempts",
     "method": "GET",
     "path": "/message/batches/{batchId}/attempts",
-    "search": "lista tentativas do lote lista tentativas persistidas, incluindo indisponibilidade de instã¢ncia e resultados unknown apã³s recovery. message batches listmessagebatchattempts messagebatchid status recipient instancename messagebatchlimit nextcursor previouscursor get /message/batches/{batchid}/attempts"
+    "search": "lista tentativas do lote lista tentativas persistidas, incluindo indisponibilidade de instância e resultados unknown após recovery. message batches listmessagebatchattempts messagebatchid status recipient instancename messagebatchlimit nextcursor previouscursor get /message/batches/{batchid}/attempts"
   },
   {
     "id": "operation:post:/message/batches/{batchId}/start",
     "type": "PRO",
-    "title": "Inicia ou continua o lote sem executar o loop na requisiÃ§Ã£o",
-    "description": "Inicia DRAFT, PAUSED ou INTERRUPTED respeitando a agenda: QUEUED dentro da janela, SCHEDULED antes da primeira ou WAITING_FOR_WINDOW fora dela. Ã‰ idempotente nos estados jÃ¡ ativos ou agendados. Message Batches startMessageBatch MessageBatchID",
+    "title": "Inicia ou continua o lote sem executar o loop na requisição",
+    "description": "Inicia DRAFT, PAUSED ou INTERRUPTED respeitando a agenda: QUEUED dentro da janela, SCHEDULED antes da primeira ou WAITING_FOR_WINDOW fora dela. É idempotente nos estados já ativos ou agendados. Message Batches startMessageBatch MessageBatchID",
     "href": "/api-reference/startMessageBatch",
     "method": "POST",
     "path": "/message/batches/{batchId}/start",
-    "search": "inicia ou continua o lote sem executar o loop na requisiã§ã£o inicia draft, paused ou interrupted respeitando a agenda: queued dentro da janela, scheduled antes da primeira ou waiting_for_window fora dela. ã‰ idempotente nos estados jã¡ ativos ou agendados. message batches startmessagebatch messagebatchid post /message/batches/{batchid}/start"
+    "search": "inicia ou continua o lote sem executar o loop na requisição inicia draft, paused ou interrupted respeitando a agenda: queued dentro da janela, scheduled antes da primeira ou waiting_for_window fora dela. é idempotente nos estados já ativos ou agendados. message batches startmessagebatch messagebatchid post /message/batches/{batchid}/start"
   },
   {
     "id": "operation:post:/message/batches/{batchId}/pause",
     "type": "PRO",
     "title": "Solicita pausa",
-    "description": "Persiste PAUSE_REQUESTED e retorna imediatamente. O worker conclui o item jÃ¡ confirmado e chega a PAUSED em um ponto seguro. Message Batches pauseMessageBatch MessageBatchID",
+    "description": "Persiste PAUSE_REQUESTED e retorna imediatamente. O worker conclui o item já confirmado e chega a PAUSED em um ponto seguro. Message Batches pauseMessageBatch MessageBatchID",
     "href": "/api-reference/pauseMessageBatch",
     "method": "POST",
     "path": "/message/batches/{batchId}/pause",
-    "search": "solicita pausa persiste pause_requested e retorna imediatamente. o worker conclui o item jã¡ confirmado e chega a paused em um ponto seguro. message batches pausemessagebatch messagebatchid post /message/batches/{batchid}/pause"
+    "search": "solicita pausa persiste pause_requested e retorna imediatamente. o worker conclui o item já confirmado e chega a paused em um ponto seguro. message batches pausemessagebatch messagebatchid post /message/batches/{batchid}/pause"
   },
   {
     "id": "operation:post:/message/batches/{batchId}/stop",
     "type": "PRO",
     "title": "Solicita encerramento terminal",
-    "description": "Persiste STOP_REQUESTED e retorna imediatamente. STOPPED Ã© terminal e conserva como PENDING os itens nÃ£o processados. Message Batches stopMessageBatch MessageBatchID",
+    "description": "Persiste STOP_REQUESTED e retorna imediatamente. STOPPED é terminal e conserva como PENDING os itens não processados. Message Batches stopMessageBatch MessageBatchID",
     "href": "/api-reference/stopMessageBatch",
     "method": "POST",
     "path": "/message/batches/{batchId}/stop",
-    "search": "solicita encerramento terminal persiste stop_requested e retorna imediatamente. stopped ã© terminal e conserva como pending os itens nã£o processados. message batches stopmessagebatch messagebatchid post /message/batches/{batchid}/stop"
+    "search": "solicita encerramento terminal persiste stop_requested e retorna imediatamente. stopped é terminal e conserva como pending os itens não processados. message batches stopmessagebatch messagebatchid post /message/batches/{batchid}/stop"
   },
   {
     "id": "operation:get:/call/{instanceName}",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "List calls",
     "description": "Calls listCalls InstanceName status direction peer video externalId cursor limit",
     "href": "/api-reference/listCalls",
@@ -3343,7 +3799,7 @@
   },
   {
     "id": "operation:post:/call/{instanceName}",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "Start an outbound WhatsApp call",
     "description": "Calls startCall InstanceName",
     "href": "/api-reference/startCall",
@@ -3353,7 +3809,7 @@
   },
   {
     "id": "operation:get:/call/{instanceName}/config",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "Get per-instance call settings",
     "description": "Returns stored instance settings and effective settings after global master flags are applied. Calls getInstanceCallSettings InstanceName",
     "href": "/api-reference/getInstanceCallSettings",
@@ -3363,7 +3819,7 @@
   },
   {
     "id": "operation:put:/call/{instanceName}/config",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "Replace per-instance call settings",
     "description": "Updates settings stored by instance_id. Global CALLS_* flags remain master locks and may keep effective fields disabled. Calls updateInstanceCallSettings InstanceName",
     "href": "/api-reference/updateInstanceCallSettings",
@@ -3372,8 +3828,18 @@
     "search": "replace per-instance call settings updates settings stored by instance_id. global calls_* flags remain master locks and may keep effective fields disabled. calls updateinstancecallsettings instancename put /call/{instancename}/config"
   },
   {
+    "id": "operation:get:/call/{instanceName}/active",
+    "type": "ATUAL",
+    "title": "Inspect active call slots",
+    "description": "Returns the in-memory concurrent-call slots for the instance after runtime reconciliation. Does not expose credentials, media, SRTP keys or tokens. Calls getActiveCalls InstanceName",
+    "href": "/api-reference/getActiveCalls",
+    "method": "GET",
+    "path": "/call/{instanceName}/active",
+    "search": "inspect active call slots returns the in-memory concurrent-call slots for the instance after runtime reconciliation. does not expose credentials, media, srtp keys or tokens. calls getactivecalls instancename get /call/{instancename}/active"
+  },
+  {
     "id": "operation:get:/call/{instanceName}/{callId}",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "Get one call",
     "description": "Calls getCall InstanceName CallId",
     "href": "/api-reference/getCall",
@@ -3383,7 +3849,7 @@
   },
   {
     "id": "operation:get:/call/{instanceName}/{callId}/events",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "List call events",
     "description": "Calls listCallEvents InstanceName CallId limit",
     "href": "/api-reference/listCallEvents",
@@ -3393,7 +3859,7 @@
   },
   {
     "id": "operation:post:/call/{instanceName}/{callId}/answer",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "Answer an inbound call through the API",
     "description": "Calls answerCall InstanceName CallId",
     "href": "/api-reference/answerCall",
@@ -3403,7 +3869,7 @@
   },
   {
     "id": "operation:post:/call/{instanceName}/{callId}/reject",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "Reject an inbound call through the API",
     "description": "Calls rejectManagedCall InstanceName CallId",
     "href": "/api-reference/rejectManagedCall",
@@ -3413,7 +3879,7 @@
   },
   {
     "id": "operation:post:/call/{instanceName}/{callId}/hangup",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "Hang up a call through the API",
     "description": "Calls hangupCall InstanceName CallId",
     "href": "/api-reference/hangupCall",
@@ -3423,7 +3889,7 @@
   },
   {
     "id": "operation:get:/call/{instanceName}/{callId}/recordings",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "List call recordings",
     "description": "Calls listCallRecordings InstanceName CallId",
     "href": "/api-reference/listCallRecordings",
@@ -3433,7 +3899,7 @@
   },
   {
     "id": "operation:post:/call/{instanceName}/{callId}/recording/start",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "Start local disk recording for a managed call",
     "description": "Records only media that is available in the API runtime. Calls answered on another linked device return 409 and do not create media files. Calls startCallRecording InstanceName CallId",
     "href": "/api-reference/startCallRecording",
@@ -3443,7 +3909,7 @@
   },
   {
     "id": "operation:post:/call/{instanceName}/{callId}/recording/stop",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "Stop local disk recording",
     "description": "Calls stopCallRecording InstanceName CallId",
     "href": "/api-reference/stopCallRecording",
@@ -3453,7 +3919,7 @@
   },
   {
     "id": "operation:get:/call/{instanceName}/{callId}/recordings/{recordingId}",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "Get call recording metadata",
     "description": "Calls getCallRecording InstanceName CallId RecordingId",
     "href": "/api-reference/getCallRecording",
@@ -3463,7 +3929,7 @@
   },
   {
     "id": "operation:delete:/call/{instanceName}/{callId}/recordings/{recordingId}",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "Delete a local call recording",
     "description": "Calls deleteCallRecording InstanceName CallId RecordingId",
     "href": "/api-reference/deleteCallRecording",
@@ -3472,8 +3938,38 @@
     "search": "delete a local call recording calls deletecallrecording instancename callid recordingid delete /call/{instancename}/{callid}/recordings/{recordingid}"
   },
   {
+    "id": "operation:get:/call/{instanceName}/{callId}/recordings/audio/download",
+    "type": "ATUAL",
+    "title": "Download unified audio call recording",
+    "description": "Calls downloadUnifiedAudioCallRecording InstanceName CallId",
+    "href": "/api-reference/downloadUnifiedAudioCallRecording",
+    "method": "GET",
+    "path": "/call/{instanceName}/{callId}/recordings/audio/download",
+    "search": "download unified audio call recording calls downloadunifiedaudiocallrecording instancename callid get /call/{instancename}/{callid}/recordings/audio/download"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/{callId}/recordings/video/incoming/download",
+    "type": "ATUAL",
+    "title": "Download unified incoming video call recording",
+    "description": "Calls downloadUnifiedIncomingVideoCallRecording InstanceName CallId",
+    "href": "/api-reference/downloadUnifiedIncomingVideoCallRecording",
+    "method": "GET",
+    "path": "/call/{instanceName}/{callId}/recordings/video/incoming/download",
+    "search": "download unified incoming video call recording calls downloadunifiedincomingvideocallrecording instancename callid get /call/{instancename}/{callid}/recordings/video/incoming/download"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/{callId}/recordings/video/outgoing/download",
+    "type": "ATUAL",
+    "title": "Download unified outgoing video call recording",
+    "description": "Calls downloadUnifiedOutgoingVideoCallRecording InstanceName CallId",
+    "href": "/api-reference/downloadUnifiedOutgoingVideoCallRecording",
+    "method": "GET",
+    "path": "/call/{instanceName}/{callId}/recordings/video/outgoing/download",
+    "search": "download unified outgoing video call recording calls downloadunifiedoutgoingvideocallrecording instancename callid get /call/{instancename}/{callid}/recordings/video/outgoing/download"
+  },
+  {
     "id": "operation:get:/call/{instanceName}/{callId}/recordings/{recordingId}/download",
-    "type": "PRO",
+    "type": "ATUAL",
     "title": "Download a completed local call recording",
     "description": "Calls downloadCallRecording InstanceName CallId RecordingId",
     "href": "/api-reference/downloadCallRecording",
@@ -3482,12 +3978,414 @@
     "search": "download a completed local call recording calls downloadcallrecording instancename callid recordingid get /call/{instancename}/{callid}/recordings/{recordingid}/download"
   },
   {
+    "id": "operation:get:/call/{instanceName}/capabilities",
+    "type": "ATUAL",
+    "title": "Consulta capacidades do provider de chamadas",
+    "description": "Calls getCallProviderCapabilities InstanceName",
+    "href": "/api-reference/getCallProviderCapabilities",
+    "method": "GET",
+    "path": "/call/{instanceName}/capabilities",
+    "search": "consulta capacidades do provider de chamadas calls getcallprovidercapabilities instancename get /call/{instancename}/capabilities"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/groups/{groupId}",
+    "type": "ATUAL",
+    "title": "Inicia chamada em grupo existente",
+    "description": "Calls startExistingGroupCall InstanceName groupId",
+    "href": "/api-reference/startExistingGroupCall",
+    "method": "POST",
+    "path": "/call/{instanceName}/groups/{groupId}",
+    "search": "inicia chamada em grupo existente calls startexistinggroupcall instancename groupid post /call/{instancename}/groups/{groupid}"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/group",
+    "type": "ATUAL",
+    "title": "Inicia chamada em grupo ad hoc",
+    "description": "Calls startAdHocGroupCall InstanceName",
+    "href": "/api-reference/startAdHocGroupCall",
+    "method": "POST",
+    "path": "/call/{instanceName}/group",
+    "search": "inicia chamada em grupo ad hoc calls startadhocgroupcall instancename post /call/{instancename}/group"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/links",
+    "type": "ATUAL",
+    "title": "Lista links de chamada",
+    "description": "Calls listCallLinks InstanceName",
+    "href": "/api-reference/listCallLinks",
+    "method": "GET",
+    "path": "/call/{instanceName}/links",
+    "search": "lista links de chamada calls listcalllinks instancename get /call/{instancename}/links"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/links",
+    "type": "ATUAL",
+    "title": "Cria link de chamada",
+    "description": "Calls createCallLink InstanceName",
+    "href": "/api-reference/createCallLink",
+    "method": "POST",
+    "path": "/call/{instanceName}/links",
+    "search": "cria link de chamada calls createcalllink instancename post /call/{instancename}/links"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/links/preview",
+    "type": "ATUAL",
+    "title": "Pre-visualiza link de chamada",
+    "description": "Calls previewCallLink InstanceName",
+    "href": "/api-reference/previewCallLink",
+    "method": "POST",
+    "path": "/call/{instanceName}/links/preview",
+    "search": "pre-visualiza link de chamada calls previewcalllink instancename post /call/{instancename}/links/preview"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/links/{linkId}",
+    "type": "ATUAL",
+    "title": "Consulta link de chamada",
+    "description": "Calls getCallLink InstanceName linkId",
+    "href": "/api-reference/getCallLink",
+    "method": "GET",
+    "path": "/call/{instanceName}/links/{linkId}",
+    "search": "consulta link de chamada calls getcalllink instancename linkid get /call/{instancename}/links/{linkid}"
+  },
+  {
+    "id": "operation:delete:/call/{instanceName}/links/{linkId}",
+    "type": "ATUAL",
+    "title": "Remove link de chamada localmente",
+    "description": "Soft-delete local; the pinned provider cannot revoke the remote URL. Calls softDeleteCallLink InstanceName linkId",
+    "href": "/api-reference/softDeleteCallLink",
+    "method": "DELETE",
+    "path": "/call/{instanceName}/links/{linkId}",
+    "search": "remove link de chamada localmente soft-delete local; the pinned provider cannot revoke the remote url. calls softdeletecalllink instancename linkid delete /call/{instancename}/links/{linkid}"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/links/{linkId}/join",
+    "type": "ATUAL",
+    "title": "Entra em chamada por link",
+    "description": "Calls joinCallLink InstanceName linkId",
+    "href": "/api-reference/joinCallLink",
+    "method": "POST",
+    "path": "/call/{instanceName}/links/{linkId}/join",
+    "search": "entra em chamada por link calls joincalllink instancename linkid post /call/{instancename}/links/{linkid}/join"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/links/{linkId}/leave",
+    "type": "ATUAL",
+    "title": "Sai de chamada por link",
+    "description": "Calls leaveCallLink InstanceName linkId",
+    "href": "/api-reference/leaveCallLink",
+    "method": "POST",
+    "path": "/call/{instanceName}/links/{linkId}/leave",
+    "search": "sai de chamada por link calls leavecalllink instancename linkid post /call/{instancename}/links/{linkid}/leave"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/{callId}/participants",
+    "type": "ATUAL",
+    "title": "Lista participantes da chamada",
+    "description": "Calls listCallParticipants InstanceName CallId",
+    "href": "/api-reference/listCallParticipants",
+    "method": "GET",
+    "path": "/call/{instanceName}/{callId}/participants",
+    "search": "lista participantes da chamada calls listcallparticipants instancename callid get /call/{instancename}/{callid}/participants"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/participants",
+    "type": "ATUAL",
+    "title": "Adiciona participantes a chamada",
+    "description": "Calls addCallParticipants InstanceName CallId",
+    "href": "/api-reference/addCallParticipants",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/participants",
+    "search": "adiciona participantes a chamada calls addcallparticipants instancename callid post /call/{instancename}/{callid}/participants"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/participants/{participantId}/ring",
+    "type": "ATUAL",
+    "title": "Chama novamente um participante",
+    "description": "Calls reringCallParticipant InstanceName CallId participantId",
+    "href": "/api-reference/reringCallParticipant",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/participants/{participantId}/ring",
+    "search": "chama novamente um participante calls reringcallparticipant instancename callid participantid post /call/{instancename}/{callid}/participants/{participantid}/ring"
+  },
+  {
+    "id": "operation:delete:/call/{instanceName}/{callId}/participants/{participantId}",
+    "type": "ATUAL",
+    "title": "Remove participante da chamada",
+    "description": "Reserved; returns 501 with the pinned provider. Calls removeCallParticipant InstanceName CallId participantId",
+    "href": "/api-reference/removeCallParticipant",
+    "method": "DELETE",
+    "path": "/call/{instanceName}/{callId}/participants/{participantId}",
+    "search": "remove participante da chamada reserved; returns 501 with the pinned provider. calls removecallparticipant instancename callid participantid delete /call/{instancename}/{callid}/participants/{participantid}"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/{callId}/waiting",
+    "type": "ATUAL",
+    "title": "Lista participantes em espera",
+    "description": "Calls listWaitingParticipants InstanceName CallId",
+    "href": "/api-reference/listWaitingParticipants",
+    "method": "GET",
+    "path": "/call/{instanceName}/{callId}/waiting",
+    "search": "lista participantes em espera calls listwaitingparticipants instancename callid get /call/{instancename}/{callid}/waiting"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/waiting/{participantId}/admit",
+    "type": "ATUAL",
+    "title": "Admite participante em espera",
+    "description": "Calls admitWaitingParticipant InstanceName CallId participantId",
+    "href": "/api-reference/admitWaitingParticipant",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/waiting/{participantId}/admit",
+    "search": "admite participante em espera calls admitwaitingparticipant instancename callid participantid post /call/{instancename}/{callid}/waiting/{participantid}/admit"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/waiting/{participantId}/reject",
+    "type": "ATUAL",
+    "title": "Rejeita participante em espera",
+    "description": "Calls rejectWaitingParticipant InstanceName CallId participantId",
+    "href": "/api-reference/rejectWaitingParticipant",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/waiting/{participantId}/reject",
+    "search": "rejeita participante em espera calls rejectwaitingparticipant instancename callid participantid post /call/{instancename}/{callid}/waiting/{participantid}/reject"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/waiting/admit-all",
+    "type": "ATUAL",
+    "title": "Admite todos os participantes em espera",
+    "description": "Calls admitAllWaitingParticipants InstanceName CallId",
+    "href": "/api-reference/admitAllWaitingParticipants",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/waiting/admit-all",
+    "search": "admite todos os participantes em espera calls admitallwaitingparticipants instancename callid post /call/{instancename}/{callid}/waiting/admit-all"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/waiting/reject-all",
+    "type": "ATUAL",
+    "title": "Rejeita todos os participantes em espera",
+    "description": "Calls rejectAllWaitingParticipants InstanceName CallId",
+    "href": "/api-reference/rejectAllWaitingParticipants",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/waiting/reject-all",
+    "search": "rejeita todos os participantes em espera calls rejectallwaitingparticipants instancename callid post /call/{instancename}/{callid}/waiting/reject-all"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/hand",
+    "type": "ATUAL",
+    "title": "Levanta a mao na chamada",
+    "description": "Calls raiseCallHand InstanceName CallId",
+    "href": "/api-reference/raiseCallHand",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/hand",
+    "search": "levanta a mao na chamada calls raisecallhand instancename callid post /call/{instancename}/{callid}/hand"
+  },
+  {
+    "id": "operation:delete:/call/{instanceName}/{callId}/hand",
+    "type": "ATUAL",
+    "title": "Abaixa a mao na chamada",
+    "description": "Calls lowerCallHand InstanceName CallId",
+    "href": "/api-reference/lowerCallHand",
+    "method": "DELETE",
+    "path": "/call/{instanceName}/{callId}/hand",
+    "search": "abaixa a mao na chamada calls lowercallhand instancename callid delete /call/{instancename}/{callid}/hand"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/{callId}/screen-share",
+    "type": "ATUAL",
+    "title": "Consulta compartilhamento de tela",
+    "description": "Calls getCallScreenShare InstanceName CallId",
+    "href": "/api-reference/getCallScreenShare",
+    "method": "GET",
+    "path": "/call/{instanceName}/{callId}/screen-share",
+    "search": "consulta compartilhamento de tela calls getcallscreenshare instancename callid get /call/{instancename}/{callid}/screen-share"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/screen-share/start",
+    "type": "ATUAL",
+    "title": "Inicia compartilhamento de tela",
+    "description": "Calls startCallScreenShare InstanceName CallId",
+    "href": "/api-reference/startCallScreenShare",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/screen-share/start",
+    "search": "inicia compartilhamento de tela calls startcallscreenshare instancename callid post /call/{instancename}/{callid}/screen-share/start"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/{callId}/screen-share/stop",
+    "type": "ATUAL",
+    "title": "Para compartilhamento de tela",
+    "description": "Calls stopCallScreenShare InstanceName CallId",
+    "href": "/api-reference/stopCallScreenShare",
+    "method": "POST",
+    "path": "/call/{instanceName}/{callId}/screen-share/stop",
+    "search": "para compartilhamento de tela calls stopcallscreenshare instancename callid post /call/{instancename}/{callid}/screen-share/stop"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/schedules",
+    "type": "ATUAL",
+    "title": "Lista chamadas agendadas",
+    "description": "Reserved; returns 501 with the pinned provider. Calls listScheduledCalls InstanceName",
+    "href": "/api-reference/listScheduledCalls",
+    "method": "GET",
+    "path": "/call/{instanceName}/schedules",
+    "search": "lista chamadas agendadas reserved; returns 501 with the pinned provider. calls listscheduledcalls instancename get /call/{instancename}/schedules"
+  },
+  {
+    "id": "operation:post:/call/{instanceName}/schedules",
+    "type": "ATUAL",
+    "title": "Cria chamada agendada",
+    "description": "Reserved; returns 501 with the pinned provider. Calls createScheduledCall InstanceName",
+    "href": "/api-reference/createScheduledCall",
+    "method": "POST",
+    "path": "/call/{instanceName}/schedules",
+    "search": "cria chamada agendada reserved; returns 501 with the pinned provider. calls createscheduledcall instancename post /call/{instancename}/schedules"
+  },
+  {
+    "id": "operation:get:/call/{instanceName}/schedules/{scheduleId}",
+    "type": "ATUAL",
+    "title": "Consulta chamada agendada",
+    "description": "Calls getScheduledCall InstanceName scheduleId",
+    "href": "/api-reference/getScheduledCall",
+    "method": "GET",
+    "path": "/call/{instanceName}/schedules/{scheduleId}",
+    "search": "consulta chamada agendada calls getscheduledcall instancename scheduleid get /call/{instancename}/schedules/{scheduleid}"
+  },
+  {
+    "id": "operation:patch:/call/{instanceName}/schedules/{scheduleId}",
+    "type": "ATUAL",
+    "title": "Atualiza chamada agendada",
+    "description": "Calls updateScheduledCall InstanceName scheduleId",
+    "href": "/api-reference/updateScheduledCall",
+    "method": "PATCH",
+    "path": "/call/{instanceName}/schedules/{scheduleId}",
+    "search": "atualiza chamada agendada calls updatescheduledcall instancename scheduleid patch /call/{instancename}/schedules/{scheduleid}"
+  },
+  {
+    "id": "operation:delete:/call/{instanceName}/schedules/{scheduleId}",
+    "type": "ATUAL",
+    "title": "Cancela chamada agendada",
+    "description": "Calls cancelScheduledCall InstanceName scheduleId",
+    "href": "/api-reference/cancelScheduledCall",
+    "method": "DELETE",
+    "path": "/call/{instanceName}/schedules/{scheduleId}",
+    "search": "cancela chamada agendada calls cancelscheduledcall instancename scheduleid delete /call/{instancename}/schedules/{scheduleid}"
+  },
+  {
     "id": "schema:CallStatus",
     "type": "Schema",
     "title": "CallStatus",
     "description": "Schema OpenAPI ",
     "href": "/api-reference",
     "search": "callstatus schema openapi   "
+  },
+  {
+    "id": "schema:CallProviderCapabilities",
+    "type": "Schema",
+    "title": "CallProviderCapabilities",
+    "description": "Schema OpenAPI directCalls groupCalls adHocGroupCalls callLinks callLinkPreview waitingRoom scheduledCalls participantInvite participantRering lateJoin reactions extendedReactions raisedHand screenShare multiParticipantAudio multiParticipantVideo audioRecording videoRecording",
+    "href": "/api-reference",
+    "search": "callprovidercapabilities schema openapi directcalls groupcalls adhocgroupcalls calllinks calllinkpreview waitingroom scheduledcalls participantinvite participantrering latejoin reactions extendedreactions raisedhand screenshare multiparticipantaudio multiparticipantvideo audiorecording videorecording  "
+  },
+  {
+    "id": "schema:StartGroupCallRequest",
+    "type": "Schema",
+    "title": "StartGroupCallRequest",
+    "description": "Schema OpenAPI video participants title",
+    "href": "/api-reference",
+    "search": "startgroupcallrequest schema openapi video participants title  "
+  },
+  {
+    "id": "schema:GroupCallSummary",
+    "type": "Schema",
+    "title": "GroupCallSummary",
+    "description": "Schema OpenAPI ",
+    "href": "/api-reference",
+    "search": "groupcallsummary schema openapi   "
+  },
+  {
+    "id": "schema:GroupCall",
+    "type": "Schema",
+    "title": "GroupCall",
+    "description": "Schema OpenAPI call participants",
+    "href": "/api-reference",
+    "search": "groupcall schema openapi call participants  "
+  },
+  {
+    "id": "schema:CallParticipant",
+    "type": "Schema",
+    "title": "CallParticipant",
+    "description": "Schema OpenAPI id instanceId callId participantJid participantLid deviceJid phoneNumber displayName role status audioEnabled audioMuted videoEnabled screenShareEnabled raisedHand",
+    "href": "/api-reference",
+    "search": "callparticipant schema openapi id instanceid callid participantjid participantlid devicejid phonenumber displayname role status audioenabled audiomuted videoenabled screenshareenabled raisedhand  "
+  },
+  {
+    "id": "schema:CreateCallLinkRequest",
+    "type": "Schema",
+    "title": "CreateCallLinkRequest",
+    "description": "Schema OpenAPI title video approvalRequired",
+    "href": "/api-reference",
+    "search": "createcalllinkrequest schema openapi title video approvalrequired  "
+  },
+  {
+    "id": "schema:CallLink",
+    "type": "Schema",
+    "title": "CallLink",
+    "description": "Token is intentionally omitted. id instanceId providerLinkId url title type videoEnabled approvalRequired status expiresAt",
+    "href": "/api-reference",
+    "search": "calllink token is intentionally omitted. id instanceid providerlinkid url title type videoenabled approvalrequired status expiresat  "
+  },
+  {
+    "id": "schema:CallLinkPreview",
+    "type": "Schema",
+    "title": "CallLinkPreview",
+    "description": "Schema OpenAPI video approvalRequired isAdmin creatorJid creatorPhoneNumber",
+    "href": "/api-reference",
+    "search": "calllinkpreview schema openapi video approvalrequired isadmin creatorjid creatorphonenumber  "
+  },
+  {
+    "id": "schema:WaitingParticipant",
+    "type": "Schema",
+    "title": "WaitingParticipant",
+    "description": "Schema OpenAPI ",
+    "href": "/api-reference",
+    "search": "waitingparticipant schema openapi   "
+  },
+  {
+    "id": "schema:ScheduledCall",
+    "type": "Schema",
+    "title": "ScheduledCall",
+    "description": "Reserved model; provider capability is currently false. id instanceId callLinkId groupId chatJid title description scheduledAt timezone videoEnabled approvalRequired status",
+    "href": "/api-reference",
+    "search": "scheduledcall reserved model; provider capability is currently false. id instanceid calllinkid groupid chatjid title description scheduledat timezone videoenabled approvalrequired status  "
+  },
+  {
+    "id": "schema:ScreenShareState",
+    "type": "Schema",
+    "title": "ScreenShareState",
+    "description": "Schema OpenAPI status screenShareId participants updatedAt",
+    "href": "/api-reference",
+    "search": "screensharestate schema openapi status screenshareid participants updatedat  "
+  },
+  {
+    "id": "schema:RaisedHandState",
+    "type": "Schema",
+    "title": "RaisedHandState",
+    "description": "Schema OpenAPI raised",
+    "href": "/api-reference",
+    "search": "raisedhandstate schema openapi raised  "
+  },
+  {
+    "id": "schema:GroupCallRecordingTrack",
+    "type": "Schema",
+    "title": "GroupCallRecordingTrack",
+    "description": "Schema OpenAPI id callId participantId deviceJid trackId ssrc mediaKind mediaSource format relativePath status",
+    "href": "/api-reference",
+    "search": "groupcallrecordingtrack schema openapi id callid participantid devicejid trackid ssrc mediakind mediasource format relativepath status  "
+  },
+  {
+    "id": "schema:CallFeatureNotSupported",
+    "type": "Schema",
+    "title": "CallFeatureNotSupported",
+    "description": "Schema OpenAPI status error message",
+    "href": "/api-reference",
+    "search": "callfeaturenotsupported schema openapi status error message  "
   },
   {
     "id": "schema:AnsweredBy",
@@ -3528,6 +4426,14 @@
     "description": "Schema OpenAPI reason",
     "href": "/api-reference",
     "search": "callreasonrequest schema openapi reason  "
+  },
+  {
+    "id": "schema:HangupResponse",
+    "type": "Schema",
+    "title": "HangupResponse",
+    "description": "Schema OpenAPI call termination",
+    "href": "/api-reference",
+    "search": "hangupresponse schema openapi call termination  "
   },
   {
     "id": "schema:Call",
@@ -3589,17 +4495,17 @@
     "id": "schema:InstanceCallSettings",
     "type": "Schema",
     "title": "InstanceCallSettings",
-    "description": "Schema OpenAPI callsEnabled incomingCallsEnabled outgoingCallsEnabled audio video reactionsEnabled recording diagnosticsEnabled autoAnswer limits",
+    "description": "Schema OpenAPI callsEnabled incomingCallsEnabled outgoingCallsEnabled audio video reactionsEnabled group callLinks participants raisedHandEnabled extendedReactionsEnabled scheduledCallsEnabled screenShare recording diagnosticsEnabled autoAnswer limits",
     "href": "/api-reference",
-    "search": "instancecallsettings schema openapi callsenabled incomingcallsenabled outgoingcallsenabled audio video reactionsenabled recording diagnosticsenabled autoanswer limits  "
+    "search": "instancecallsettings schema openapi callsenabled incomingcallsenabled outgoingcallsenabled audio video reactionsenabled group calllinks participants raisedhandenabled extendedreactionsenabled scheduledcallsenabled screenshare recording diagnosticsenabled autoanswer limits  "
   },
   {
     "id": "schema:EffectiveCallSettings",
     "type": "Schema",
     "title": "EffectiveCallSettings",
-    "description": "Result of global CALLS_* master locks combined with stored instance settings. callsEnabled incomingCallsEnabled outgoingCallsEnabled audioEnabled audioReceiveEnabled audioSendEnabled audioPlaybackEnabled audioStreamingEnabled videoEnabled videoReceiveEnabled videoSendEnabled videoUpgradeEnabled videoPlaybackEnabled reactionsEnabled recordingEnabled audioRecordingEnabled videoRecordingEnabled diagnosticsEnabled autoAnswerEnabled maxConcurrentCalls ringTimeoutSeconds connectTimeoutSeconds maxCallDurationSeconds",
+    "description": "Result of global CALLS_* master locks combined with stored instance settings. callsEnabled incomingCallsEnabled outgoingCallsEnabled audioEnabled audioReceiveEnabled audioSendEnabled audioPlaybackEnabled audioStreamingEnabled videoEnabled videoReceiveEnabled videoSendEnabled videoUpgradeEnabled videoPlaybackEnabled reactionsEnabled groupCallsEnabled groupAudioEnabled groupVideoEnabled adHocGroupCallsEnabled callLinksEnabled callLinkPreviewEnabled callLinkApprovalEnabled scheduledCallsEnabled participantInviteEnabled participantReringEnabled lateJoinEnabled raisedHandEnabled screenShareEnabled screenShareSendEnabled screenShareReceiveEnabled screenShareRecordingEnabled extendedReactionsEnabled recordingEnabled audioRecordingEnabled videoRecordingEnabled diagnosticsEnabled autoAnswerEnabled maxConcurrentCalls maxGroupCalls maxGroupCallParticipants maxWaitingParticipants maxParticipantReringAttempts participantReringCooldownSeconds ringTimeoutSeconds connectTimeoutSeconds maxCallDurationSeconds",
     "href": "/api-reference",
-    "search": "effectivecallsettings result of global calls_* master locks combined with stored instance settings. callsenabled incomingcallsenabled outgoingcallsenabled audioenabled audioreceiveenabled audiosendenabled audioplaybackenabled audiostreamingenabled videoenabled videoreceiveenabled videosendenabled videoupgradeenabled videoplaybackenabled reactionsenabled recordingenabled audiorecordingenabled videorecordingenabled diagnosticsenabled autoanswerenabled maxconcurrentcalls ringtimeoutseconds connecttimeoutseconds maxcalldurationseconds  "
+    "search": "effectivecallsettings result of global calls_* master locks combined with stored instance settings. callsenabled incomingcallsenabled outgoingcallsenabled audioenabled audioreceiveenabled audiosendenabled audioplaybackenabled audiostreamingenabled videoenabled videoreceiveenabled videosendenabled videoupgradeenabled videoplaybackenabled reactionsenabled groupcallsenabled groupaudioenabled groupvideoenabled adhocgroupcallsenabled calllinksenabled calllinkpreviewenabled calllinkapprovalenabled scheduledcallsenabled participantinviteenabled participantreringenabled latejoinenabled raisedhandenabled screenshareenabled screensharesendenabled screensharereceiveenabled screensharerecordingenabled extendedreactionsenabled recordingenabled audiorecordingenabled videorecordingenabled diagnosticsenabled autoanswerenabled maxconcurrentcalls maxgroupcalls maxgroupcallparticipants maxwaitingparticipants maxparticipantreringattempts participantreringcooldownseconds ringtimeoutseconds connecttimeoutseconds maxcalldurationseconds  "
   },
   {
     "id": "schema:UpdateInstanceCallSettingsRequest",
@@ -3685,25 +4591,25 @@
     "id": "schema:MessageBatchMessage",
     "type": "Schema",
     "title": "MessageBatchMessage",
-    "description": "Mensagem persistida do lote. O payload Ã© direto: nÃ£o envie number/chat/recipient/options nem wrappers como textMessage, mediaMessage, audioMessage, contactMessage, locationMessage ou buttonMessage. Tipos aceitos: text, link, media, audio, contact, location e interactive; ptt, whatsapp-audio e whatsapp_audio sÃ£o aliases de audio. type payload",
+    "description": "Mensagem persistida do lote. O payload é direto: não envie number/chat/recipient/options nem wrappers como textMessage, mediaMessage, audioMessage, contactMessage, locationMessage ou buttonMessage. Tipos aceitos: text, link, media, audio, contact, location e interactive; ptt, whatsapp-audio e whatsapp_audio são aliases de audio. type payload",
     "href": "/api-reference",
-    "search": "messagebatchmessage mensagem persistida do lote. o payload ã© direto: nã£o envie number/chat/recipient/options nem wrappers como textmessage, mediamessage, audiomessage, contactmessage, locationmessage ou buttonmessage. tipos aceitos: text, link, media, audio, contact, location e interactive; ptt, whatsapp-audio e whatsapp_audio sã£o aliases de audio. type payload  "
+    "search": "messagebatchmessage mensagem persistida do lote. o payload é direto: não envie number/chat/recipient/options nem wrappers como textmessage, mediamessage, audiomessage, contactmessage, locationmessage ou buttonmessage. tipos aceitos: text, link, media, audio, contact, location e interactive; ptt, whatsapp-audio e whatsapp_audio são aliases de audio. type payload  "
   },
   {
     "id": "schema:MessageBatchInteractivePayload",
     "type": "Schema",
     "title": "MessageBatchInteractivePayload",
-    "description": "Payload direto de message.type=interactive no Message Batch. Os botÃµes podem misturar url, copyCode e id. Um mediaUploadId positivo exige lote com exatamente uma instÃ¢ncia. ",
+    "description": "Payload direto de message.type=interactive no Message Batch. Os botões podem misturar url, copyCode e id. Um mediaUploadId positivo exige lote com exatamente uma instância. ",
     "href": "/api-reference",
-    "search": "messagebatchinteractivepayload payload direto de message.type=interactive no message batch. os botãµes podem misturar url, copycode e id. um mediauploadid positivo exige lote com exatamente uma instã¢ncia.   "
+    "search": "messagebatchinteractivepayload payload direto de message.type=interactive no message batch. os botões podem misturar url, copycode e id. um mediauploadid positivo exige lote com exatamente uma instância.   "
   },
   {
     "id": "schema:MessageBatchSchedule",
     "type": "Schema",
     "title": "MessageBatchSchedule",
-    "description": "Janela absoluta inicial. DAILY preserva os horÃ¡rios locais e aceita janelas que atravessam a meia-noite. windowStartAt windowEndAt recurrence timezone",
+    "description": "Janela absoluta inicial. DAILY preserva os horários locais e aceita janelas que atravessam a meia-noite. windowStartAt windowEndAt recurrence timezone",
     "href": "/api-reference",
-    "search": "messagebatchschedule janela absoluta inicial. daily preserva os horã¡rios locais e aceita janelas que atravessam a meia-noite. windowstartat windowendat recurrence timezone  "
+    "search": "messagebatchschedule janela absoluta inicial. daily preserva os horários locais e aceita janelas que atravessam a meia-noite. windowstartat windowendat recurrence timezone  "
   },
   {
     "id": "schema:MessageBatchScheduleInput",
@@ -3725,9 +4631,9 @@
     "id": "schema:MessageBatchListRequest",
     "type": "Schema",
     "title": "MessageBatchListRequest",
-    "description": "Filtros da listagem de lotes. Envie {} para usar os padrÃµes. status instanceName createdFrom createdTo name query limit nextCursor previousCursor",
+    "description": "Filtros da listagem de lotes. Envie {} para usar os padrões. status instanceName createdFrom createdTo name query limit nextCursor previousCursor",
     "href": "/api-reference",
-    "search": "messagebatchlistrequest filtros da listagem de lotes. envie {} para usar os padrãµes. status instancename createdfrom createdto name query limit nextcursor previouscursor  "
+    "search": "messagebatchlistrequest filtros da listagem de lotes. envie {} para usar os padrões. status instancename createdfrom createdto name query limit nextcursor previouscursor  "
   },
   {
     "id": "schema:MessageBatchCounts",
@@ -4162,14 +5068,6 @@
     "search": "sendreactionrequest schema openapi reactionmessage  "
   },
   {
-    "id": "schema:NativeFlowMessage",
-    "type": "Schema",
-    "title": "NativeFlowMessage",
-    "description": "Payload nativo de fluxo interativo do WhatsApp. ",
-    "href": "/api-reference",
-    "search": "nativeflowmessage payload nativo de fluxo interativo do whatsapp.   "
-  },
-  {
     "id": "schema:SendNativeFlowRequest",
     "type": "Schema",
     "title": "SendNativeFlowRequest",
@@ -4570,14 +5468,22 @@
     "search": "interactiverequest schema openapi number chat recipient buttonmessage carouselmessage options  "
   },
   {
+    "id": "schema:NativeFlowMessage",
+    "type": "Schema",
+    "title": "NativeFlowMessage",
+    "description": "Mensagem de formulario nativo enviada pelo endpoint interativo. ",
+    "href": "/api-reference",
+    "search": "nativeflowmessage mensagem de formulario nativo enviada pelo endpoint interativo.   "
+  },
+  {
     "id": "webhook:post:messageBatchEvent",
     "type": "PRO",
     "title": "Evento global persistente de Message Batch",
-    "description": "Enviado somente para WEBHOOK_GLOBAL_URL depois do commit da transaÃ§Ã£o do lote. Respostas 2xx confirmam a entrega; falhas sÃ£o reagendadas pela outbox com backoff persistente. Message Batches",
+    "description": "Enviado somente para WEBHOOK_GLOBAL_URL depois do commit da transação do lote. Respostas 2xx confirmam a entrega; falhas são reagendadas pela outbox com backoff persistente. Message Batches",
     "href": "/api-reference",
     "method": "POST",
     "path": "messageBatchEvent",
-    "search": "evento global persistente de message batch enviado somente para webhook_global_url depois do commit da transaã§ã£o do lote. respostas 2xx confirmam a entrega; falhas sã£o reagendadas pela outbox com backoff persistente. message batches post messagebatchevent"
+    "search": "evento global persistente de message batch enviado somente para webhook_global_url depois do commit da transação do lote. respostas 2xx confirmam a entrega; falhas são reagendadas pela outbox com backoff persistente. message batches post messagebatchevent"
   },
   {
     "id": "webhook-event:call.upsert",

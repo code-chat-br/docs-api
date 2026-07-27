@@ -1,0 +1,144 @@
+# Upgrade do meowcaller e validacao de chamadas
+
+Este guia concentra o historico do upgrade do meowcaller para recursos de grupo, breaking changes, baseline automatizado e matriz de testes reais.
+
+## Revisoes fixadas
+
+- meowcaller anterior: `10cb9858d9d7`
+- meowcaller selecionado: `6d9b7b2c18072155a4581ab8c7fccc51b4fd0a73`
+- referencia: `main`, merge do PR `purpshell/meowcaller#18`
+- pseudo-versao: `v0.0.0-20260726180203-6d9b7b2c1807`
+- whatsmeow: `v0.0.0-20260722203353-e9a033b24933` (`e9a033b2493356741a604a09e50c34b371882338`)
+- Go minimo do meowcaller: `1.25.0`; a aplicacao ja usa Go `1.26`
+
+O target foi escolhido depois da inspecao de branches, PRs, testes, datasheets e exemplos. Ele e a implementacao mesclada pelo mantenedor, nao apenas um commit contendo palavras relacionadas a grupos.
+
+## Seguranca e rollback
+
+- tag local: `calls-stable-before-meowcaller-group-upgrade`
+- branch: `feat/meowcaller-group-upgrade`
+- rollback de codigo: checkout da tag ou revert do commit de dependencias
+- migration nova: `000017_meowcaller_group_calls`; nao aplicar automaticamente em producao antes dos testes reais
+
+O modulo continua substituido por `./third_party/meowcaller`, que e a copia auditada do commit exato acrescida somente do patch de hangup ja usado pela aplicacao. O patch envia terminate antes do cleanup, aguarda confirmacao e preserva retry/timeout.
+
+## O que esta implementado
+
+Provider opcional, capabilities, chamadas por group ID, grupos ad hoc, participantes, re-ring com limites, links, preview/join/leave, lobby, mao levantada, reacoes Unicode, sinalizacao de screen share, persistencia aditiva, eventos, WebSocket v2 e video original atribuido por participante.
+
+## Limites comprovados do target
+
+- agendamento/EventMessage nao existe na API publica do meowcaller selecionado; as rotas retornam 501;
+- nao existe remocao publica de participante no provider; a rota retorna 501;
+- nao existe revoke/delete remoto de link; DELETE e soft-delete local e nao invalida a URL do WhatsApp;
+- nao existe callback publico de audio bruto por participante; o audio do grupo e mixado internamente;
+- o video por participante e atribuido, mas o screen share usa transicao do fluxo primario e nao oferece camera e tela simultaneas como tracks independentes;
+- a validacao automatizada nao substitui teste real com contas autorizadas.
+
+Por isso esta branch nao deve ser promovida como suporte completo a grupos antes da matriz de testes reais.
+
+## Breaking changes observados
+
+| API antiga | API nova | Impacto | Adaptacao |
+|---|---|---|---|
+| `Client.CallWithOptions` | preservada | nenhum para chamadas diretas | fluxo 1:1 mantido |
+| `Call.Hangup` | `Call.HangupWithOptions` continua disponivel | upstream novo nao substitui confirmacao controlada local | patch de terminate-before-cleanup, timeout e retry reaplicado |
+| um peer por `Call` | `GroupCallState` com participantes e devices | roster dinamico | normalizacao de JID, device JID, PID e status |
+| `Client.CallWithOptions` | `GroupCallWithOptions` e `GroupCallByIDWithOptions` | novos fluxos de saida | interface opcional `GroupCallingProvider` |
+| sem links | `CreateCallLink`, `PreviewCallLink`, `JoinCallLink` | novo lifecycle e lobby | token persistido, omitido de JSON e logs |
+| reacao curta | string Unicode no app-data | app limita NFC/64 bytes/controle/NUL | opt-in e 10 eventos/s |
+| video de peer sem identidade | `OnParticipantVideoFrame` | frames H.264 possuem participante/device/PID/SSRC | WebSocket v2 e gravacao original por participante |
+| audio de peer | mixer multipessoa interno | nao ha callback publico de audio bruto por participante | audio individual nao e declarado como suportado |
+| estado de camera | `OnScreenShare` e `Start/StopScreenShare` | sinalizacao de screen share independente | estado e eventos proprios; midia limitada ao fluxo primario |
+| sem lobby | `WaitingRoomState`, admit e deny | controle exige sessao administradora | ownership por instancia e operacoes em lote compostas |
+| whatsmeow ja fixado | mesma pseudo-versao `e9a033b24933` | nenhuma troca adicional | versao exigida pelo target confirmada |
+
+Nao houve alteracao na ordem de construcao/registro usada pela aplicacao: o wrapper do `meowcaller` continua sendo criado durante o registro do cliente WhatsApp. Os tipos concretos novos permanecem dentro do adapter.
+
+## Resultado pos-upgrade
+
+- branch: `feat/meowcaller-group-upgrade`
+- meowcaller: `v0.0.0-20260726180203-6d9b7b2c1807`
+- whatsmeow: `v0.0.0-20260722203353-e9a033b24933` (inalterado)
+- `go test -count=1 ./internal/call`: passou, 71 testes descobertos
+- `go test -count=1 ./internal/http/handler`: passou, 19 testes descobertos
+- `go test -count=1 ./internal/realtime`: passou
+- `go test`, `go vet` e `go build` no modulo `third_party/meowcaller`: passaram
+- `go vet ./...`: passou
+- `go build ./...`: passou
+- `go test -count=1 ./...`: falhou somente nos mesmos grupos ja registrados no baseline (`internal/http`, `internal/message` e `internal/whatsapp`)
+- `go test -race -count=1 ./...`: nao iniciou; host com `CGO_ENABLED=0` e sem toolchain C
+- PostgreSQL 17 isolado: migration `000017_meowcaller_group_calls` aplicada; teste avancou ate falha preexistente de `MessageBatch RecoverExpired` (esperado 1, recebido 2)
+- integracao `internal/database/repository`: problema de harness no Windows ao procurar `internal/database/migrations` a partir do diretorio do pacote
+- OpenAPI: YAML parseado com sucesso, 91 paths e 149 schemas
+- testes reais com contas/aparelhos: nao executados
+
+Esses resultados nao constituem validacao real de midia/lifecycle de grupos. As flags novas devem permanecer desligadas em producao ate a execucao da matriz de testes reais.
+
+Data da coleta: 2026-07-26 (America/Sao_Paulo)
+
+## Checkpoint
+
+- Commit da aplicacao: `5e697f703d1228f65967a769bb614c735c039e6f`
+- Branch de origem: `main`
+- Branch da atualizacao: `feat/meowcaller-group-upgrade`
+- Tag local de seguranca: `calls-stable-before-meowcaller-group-upgrade`
+- Worktree antes da atualizacao: limpo
+
+## Toolchain e baseline automatizado
+
+- `go version`: `go version go1.26.1 windows/amd64`
+- `go env GOVERSION`: `go1.26.1`
+- `go env GOTOOLCHAIN`: `auto`
+- Diretiva da aplicacao: `go 1.26`
+- meowcaller requerido no checkpoint: `v0.0.0-20260723091710-10cb9858d9d7`
+- meowcaller efetivamente compilado: `./third_party/meowcaller` por `replace`
+- Diretiva do fork local do meowcaller: `go 1.25.0`
+- whatsmeow: `v0.0.0-20260722203353-e9a033b24933`
+- Diretiva do whatsmeow: `go 1.25.0`
+- Grafo de modulos: 381 arestas; a aplicacao seleciona diretamente as versoes acima.
+
+| Comando | Resultado | Duracao | Observacao |
+|---|---:|---:|---|
+| `go mod tidy` | passou | 1,72 s | sem alteracao no worktree |
+| `go fmt ./...` | passou | 9,73 s | sem alteracao no worktree |
+| `go vet ./...` | passou | 10,27 s | sem diagnosticos |
+| `go test ./...` | falhou | 9,91 s | falhas preexistentes; `internal/call` passou |
+| `go test -race ./...` | nao executou | 0,04 s | `-race requires cgo; enable cgo by setting CGO_ENABLED=1` |
+| `go build ./...` | passou | 3,90 s | todos os pacotes compilam |
+
+Falhas preexistentes da suite global:
+
+- `internal/http`: `TestRegisterRoutesConnectionCodePostAliases` e `TestRegisterRoutesFindMessagesContract`.
+- `internal/message`: `TestBuildFormMessage` e tres casos de `TestFormValidationRejectsInvalidInput`.
+- `internal/whatsapp`: cinco testes de persistencia/dispatch de recibos e mensagens.
+- `internal/whatsapp`: `TestWhatsmeowVersionForWebhookCoverage` ainda esperava `v0.0.0-20260630180629-b572e5bcb92b`, enquanto o checkpoint ja usava `v0.0.0-20260722203353-e9a033b24933`.
+
+Essas falhas ocorreram antes de qualquer mudanca de dependencia ou de codigo da atualizacao e nao devem ser atribuidas ao novo meowcaller.
+
+Testes focados:
+
+| Escopo | Resultado | Observacao |
+|---|---:|---|
+| `go test -count=1 ./internal/call` | passou | provider fake, chamadas recebidas/realizadas, concorrencia, multidispositivo, hangup, audio/video, gravacao, recovery e settings |
+| `go test -count=1 ./internal/http/handler -run '^TestCallMediaFrame'` | passou | framing binario atual do WebSocket de midia |
+| `go test -count=1 ./internal/realtime` | passou | autorizacao e fan-out do hub WebSocket |
+| migrations + integracao em PostgreSQL 17 isolado | falhou parcialmente | 16 migrations aplicadas; falha posterior preexistente no recovery do Message Batch |
+
+O race detector nao pode ser habilitado localmente neste host: `CGO_ENABLED=0` e nenhum compilador GCC esta instalado. Ele devera ser executado em CI/Linux com CGO antes de promover a atualizacao.
+
+## Matriz de testes reais
+
+Use somente contas proprias ou autorizadas. Registre aparelho, versao, direcao, timestamps e IDs sanitizados.
+
+Antes da promocao, validar:
+
+- Android -> API e API -> Android: audio, video, upgrade, reacao, gravacao e hangup dos dois lados;
+- atendimento no smartphone: `ANSWERED_ELSEWHERE`, sem captura de midia e slot liberado;
+- grupo por ID e ad hoc com dois Android, late join, invite, re-ring, saida e encerramento do host;
+- link de audio/video, preview, join/leave, lobby, admit e reject;
+- mao e screen share no cliente suportado, verificando que camera nao e interrompida indevidamente;
+- arquivos por participante, SSRC/source e cleanup;
+- reconnect, shutdown e startup recovery.
+
+Nenhum item foi marcado como validado nesta atualizacao automatizada. Guarde evidencias antes de habilitar as flags em producao.

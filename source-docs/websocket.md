@@ -9,6 +9,7 @@ Local:
 ```text
 ws://localhost:8084/ws/instance/events?event=connection.update&token=<INSTANCE_JWT>
 ws://localhost:8084/ws/global/events?event=message.batch.progress&token=<USER_JWT>
+ws://localhost:8084/ws/instance/<INSTANCE_NAME>/calls/<CALL_ID>/media?token=<INSTANCE_JWT>
 ```
 
 Producao deve usar `wss://`:
@@ -16,13 +17,16 @@ Producao deve usar `wss://`:
 ```text
 wss://api.example.com/ws/instance/events
 wss://api.example.com/ws/global/events
+wss://api.example.com/ws/instance/<INSTANCE_NAME>/calls/<CALL_ID>/media
 ```
 
-Cada conexao assina exatamente um evento por query string. Nao ha wildcard, `*`, multiplos eventos separados por virgula ou troca de assinatura depois do upgrade.
+Cada conexao de eventos assina exatamente um evento por query string. Nao ha wildcard, `*`, multiplos eventos separados por virgula ou troca de assinatura depois do upgrade. A rota `/ws/instance/<INSTANCE_NAME>/calls/<CALL_ID>/media` nao assina eventos; ela transporta midia binaria da chamada.
 
 ## Autenticacao
 
 `/ws/instance/events` aceita somente JWT de instancia. O token e validado com HS256 e `AUTHENTICATION_JWT_SECRET`, precisa conter `instanceName`, precisa pertencer ao registro `Auth.token` da instancia encontrada e entrega apenas eventos desse `Instance.id`.
+
+`/ws/instance/<INSTANCE_NAME>/calls/<CALL_ID>/media` tambem aceita somente JWT de instancia. Alem das validacoes acima, o `INSTANCE_NAME` no path precisa ser igual ao claim `instanceName` do token. Isso impede abrir midia de chamada de outra instancia usando um token valido de instancia diferente.
 
 Quando `AUTHENTICATION_JWT_EXPIRES_IN > 0`, a expiracao do token de instancia e validada no handshake e a conexao e fechada no instante de `exp`. Quando `AUTHENTICATION_JWT_EXPIRES_IN=0`, a expiracao do token de instancia pode ser ignorada e nao ha timer artificial.
 
@@ -37,6 +41,38 @@ O runtime atual nao possui tabela de usuarios. Por isso, a validacao do usuario 
 | `event` | Sim | Nome externo exato do evento. A comparacao e case-sensitive. |
 | `token` | Sim | JWT de instancia ou de usuario, conforme o endpoint. |
 
+Parametros especificos de `/ws/instance/<INSTANCE_NAME>/calls/<CALL_ID>/media`:
+
+| Parametro | Padrao | Descricao |
+| --- | --- | --- |
+| `audioSend` | `true` | Browser envia audio PCM para a chamada. |
+| `audioReceive` | `true` | Browser recebe audio remoto da chamada. |
+| `videoSend` | `true` | Browser envia video H.264 Annex-B para a chamada. |
+| `videoReceive` | `true` | Browser recebe video remoto H.264 Annex-B da chamada. |
+
+Eventos de chamada podem ser assinados em `/ws/instance/events?event=<EVENTO>&token=<INSTANCE_JWT>`. Para encerramento controlado, os eventos mais importantes sao:
+
+- `call.hangup.requested`
+- `call.ending`
+- `call.terminate.sent`
+- `call.terminate.confirmed`
+- `call.terminate.retry`
+- `call.terminate.failed`
+- `call.ended`
+- `call.ended_unconfirmed`
+
+Ao receber apenas `call.ending`, o dashboard deve manter a UI em estado de encerramento e aguardar `call.ended` ou `call.ended_unconfirmed`.
+
+Para iniciar midia local no dashboard, nao use `call.outgoing`, `call.ringing`,
+`call.connecting`, criacao da chamada ou carregamento da pagina como gatilho. O
+provider confirma que a sessao de midia esta pronta pelo callback interno
+`ready`; a API persiste `status=ACTIVE`, publica `call.active` e em seguida
+publica `call.ready`. O gatilho recomendado para solicitar microfone e abrir o
+WebSocket binario e `event === "call.ready"` com `call.status === "ACTIVE"`.
+Como fallback de reconciliacao, ao carregar a pagina consulte
+`GET /call/{instanceName}/{callId}` e inicie a midia apenas se a chamada
+persistida estiver `ACTIVE` e nao terminal.
+
 Respostas antes do upgrade:
 
 | Status | Caso |
@@ -47,6 +83,65 @@ Respostas antes do upgrade:
 | `404` | Instancia referenciada pelo token de instancia nao encontrada. |
 | `426` | Rota chamada sem upgrade WebSocket. |
 | `500` | Falha interna inesperada. |
+
+## Midia de chamadas
+
+A rota de midia e bidirecional e usa frames WebSocket binarios. Ela e separada do WebSocket de eventos.
+
+```text
+GET /ws/instance/{instanceName}/calls/{callId}/media?token=<INSTANCE_JWT>
+```
+
+`callId` aceita UUID interno da chamada ou provider call ID. A chamada precisa estar em `CONNECTING` ou `ACTIVE`.
+
+Header binario:
+
+| Offset | Tamanho | Descricao |
+| ---: | ---: | --- |
+| `0` | `4` | Magic `WMC1`. |
+| `4` | `1` | Versao `1`. |
+| `5` | `1` | Tipo: `1` audio PCM float32, `2` video H.264 Annex-B. |
+| `6` | `2` | Reservado. |
+| `8` | `4` | Duracao em ms, big-endian. |
+| `12` | `4` | Tamanho do payload, big-endian. |
+| `16` | `N` | Payload. |
+
+Payloads:
+
+- Tipo `1`: PCM `float32 little-endian`, mono, 16 kHz. Use frames curtos, idealmente 60 ms.
+- Tipo `2`: access unit H.264 Annex-B bruto. Use a duracao no header para controlar o timestamp de video.
+
+Exemplo de empacotamento no browser:
+
+```js
+function mediaFrame(kind, payload, durationMs = 0) {
+  const header = new ArrayBuffer(16);
+  const view = new DataView(header);
+  view.setUint8(0, 0x57); // W
+  view.setUint8(1, 0x4d); // M
+  view.setUint8(2, 0x43); // C
+  view.setUint8(3, 0x31); // 1
+  view.setUint8(4, 1);
+  view.setUint8(5, kind);
+  view.setUint32(8, durationMs, false);
+  view.setUint32(12, payload.byteLength, false);
+  const out = new Uint8Array(16 + payload.byteLength);
+  out.set(new Uint8Array(header), 0);
+  out.set(new Uint8Array(payload), 16);
+  return out;
+}
+
+const ws = new WebSocket(`ws://localhost:8084/ws/instance/test_001/calls/${callId}/media?token=${token}`);
+ws.binaryType = "arraybuffer";
+
+// Enviar audio PCM float32 mono 16 kHz.
+ws.send(mediaFrame(1, float32PcmBuffer));
+
+// Enviar access unit H.264 Annex-B.
+ws.send(mediaFrame(2, h264AccessUnit, 66));
+```
+
+O servidor envia os mesmos tipos de frame no sentido API -> browser. No recebimento, leia o header, verifique `WMC1`, `version=1`, `kind` e `payloadLength`.
 
 ## Eventos de instancia
 

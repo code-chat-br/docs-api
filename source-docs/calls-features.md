@@ -1,0 +1,97 @@
+# Recursos de chamadas
+
+Este guia concentra os recursos opcionais adicionados ao subsistema de chamadas: grupos, links, lobby, participantes, midia, video, screen share, gravacao, mao levantada, reacoes e scheduling reservado.
+
+## Chamadas em grupo
+
+Recursos de grupo sao opt-in por instancia. Habilite `groupCallsEnabled` e `groupAudioEnabled`; video exige tambem `groupVideoEnabled`. Grupo ad hoc exige `adHocGroupCallsEnabled`.
+
+Iniciar:
+
+- `POST /call/{instanceName}/groups/{groupId}`: grupo existente. O servico consulta o roster da conta conectada, verifica membership, deduplica devices/identidades e aplica o limite configurado.
+- `POST /call/{instanceName}/group`: grupo ad hoc com pelo menos dois participantes.
+
+Payload:
+
+```json
+{"video":false,"participants":["5531999999999","5531988888888"],"title":"Suporte"}
+```
+
+Uma sessao de grupo ocupa exatamente um slot de chamada. `maxGroupCalls` limita sessoes; `maxGroupCallParticipants` limita participantes. A resposta ampliada contem `call` e `participants`; chamadas diretas mantem o payload antigo.
+
+O suporte do upstream ainda precisa de validacao real com contas autorizadas.
+
+## Participantes
+
+`CallParticipant` preserva participant JID/LID, device JID, telefone, role, status, flags de midia/mao e timestamps. A idempotencia usa chamada + participant JID + device JID, permitindo varios devices por pessoa.
+
+Adicionar e tocar novamente respeitam opt-in, ownership, limite do grupo, maximo de tentativas e cooldown. O target nao expoe remocao de participante; DELETE responde 501 em vez de simular remocao.
+
+Os callbacks do provider sao normalizados no adapter. A camada HTTP nao infere participante apenas por SSRC.
+
+## Call links
+
+Tokens sao persistidos para operacoes do provider, mas tem `json:"-"` e nao devem aparecer em logs. Preview aceita token ou URL e devolve somente metadados sanitizados.
+
+`approvalRequired` e intencao persistida na criacao e e aplicada pelo provider quando a conta administradora entra na sessao do link.
+
+DELETE valida ownership e faz soft-delete local. O meowcaller fixado nao possui revogacao remota, portanto a URL do WhatsApp pode continuar utilizavel.
+
+## Sala de espera
+
+Sala de espera requer `callLinksEnabled` e `callLinkApprovalEnabled`. A instancia autenticada representa o host/criador/moderador; o provider tambem precisa informar `IsAdmin` para listar/controlar o lobby.
+
+As operacoes `admit-all` e `reject-all` aplicam admit/deny individualmente porque o provider nao possui uma operacao em lote. `maxWaitingParticipants` e validado.
+
+## Midia e video
+
+Audio direto continua PCM float32 mono/16 kHz e video continua H.264 Annex-B. Em grupos, o meowcaller mistura o audio recebido e atribui video por participant/device/PID/SSRC. A aplicacao preserva essa distincao no adapter, WebSocket v2 e gravacao.
+
+Nao inferir identidade apenas por SSRC. Screen share usa sinalizacao propria, mas o target faz source-role transition no fluxo primario.
+
+O fluxo 1:1, upgrade/downgrade, orientacao, keyframe e H.264 Annex-B permanecem compativeis. Grupos usam `OnParticipantVideoFrame`, com identidade normalizada e filas limitadas.
+
+## Screen share
+
+Configuracoes: `screenShareEnabled`, `screenShareSendEnabled`, `screenShareReceiveEnabled` e `screenShareRecordingEnabled`, todas desabilitadas por padrao.
+
+Estados: `INACTIVE`, `STARTING`, `ACTIVE`, `STOPPING`, `FAILED`. A sinalizacao e os eventos nao alteram o estado de camera.
+
+Limitacao: o target sinaliza screen share independentemente, mas usa o fluxo primario de video como transicao de source-role. Ele nao entrega camera e tela simultaneas como dois tracks publicos. A gravacao separa frames conforme o estado sinalizado, mas nao pode reconstruir dois tracks simultaneos que o provider nao fornece.
+
+## Gravacao
+
+Audio/video 1:1, finalizacao, retencao, shutdown e recovery mantem o contrato anterior. As novas colunas de track sao nullable e nao alteram registros antigos.
+
+Para grupos, frames H.264 que chegam por `OnParticipantVideoFrame` sao preservados em:
+
+```text
+<root>/<instance>/<ano>/<mes>/<call>/participants/<participant-id>/
+  camera-<ssrc>.h264
+  screenshare-<ssrc>.h264
+```
+
+Cada registro contem `participantId`, `deviceJid`, `trackId`, `ssrc`, `mediaKind` e `mediaSource`. O registry e concorrente, dinamico e fecha sinks idempotentemente; recorders e filas WebSocket sao limitados.
+
+Limitacao critica: o provider nao expoe audio bruto por participante. O audio recebido e mixado internamente e nao pode ser rotulado honestamente como trilha original individual. Gallery, multichannel e timelines individuais ainda nao estao implementados. Nao declarar gravacao multipessoa completa.
+
+## Mao levantada e reacoes
+
+O historico usa eventos da chamada local e de participantes. Reacoes aceitam `reaction` ou o campo legado `emoji`, com validacao de UTF-8, NFC, limite de 64 bytes, rejeicao de NUL/caracteres de controle e valor vazio para limpar.
+
+Texto/reacao ampliada exige `extendedReactionsEnabled`; emojis legados continuam funcionando. O limite e 10 reacoes por chamada por segundo no runtime.
+
+## Scheduling reservado
+
+A migration cria `ScheduledCall` de forma aditiva para estabilizar o modelo futuro. As rotas tambem estao reservadas:
+
+- `POST/GET /call/{instanceName}/schedules`
+- `GET/PATCH/DELETE /call/{instanceName}/schedules/{scheduleId}`
+
+O commit fixado do meowcaller nao expoe scheduling/EventMessage. A capability `scheduledCalls` e `false`, o effective setting permanece `false` e todas as rotas retornam:
+
+```json
+{"status":501,"error":"call_feature_not_supported","message":"The current call provider does not support this feature."}
+```
+
+Nenhum protobuf foi montado manualmente e nenhum agendamento e anunciado como funcional.

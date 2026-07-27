@@ -1,6 +1,6 @@
 # Chamadas WhatsApp
 
-> **Recurso Pro:** todas as rotas `/call...` são classificadas comercialmente como CodeChat API Go Pro. O runtime atual não aplica entitlement de plano nem retorna `402`; a autenticação executável é feita por JWT da instância.
+Recursos de grupo, links, participantes, lobby, WebSocket v2 e gravacao atribuida agora estao consolidados em `calls-features.md`. API, eventos e dashboard ficam em `calls-api.md`; fluxos operacionais de chamada direta ficam em `calls-flows.md`; runtime, configuracao e troubleshooting ficam em `calls-runtime.md`; upgrade e validacao ficam em `calls-upgrade.md`. As chamadas diretas mantem o contrato anterior.
 
 Este documento consolida a documentação do subsistema experimental de chamadas WhatsApp da API.
 
@@ -920,9 +920,19 @@ Retorno `200`:
 
 ### `POST /call/{instanceName}/{callId}/audio/play`
 
-Toca áudio na chamada a partir de uma URL HTTP(S).
+Toca áudio na chamada a partir de uma URL HTTP(S) ou de um arquivo enviado por `multipart/form-data`.
 
-Use para enviar áudio da API para a chamada, por exemplo uma saudação, fila de espera ou arquivo gerado por outro serviço. O endpoint aceita MP3, WAV PCM e Ogg/Opus quando o `Content-Type` remoto é reconhecido. A URL passa por proteção SSRF e limite de tamanho.
+Use para enviar áudio da API para a chamada, por exemplo uma saudação, fila de espera ou arquivo gerado por outro serviço. O endpoint aceita MP3, WAV PCM e Ogg/Opus quando o `Content-Type` remoto é reconhecido ou quando a extensão do arquivo enviado é compatível. A URL passa por proteção SSRF e limite de tamanho.
+
+Campos:
+
+- `url`: URL HTTP/HTTPS do áudio. Usada em JSON ou em formulário multipart quando não houver arquivo.
+- `file`: arquivo multipart de áudio. Quando `file` e `url` são enviados juntos, `file` tem preferência.
+- `loop`: quando `true`, repete o áudio até `/audio/stop`.
+- `replaceCurrent`: quando `true`, interrompe playback atual antes de iniciar o novo.
+- `mediaId`: reservado; não está implementado para esse endpoint.
+
+Se `url`, `file` e `mediaId` estiverem vazios, a API retorna erro de requisição inválida.
 
 Exemplo:
 
@@ -935,6 +945,24 @@ curl -X POST "$API/call/$INSTANCE/$CALL_ID/audio/play" \
     "replaceCurrent": true,
     "loop": false
   }'
+```
+
+Retorno `200`:
+
+```json
+{
+  "status": "playing"
+}
+```
+
+Exemplo com upload local por multipart:
+
+```bash
+curl -X POST "$API/call/$INSTANCE/$CALL_ID/audio/play" \
+  -H "Authorization: Bearer $TOKEN" \
+  -F "file=@./hello.wav;type=audio/wav" \
+  -F "replaceCurrent=true" \
+  -F "loop=false"
 ```
 
 Retorno `200`:
@@ -1079,9 +1107,30 @@ Retorno `200`:
 
 ### `POST /call/{instanceName}/{callId}/video/play`
 
-Reservado para playback de vídeo.
+Inicia playback de vídeo local pela API dentro de uma chamada ativa ou em conexão.
 
-Na versão atual, a rota está registrada, mas não está implementada. Não há transcoding por URL/container para vídeo.
+Use quando a API deve enviar um vídeo pré-codificado para o outro participante. A mídia pode vir de uma URL ou de upload local por `multipart/form-data`. Em ambos os casos, o conteúdo precisa ser H.264 Annex-B bruto (`.h264`), com start codes `00 00 01` ou `00 00 00 01`. Este endpoint não faz transcoding de MP4, WebM, MOV ou outros containers; para esses formatos, gere um `.h264` compatível antes de chamar a API.
+
+Campos do corpo:
+
+- `url`: URL HTTP/HTTPS do arquivo H.264 Annex-B bruto. Usado em JSON ou em formulário multipart quando não houver arquivo.
+- `file`: arquivo multipart H.264 Annex-B bruto. Quando `file` e `url` são enviados juntos, `file` tem preferência.
+- `loop`: quando `true`, repete os access units até `/video/stop-playback`.
+- `replaceCurrent`: quando `true`, cancela qualquer playback de vídeo anterior da mesma chamada antes de iniciar o novo.
+- `frameDurationMs`: duração de cada access unit em milissegundos. Tem precedência sobre `fps`.
+- `fps`: taxa usada para calcular a duração dos frames quando `frameDurationMs` não for enviado.
+
+Se `url` e `file` estiverem vazios, a API retorna erro de requisição inválida. `mediaId` não é implementado nesse endpoint.
+
+Requisitos:
+
+- chamadas globais e chamadas da instância habilitadas;
+- `video.enabled=true`;
+- `video.sendEnabled=true`;
+- `video.playbackEnabled=true`;
+- chamada em `CONNECTING` ou `ACTIVE`.
+
+Ao iniciar, a API solicita o fluxo local de vídeo ao provider se ele ainda não estiver ativo. O endpoint envia eventos `call.video.playback.started`, `call.video.playback.completed` e, em caso de falha, `call.video.playback.failed`.
 
 Exemplo:
 
@@ -1089,26 +1138,41 @@ Exemplo:
 curl -X POST "$API/call/$INSTANCE/$CALL_ID/video/play" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"url":"https://cdn.example.com/video/sample.mp4"}'
+  -d '{"url":"https://cdn.example.com/video/sample.h264","fps":15,"loop":false,"replaceCurrent":true}'
 ```
 
-Retorno `422`:
+Retorno `200`:
 
 ```json
 {
-  "statusCode": 422,
-  "error": "unprocessable-entity",
-  "messages": [
-    "Entidade nao processavel."
-  ]
+  "status": "playing"
+}
+```
+
+Exemplo com upload local por multipart:
+
+```bash
+curl -X POST "$API/call/$INSTANCE/$CALL_ID/video/play" \
+  -H "Authorization: Bearer $TOKEN" \
+  -F "file=@./sample.h264;type=video/h264" \
+  -F "fps=15" \
+  -F "loop=false" \
+  -F "replaceCurrent=true"
+```
+
+Retorno `200`:
+
+```json
+{
+  "status": "playing"
 }
 ```
 
 ### `POST /call/{instanceName}/{callId}/video/stop-playback`
 
-Reservado para parar playback de vídeo.
+Interrompe o playback de vídeo iniciado por `/video/play`.
 
-Na versão atual, a rota está registrada, mas não está implementada. Ela não para vídeo local iniciado por `/video/start`; para isso use `/video/stop`.
+Esse endpoint é idempotente: se não houver playback ativo, retorna `200` mesmo assim. Ele não desliga a chamada e não para o vídeo local iniciado por `/video/start`; para encerrar o fluxo local de vídeo, use `/video/stop`. Quando há playback ativo, publica `call.video.playback.stopped`.
 
 Exemplo:
 
@@ -1117,15 +1181,11 @@ curl -X POST "$API/call/$INSTANCE/$CALL_ID/video/stop-playback" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
-Retorno `422`:
+Retorno `200`:
 
 ```json
 {
-  "statusCode": 422,
-  "error": "unprocessable-entity",
-  "messages": [
-    "Entidade nao processavel."
-  ]
+  "status": "stopped"
 }
 ```
 
@@ -1337,6 +1397,8 @@ Baixa o arquivo local da gravação.
 
 Use quando `downloadAvailable=true`. A API resolve o caminho relativo no servidor, bloqueia traversal e entrega o arquivo com `Content-Disposition` de download.
 
+Este endpoint baixa somente o arquivo original do `recordingId` (`audio-in.wav`, `audio-out.wav`, `video-in.h264` ou `video-out.h264`). Para arquivos unificados, use os endpoints dedicados abaixo.
+
 Exemplo:
 
 ```bash
@@ -1353,6 +1415,52 @@ Content-Type: audio/wav
 Content-Disposition: attachment; filename="audio-in.wav"
 
 <bytes do arquivo>
+```
+
+### `GET /call/{instanceName}/{callId}/recordings/audio/download`
+
+Baixa o áudio unificado de uma chamada de áudio.
+
+A API lista as gravações da chamada, valida que a chamada não é de vídeo, mistura `audio-in.wav` com `audio-out.wav`, salva `audio-mixed.wav` na pasta da chamada e retorna o arquivo. As gravações cruas continuam disponíveis.
+
+Exemplo:
+
+```bash
+curl -L "$API/call/$INSTANCE/$CALL_ID/recordings/audio/download" \
+  -H "Authorization: Bearer $TOKEN" \
+  -o audio-mixed.wav
+```
+
+### `GET /call/{instanceName}/{callId}/recordings/video/incoming/download`
+
+Baixa o vídeo de entrada unificado de uma chamada de vídeo.
+
+A API lista as gravações da chamada, valida que é uma chamada de vídeo, combina `video-in.h264` com `audio-in.wav`, salva `video-in.mp4` na pasta da chamada e retorna o arquivo.
+
+Se o vídeo for mais longo que o áudio, o MP4 mantém o vídeo até o fim e o áudio termina antes. Se o áudio for mais longo que o vídeo, o MP4 continua com tela preta até o fim do áudio.
+
+Exemplo:
+
+```bash
+curl -L "$API/call/$INSTANCE/$CALL_ID/recordings/video/incoming/download" \
+  -H "Authorization: Bearer $TOKEN" \
+  -o video-in.mp4
+```
+
+### `GET /call/{instanceName}/{callId}/recordings/video/outgoing/download`
+
+Baixa o vídeo de saída unificado de uma chamada de vídeo.
+
+A API lista as gravações da chamada, valida que é uma chamada de vídeo, combina `video-out.h264` com `audio-out.wav`, salva `video-out.mp4` na pasta da chamada e retorna o arquivo.
+
+Se o vídeo for mais longo que o áudio, o MP4 mantém o vídeo até o fim e o áudio termina antes. Se o áudio for mais longo que o vídeo, o MP4 continua com tela preta até o fim do áudio.
+
+Exemplo:
+
+```bash
+curl -L "$API/call/$INSTANCE/$CALL_ID/recordings/video/outgoing/download" \
+  -H "Authorization: Bearer $TOKEN" \
+  -o video-out.mp4
 ```
 
 ### `DELETE /call/{instanceName}/{callId}/recordings/{recordingId}`
@@ -1405,6 +1513,13 @@ Eventos multi-device:
 - `call.answered_elsewhere`
 - `call.rejected_elsewhere`
 
+Eventos de playback de vídeo:
+
+- `call.video.playback.started`
+- `call.video.playback.completed`
+- `call.video.playback.stopped`
+- `call.video.playback.failed`
+
 Eventos de gravação:
 
 - `call.recording.started`
@@ -1444,7 +1559,41 @@ Eventos nunca incluem bytes de mídia.
 
 Eventos de ciclo de vida de chamada usam o publicador WebSocket de eventos da instância. Assine eventos `call.*` usando o modelo de autenticação WebSocket já existente.
 
-A rota binária de mídia WebSocket planejada para `/ws/instance/calls/media` não está habilitada nesta versão. Atualmente a mídia entra por playback REST de URL e por sinks do provider. Clientes lentos de WebSocket de ciclo de vida são tratados pelo buffer limitado já existente.
+A mídia em tempo real usa um WebSocket binário separado:
+
+```text
+ws://localhost:8084/ws/instance/{instanceName}/calls/{callId}/media?token=<INSTANCE_JWT>
+```
+
+`instanceName` é obrigatório no path e precisa ser igual ao claim `instanceName` do JWT. O token também precisa ser exatamente o token persistido em `Auth.token` da instância. `callId` aceita o UUID interno da chamada ou o provider call ID.
+
+Parâmetros opcionais:
+
+- `audioSend`: browser envia áudio para a chamada. Padrão `true`.
+- `audioReceive`: browser recebe áudio remoto da chamada. Padrão `true`.
+- `videoSend`: browser envia vídeo para a chamada. Padrão `true`.
+- `videoReceive`: browser recebe vídeo remoto da chamada. Padrão `true`.
+
+O protocolo de mídia usa frames WebSocket binários. Header fixo:
+
+| Offset | Tamanho | Descrição |
+| ---: | ---: | --- |
+| `0` | `4` | Magic `WMC1`. |
+| `4` | `1` | Versão `1`. |
+| `5` | `1` | Tipo: `1` áudio PCM float32, `2` vídeo H.264 Annex-B. |
+| `6` | `2` | Reservado. |
+| `8` | `4` | Duração em milissegundos, big-endian. Usado principalmente para vídeo. |
+| `12` | `4` | Tamanho do payload, big-endian. |
+| `16` | `N` | Payload. |
+
+Payloads:
+
+- Áudio: PCM `float32 little-endian`, mono, 16 kHz. O front deve enviar frames curtos, idealmente 60 ms.
+- Vídeo: access unit H.264 Annex-B bruto. O front deve enviar duration no header para avançar o timestamp RTP.
+
+O servidor envia para o browser os mesmos tipos de frames: áudio remoto como PCM `float32 little-endian` e vídeo remoto como access units H.264 Annex-B.
+
+Esse transporte é WebSocket binário pronto para plugar no front. Ele não é um `RTCPeerConnection` WebRTC nativo e não faz transcodificação; o front precisa adaptar microfone/câmera para PCM/H.264 compatíveis, ou usar uma camada WebRTC própria que produza esses frames para o socket.
 
 ## Mídia
 
@@ -1664,3 +1813,31 @@ Outras verificações:
 - URL de áudio rejeitada: confira content type, tamanho, destino DNS e bloqueio de IP privado.
 - Vídeo falha: confirme que a entrada é H.264 Annex-B, não MP4.
 - Reinício da aplicação: chamadas não terminais são marcadas como `INTERRUPTED` com `application_restart`.
+
+## Concorrência e encerramento controlado
+
+A concorrência de chamadas agora é controlada por slots em memória por instância, identificados por `callID`. A fonte primária é o runtime local; o banco permanece como histórico e apoio de diagnóstico. Antes de rejeitar uma nova chamada por limite excedido, a API reconcilia slots órfãos contra o `CallManager` e remove slots sem runtime, com contexto cancelado ou status terminal.
+
+Estados que ocupam vaga: `INCOMING`, `OUTGOING`, `RINGING`, `PREACCEPTED`, `CONNECTING`, `ACTIVE` e `ENDING`.
+
+Estados que não ocupam vaga: `ENDED`, `ENDED_UNCONFIRMED`, `REJECTED`, `MISSED`, `BUSY`, `FAILED`, `INTERRUPTED`, `ANSWERED_ELSEWHERE` e `REJECTED_ELSEWHERE`.
+
+Use `GET /call/{instanceName}/active` para inspecionar as vagas ativas reconciliadas de uma instância. A resposta expõe IDs, status, direção, horário e fonte do slot; não expõe credenciais, mídia, tokens nem chaves.
+
+O encerramento pelo dashboard segue a ordem:
+
+1. publicar `call.hangup.requested`;
+2. transicionar a chamada para `ENDING`;
+3. enviar `<terminate>` pelo provider;
+4. correlacionar o ACK pelo stanza ID até `CALLS_HANGUP_ACK_TIMEOUT_SECONDS`, aceitando `CallTerminate` remoto como observação adicional;
+5. finalizar como `ENDED` quando confirmado ou `ENDED_UNCONFIRMED` quando o timeout expira;
+6. só então limpar mídia/gravação/WebSockets/runtime e liberar o slot.
+
+Eventos novos: `call.ending`, `call.terminate.sent`, `call.terminate.confirmed`, `call.terminate.retry`, `call.terminate.failed` e `call.ended_unconfirmed`.
+
+Mais detalhes:
+
+- `docs/calls-api.md`
+- `docs/calls-runtime.md`
+- `docs/calls-features.md`
+- `docs/calls-upgrade.md`

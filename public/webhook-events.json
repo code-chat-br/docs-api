@@ -78,7 +78,7 @@
         {
           "name": "status",
           "type": "string",
-          "description": "obrigatório, não aceita `null`. Status normalizado da chamada. Valores possíveis: `offer`, `ringing`, `preaccept`, `transport`, `relaylatency`, `timeout`, `reject`, `accept`, `terminate`, `unknown`."
+          "description": "obrigatório, não aceita `null`. Status normalizado da chamada. Telemetria de transporte nao publica call.upsert. Valores possíveis: `offer`, `ringing`, `preaccept`, `timeout`, `reject`, `accept`, `terminate`, `unknown`."
         },
         {
           "name": "offline",
@@ -2113,15 +2113,8 @@
         "data": {
           "batch": {
             "id": "01900000-0000-7000-8000-000000000001",
-            "ownerUserId": "11111111-1111-4111-8111-111111111111",
-            "name": "Aviso de manutenÃ§Ã£o",
+            "name": "Aviso de manutenção",
             "status": "PROCESSING",
-            "autoResume": true,
-            "schedule": null,
-            "nextRunAt": null,
-            "lastInterruptedAt": null,
-            "interruptionReason": null,
-            "lastRecoveredAt": null,
             "instances": [
               {
                 "id": 1,

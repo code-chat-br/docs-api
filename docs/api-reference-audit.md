@@ -6,12 +6,12 @@ Gerado exclusivamente a partir da especificação versionada em `source-docs/ope
 
 | Item | Quantidade |
 | --- | ---: |
-| Operações HTTP no OpenAPI | 113 |
-| Operações atuais, sem classificação Pro | 44 |
-| Operações Pro | 30 |
+| Operações HTTP no OpenAPI | 146 |
+| Operações atuais, sem classificação Pro | 92 |
+| Operações Pro | 15 |
 | Operações marcadas como deprecated | 38 |
 | Operações de webhook no OpenAPI | 1 |
-| Schemas em components.schemas | 136 |
+| Schemas em components.schemas | 151 |
 | Eventos de webhook por instância | 27 |
 | Eventos globais de Message Batch | 18 |
 
@@ -127,21 +127,54 @@ Resultado: **a especificação local está estruturalmente consistente e sincron
 | `POST` | `/message/batches/{batchId}/start` | `startMessageBatch` | Pro |
 | `POST` | `/message/batches/{batchId}/pause` | `pauseMessageBatch` | Pro |
 | `POST` | `/message/batches/{batchId}/stop` | `stopMessageBatch` | Pro |
-| `GET` | `/call/{instanceName}` | `listCalls` | Pro |
-| `POST` | `/call/{instanceName}` | `startCall` | Pro |
-| `GET` | `/call/{instanceName}/config` | `getInstanceCallSettings` | Pro |
-| `PUT` | `/call/{instanceName}/config` | `updateInstanceCallSettings` | Pro |
-| `GET` | `/call/{instanceName}/{callId}` | `getCall` | Pro |
-| `GET` | `/call/{instanceName}/{callId}/events` | `listCallEvents` | Pro |
-| `POST` | `/call/{instanceName}/{callId}/answer` | `answerCall` | Pro |
-| `POST` | `/call/{instanceName}/{callId}/reject` | `rejectManagedCall` | Pro |
-| `POST` | `/call/{instanceName}/{callId}/hangup` | `hangupCall` | Pro |
-| `GET` | `/call/{instanceName}/{callId}/recordings` | `listCallRecordings` | Pro |
-| `POST` | `/call/{instanceName}/{callId}/recording/start` | `startCallRecording` | Pro |
-| `POST` | `/call/{instanceName}/{callId}/recording/stop` | `stopCallRecording` | Pro |
-| `GET` | `/call/{instanceName}/{callId}/recordings/{recordingId}` | `getCallRecording` | Pro |
-| `DELETE` | `/call/{instanceName}/{callId}/recordings/{recordingId}` | `deleteCallRecording` | Pro |
-| `GET` | `/call/{instanceName}/{callId}/recordings/{recordingId}/download` | `downloadCallRecording` | Pro |
+| `GET` | `/call/{instanceName}` | `listCalls` | Atual |
+| `POST` | `/call/{instanceName}` | `startCall` | Atual |
+| `GET` | `/call/{instanceName}/config` | `getInstanceCallSettings` | Atual |
+| `PUT` | `/call/{instanceName}/config` | `updateInstanceCallSettings` | Atual |
+| `GET` | `/call/{instanceName}/active` | `getActiveCalls` | Atual |
+| `GET` | `/call/{instanceName}/{callId}` | `getCall` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/events` | `listCallEvents` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/answer` | `answerCall` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/reject` | `rejectManagedCall` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/hangup` | `hangupCall` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/recordings` | `listCallRecordings` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/recording/start` | `startCallRecording` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/recording/stop` | `stopCallRecording` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/recordings/{recordingId}` | `getCallRecording` | Atual |
+| `DELETE` | `/call/{instanceName}/{callId}/recordings/{recordingId}` | `deleteCallRecording` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/recordings/audio/download` | `downloadUnifiedAudioCallRecording` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/recordings/video/incoming/download` | `downloadUnifiedIncomingVideoCallRecording` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/recordings/video/outgoing/download` | `downloadUnifiedOutgoingVideoCallRecording` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/recordings/{recordingId}/download` | `downloadCallRecording` | Atual |
+| `GET` | `/call/{instanceName}/capabilities` | `getCallProviderCapabilities` | Atual |
+| `POST` | `/call/{instanceName}/groups/{groupId}` | `startExistingGroupCall` | Atual |
+| `POST` | `/call/{instanceName}/group` | `startAdHocGroupCall` | Atual |
+| `GET` | `/call/{instanceName}/links` | `listCallLinks` | Atual |
+| `POST` | `/call/{instanceName}/links` | `createCallLink` | Atual |
+| `POST` | `/call/{instanceName}/links/preview` | `previewCallLink` | Atual |
+| `GET` | `/call/{instanceName}/links/{linkId}` | `getCallLink` | Atual |
+| `DELETE` | `/call/{instanceName}/links/{linkId}` | `softDeleteCallLink` | Atual |
+| `POST` | `/call/{instanceName}/links/{linkId}/join` | `joinCallLink` | Atual |
+| `POST` | `/call/{instanceName}/links/{linkId}/leave` | `leaveCallLink` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/participants` | `listCallParticipants` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/participants` | `addCallParticipants` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/participants/{participantId}/ring` | `reringCallParticipant` | Atual |
+| `DELETE` | `/call/{instanceName}/{callId}/participants/{participantId}` | `removeCallParticipant` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/waiting` | `listWaitingParticipants` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/waiting/{participantId}/admit` | `admitWaitingParticipant` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/waiting/{participantId}/reject` | `rejectWaitingParticipant` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/waiting/admit-all` | `admitAllWaitingParticipants` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/waiting/reject-all` | `rejectAllWaitingParticipants` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/hand` | `raiseCallHand` | Atual |
+| `DELETE` | `/call/{instanceName}/{callId}/hand` | `lowerCallHand` | Atual |
+| `GET` | `/call/{instanceName}/{callId}/screen-share` | `getCallScreenShare` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/screen-share/start` | `startCallScreenShare` | Atual |
+| `POST` | `/call/{instanceName}/{callId}/screen-share/stop` | `stopCallScreenShare` | Atual |
+| `GET` | `/call/{instanceName}/schedules` | `listScheduledCalls` | Atual |
+| `POST` | `/call/{instanceName}/schedules` | `createScheduledCall` | Atual |
+| `GET` | `/call/{instanceName}/schedules/{scheduleId}` | `getScheduledCall` | Atual |
+| `PATCH` | `/call/{instanceName}/schedules/{scheduleId}` | `updateScheduledCall` | Atual |
+| `DELETE` | `/call/{instanceName}/schedules/{scheduleId}` | `cancelScheduledCall` | Atual |
 
 ## Endpoints possivelmente obsoletos
 
@@ -188,14 +221,29 @@ Os 38 endpoints abaixo continuam documentados, mas estão marcados como `depreca
 
 ## Schemas sem exemplos explícitos
 
-122 schemas não possuem `example` explícito. A interface gera exemplos a partir de tipos, enums, formatos, defaults e contexto da CodeChat:
+136 schemas não possuem `example` explícito. A interface gera exemplos a partir de tipos, enums, formatos, defaults e contexto da CodeChat:
 
 - `CallStatus`
+- `CallProviderCapabilities`
+- `StartGroupCallRequest`
+- `GroupCallSummary`
+- `GroupCall`
+- `CallParticipant`
+- `CreateCallLinkRequest`
+- `CallLink`
+- `CallLinkPreview`
+- `WaitingParticipant`
+- `ScheduledCall`
+- `ScreenShareState`
+- `RaisedHandState`
+- `GroupCallRecordingTrack`
+- `CallFeatureNotSupported`
 - `AnsweredBy`
 - `EndedBy`
 - `AnswerRequestedBy`
 - `StartCallRequest`
 - `CallReasonRequest`
+- `HangupResponse`
 - `Call`
 - `CallEvent`
 - `RecordingStatus`
@@ -262,7 +310,6 @@ Os 38 endpoints abaixo continuam documentados, mas estão marcados como `depreca
 - `SendContactRequest`
 - `SendLocationRequest`
 - `SendReactionRequest`
-- `NativeFlowMessage`
 - `SendNativeFlowRequest`
 - `IsAccountRequest`
 - `IsAccountResponse`
@@ -318,7 +365,7 @@ Os 38 endpoints abaixo continuam documentados, mas estão marcados como `depreca
 - Operações sem `summary` e sem `description`: 0.
 - Operações sem tag: 0.
 - Operações sem resposta: 0.
-- Operações sem exemplo explícito no nível da operação: 112. A referência prioriza exemplos de mídia/schema e usa o gerador como fallback.
+- Operações sem exemplo explícito no nível da operação: 145. A referência prioriza exemplos de mídia/schema e usa o gerador como fallback.
 - Parâmetros de caminho inconsistentes: 0.
 - `operationId` ausente ou duplicado: 0.
 
