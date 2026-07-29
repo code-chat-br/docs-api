@@ -110,6 +110,10 @@ for (const [route, pathItem] of Object.entries(spec.paths || {})) {
     }
     if (route.startsWith('/call')) {
       callOperations.add(operationKey);
+      if (operation['x-codechat-plan'] !== 'pro')
+        failures.push(`operaÃ§Ã£o de chamada sem classificaÃ§Ã£o Pro: ${operationKey}`);
+      if (operation['x-codechat-plan-enforced'] !== false)
+        failures.push(`operaÃ§Ã£o de chamada com enforcement Pro divergente: ${operationKey}`);
     }
   }
 }

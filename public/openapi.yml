@@ -3877,6 +3877,8 @@ paths:
         - Calls
       summary: Start an outbound WhatsApp call
       operationId: startCall
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
       requestBody:
@@ -3901,6 +3903,8 @@ paths:
         - Calls
       summary: List calls
       operationId: listCalls
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - name: status
@@ -3959,6 +3963,8 @@ paths:
       summary: Get per-instance call settings
       description: Returns stored instance settings and effective settings after global master flags are applied.
       operationId: getInstanceCallSettings
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
       responses:
@@ -3978,6 +3984,8 @@ paths:
       summary: Replace per-instance call settings
       description: Updates settings stored by instance_id. Global CALLS_* flags remain master locks and may keep effective fields disabled.
       operationId: updateInstanceCallSettings
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
       requestBody:
@@ -4032,6 +4040,8 @@ paths:
       summary: Inspect active call slots
       description: Returns the in-memory concurrent-call slots for the instance after runtime reconciliation. Does not expose credentials, media, SRTP keys or tokens.
       operationId: getActiveCalls
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
       responses:
@@ -4096,6 +4106,8 @@ paths:
         - Calls
       summary: Get one call
       operationId: getCall
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4116,6 +4128,8 @@ paths:
         - Calls
       summary: List call events
       operationId: listCallEvents
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4147,6 +4161,8 @@ paths:
         - Calls
       summary: Answer an inbound call through the API
       operationId: answerCall
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4171,6 +4187,8 @@ paths:
         - Calls
       summary: Reject an inbound call through the API
       operationId: rejectManagedCall
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4200,6 +4218,8 @@ paths:
         - Calls
       summary: Hang up a call through the API
       operationId: hangupCall
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4229,6 +4249,8 @@ paths:
         - Calls
       summary: List call recordings
       operationId: listCallRecordings
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4255,6 +4277,8 @@ paths:
       summary: Start local disk recording for a managed call
       description: Records only media that is available in the API runtime. Calls answered on another linked device return 409 and do not create media files.
       operationId: startCallRecording
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4289,6 +4313,8 @@ paths:
         - Calls
       summary: Stop local disk recording
       operationId: stopCallRecording
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4321,6 +4347,8 @@ paths:
         - Calls
       summary: Get call recording metadata
       operationId: getCallRecording
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4341,6 +4369,8 @@ paths:
         - Calls
       summary: Delete a local call recording
       operationId: deleteCallRecording
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4358,6 +4388,8 @@ paths:
         - Calls
       summary: Download unified audio call recording
       operationId: downloadUnifiedAudioCallRecording
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4379,6 +4411,8 @@ paths:
         - Calls
       summary: Download unified incoming video call recording
       operationId: downloadUnifiedIncomingVideoCallRecording
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4400,6 +4434,8 @@ paths:
         - Calls
       summary: Download unified outgoing video call recording
       operationId: downloadUnifiedOutgoingVideoCallRecording
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4421,6 +4457,8 @@ paths:
         - Calls
       summary: Download a completed local call recording
       operationId: downloadCallRecording
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4447,6 +4485,8 @@ paths:
         - Calls
       summary: Consulta capacidades do provider de chamadas
       operationId: getCallProviderCapabilities
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
       responses:
@@ -4464,6 +4504,8 @@ paths:
         - Calls
       summary: Inicia chamada em grupo existente
       operationId: startExistingGroupCall
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - name: groupId
@@ -4494,6 +4536,8 @@ paths:
         - Calls
       summary: Inicia chamada em grupo ad hoc
       operationId: startAdHocGroupCall
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
       requestBody:
@@ -4519,6 +4563,8 @@ paths:
         - Calls
       summary: Cria link de chamada
       operationId: createCallLink
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
       requestBody:
@@ -4543,6 +4589,8 @@ paths:
         - Calls
       summary: Lista links de chamada
       operationId: listCallLinks
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
       responses:
@@ -4565,6 +4613,8 @@ paths:
         - Calls
       summary: Pre-visualiza link de chamada
       operationId: previewCallLink
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
       requestBody:
@@ -4598,6 +4648,8 @@ paths:
         - Calls
       summary: Consulta link de chamada
       operationId: getCallLink
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - name: linkId
@@ -4619,6 +4671,8 @@ paths:
       tags:
         - Calls
       operationId: softDeleteCallLink
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       description: Soft-delete local; the pinned provider cannot revoke the remote URL.
       parameters:
         - $ref: "#/components/parameters/InstanceName"
@@ -4640,6 +4694,8 @@ paths:
         - Calls
       summary: Entra em chamada por link
       operationId: joinCallLink
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - name: linkId
@@ -4674,6 +4730,8 @@ paths:
         - Calls
       summary: Sai de chamada por link
       operationId: leaveCallLink
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - name: linkId
@@ -4697,6 +4755,8 @@ paths:
         - Calls
       summary: Lista participantes da chamada
       operationId: listCallParticipants
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4719,6 +4779,8 @@ paths:
         - Calls
       summary: Adiciona participantes a chamada
       operationId: addCallParticipants
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4751,6 +4813,8 @@ paths:
         - Calls
       summary: Chama novamente um participante
       operationId: reringCallParticipant
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4776,6 +4840,8 @@ paths:
       tags:
         - Calls
       operationId: removeCallParticipant
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       description: Reserved; returns 501 with the pinned provider.
       parameters:
         - $ref: "#/components/parameters/InstanceName"
@@ -4800,6 +4866,8 @@ paths:
         - Calls
       summary: Lista participantes em espera
       operationId: listWaitingParticipants
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4825,6 +4893,8 @@ paths:
         - Calls
       summary: Admite participante em espera
       operationId: admitWaitingParticipant
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4851,6 +4921,8 @@ paths:
         - Calls
       summary: Rejeita participante em espera
       operationId: rejectWaitingParticipant
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4877,6 +4949,8 @@ paths:
         - Calls
       summary: Admite todos os participantes em espera
       operationId: admitAllWaitingParticipants
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4893,6 +4967,8 @@ paths:
         - Calls
       summary: Rejeita todos os participantes em espera
       operationId: rejectAllWaitingParticipants
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4909,6 +4985,8 @@ paths:
         - Calls
       summary: Levanta a mao na chamada
       operationId: raiseCallHand
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4928,6 +5006,8 @@ paths:
         - Calls
       summary: Abaixa a mao na chamada
       operationId: lowerCallHand
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4948,6 +5028,8 @@ paths:
         - Calls
       summary: Consulta compartilhamento de tela
       operationId: getCallScreenShare
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4966,6 +5048,8 @@ paths:
         - Calls
       summary: Inicia compartilhamento de tela
       operationId: startCallScreenShare
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -4986,6 +5070,8 @@ paths:
         - Calls
       summary: Para compartilhamento de tela
       operationId: stopCallScreenShare
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - $ref: "#/components/parameters/CallId"
@@ -5005,6 +5091,8 @@ paths:
       tags:
         - Calls
       operationId: listScheduledCalls
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       description: Reserved; returns 501 with the pinned provider.
       parameters:
         - $ref: "#/components/parameters/InstanceName"
@@ -5018,6 +5106,8 @@ paths:
       tags:
         - Calls
       operationId: createScheduledCall
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       description: Reserved; returns 501 with the pinned provider.
       parameters:
         - $ref: "#/components/parameters/InstanceName"
@@ -5033,6 +5123,8 @@ paths:
         - Calls
       summary: Consulta chamada agendada
       operationId: getScheduledCall
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - name: scheduleId
@@ -5051,6 +5143,8 @@ paths:
         - Calls
       summary: Atualiza chamada agendada
       operationId: updateScheduledCall
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - name: scheduleId
@@ -5069,6 +5163,8 @@ paths:
         - Calls
       summary: Cancela chamada agendada
       operationId: cancelScheduledCall
+      x-codechat-plan: pro
+      x-codechat-plan-enforced: false
       parameters:
         - $ref: "#/components/parameters/InstanceName"
         - name: scheduleId
