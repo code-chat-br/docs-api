@@ -83,22 +83,19 @@ describe('analytics configuration', () => {
     expect(container.querySelector('#google-tag-manager')?.textContent).toContain('GTM-TEST');
     expect(container.querySelector('#meta-pixel')?.textContent).toContain('connect.facebook.net/en_US/fbevents.js');
     expect(container.querySelector('#meta-pixel')?.textContent).toContain('PIXEL-TEST');
+    expect(container.querySelector('#meta-pixel')?.textContent).toContain(`fbq('init', "PIXEL-TEST")`);
+    expect(container.querySelector('#meta-pixel')?.textContent).not.toContain(`fbq('track', 'PageView')`);
 
     const noscriptMarkup = renderToStaticMarkup(<AnalyticsNoscript />);
     expect(noscriptMarkup).toContain('https://www.googletagmanager.com/ns.html?id=GTM-TEST');
     expect(noscriptMarkup).toContain('https://www.facebook.com/tr?id=PIXEL-TEST');
   });
 
-  it('envia PageView do Meta Pixel em mudancas de rota sem duplicar o carregamento inicial', async () => {
+  it('envia PageView inicial e mudancas de rota do Meta Pixel sem duplicar', async () => {
     const fbq = vi.fn();
     window.fbq = fbq;
 
     const { rerender } = render(<MetaPixelPageViewTracker />);
-
-    expect(fbq).not.toHaveBeenCalled();
-
-    navigationState.pathname = '/docs/authentication';
-    rerender(<MetaPixelPageViewTracker />);
 
     await waitFor(() => expect(fbq).toHaveBeenCalledTimes(1));
     expect(fbq).toHaveBeenLastCalledWith('track', 'PageView');
@@ -106,10 +103,31 @@ describe('analytics configuration', () => {
     rerender(<MetaPixelPageViewTracker />);
     expect(fbq).toHaveBeenCalledTimes(1);
 
-    navigationState.search = 'tab=headers';
+    navigationState.pathname = '/docs/authentication';
     rerender(<MetaPixelPageViewTracker />);
 
     await waitFor(() => expect(fbq).toHaveBeenCalledTimes(2));
+    expect(fbq).toHaveBeenLastCalledWith('track', 'PageView');
+
+    rerender(<MetaPixelPageViewTracker />);
+    expect(fbq).toHaveBeenCalledTimes(2);
+
+    navigationState.search = 'tab=headers';
+    rerender(<MetaPixelPageViewTracker />);
+
+    await waitFor(() => expect(fbq).toHaveBeenCalledTimes(3));
+  });
+
+  it('aguarda o fbq estar disponivel antes de enviar o PageView inicial', async () => {
+    const { unmount } = render(<MetaPixelPageViewTracker />);
+    const fbq = vi.fn();
+
+    window.fbq = fbq;
+
+    await waitFor(() => expect(fbq).toHaveBeenCalledTimes(1));
+    expect(fbq).toHaveBeenLastCalledWith('track', 'PageView');
+
+    unmount();
   });
 
   it('envia page_view para o dataLayer em mudancas de rota sem duplicar o carregamento inicial', async () => {
