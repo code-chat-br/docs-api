@@ -1,19 +1,19 @@
 import { Suspense } from 'react';
-import { GoogleTagManager, GoogleTagManagerNoscript } from './google-tag-manager';
-import { GoogleTagManagerPageViewTracker } from './google-tag-manager-page-view-tracker';
+import { GoogleTag } from './google-tag';
+import { GoogleTagPageViewTracker } from './google-tag-page-view-tracker';
 import { MetaPixel, MetaPixelNoscript } from './meta-pixel';
 import { MetaPixelPageViewTracker } from './meta-pixel-page-view-tracker';
 
 type AnalyticsEnv = {
   NEXT_PUBLIC_ANALYTICS_ENABLED?: string;
-  NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID?: string;
+  NEXT_PUBLIC_GOOGLE_TAG_ID?: string;
   NEXT_PUBLIC_META_PIXEL_ID?: string;
   NODE_ENV?: string;
 };
 
 export type AnalyticsConfig = {
   enabled: boolean;
-  googleTagManagerId: string;
+  googleTagId: string;
   metaPixelId: string;
 };
 
@@ -32,7 +32,7 @@ export function getAnalyticsConfig(env: AnalyticsEnv = process.env): AnalyticsCo
 
   return {
     enabled,
-    googleTagManagerId: enabled ? (env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID?.trim() ?? '') : '',
+    googleTagId: enabled ? (env.NEXT_PUBLIC_GOOGLE_TAG_ID?.trim() ?? '') : '',
     metaPixelId: enabled ? (env.NEXT_PUBLIC_META_PIXEL_ID?.trim() ?? '') : '',
   };
 }
@@ -42,11 +42,11 @@ export function Analytics() {
 
   return (
     <>
-      <GoogleTagManager id={config.googleTagManagerId} />
+      <GoogleTag id={config.googleTagId} />
       <MetaPixel id={config.metaPixelId} />
-      {config.googleTagManagerId ? (
+      {config.googleTagId ? (
         <Suspense fallback={null}>
-          <GoogleTagManagerPageViewTracker />
+          <GoogleTagPageViewTracker id={config.googleTagId} />
         </Suspense>
       ) : null}
       {config.metaPixelId ? (
@@ -63,7 +63,6 @@ export function AnalyticsNoscript() {
 
   return (
     <>
-      <GoogleTagManagerNoscript id={config.googleTagManagerId} />
       <MetaPixelNoscript id={config.metaPixelId} />
     </>
   );
