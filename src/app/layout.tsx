@@ -4,6 +4,7 @@ import './global.css';
 import './api-reference/reference.css';
 import { Inter } from 'next/font/google';
 import type { Metadata } from 'next';
+import { Analytics, AnalyticsNoscript } from '@/components/analytics/analytics';
 import { uiTranslations } from '@/config/ui-translations';
 
 const siteUrl = 'https://docs.codechat.dev';
@@ -89,7 +90,9 @@ export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="pt-BR" className={inter.variable} suppressHydrationWarning data-scroll-behavior="smooth">
       <body className="flex min-h-screen flex-col font-sans">
+        <AnalyticsNoscript />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <Analytics />
         <RootProvider
           search={{ enabled: false }}
           theme={{ defaultTheme: 'dark', enableSystem: true, storageKey: 'codechat-docs-theme' }}

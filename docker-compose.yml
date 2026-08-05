@@ -12,6 +12,9 @@ services:
         NEXT_PUBLIC_GITHUB_URL: ${VITE_GITHUB_URL:-${NEXT_PUBLIC_GITHUB_URL:-https://github.com/code-chat-br/whatsapp-api-go}}
         NEXT_PUBLIC_DOCS_GITHUB_URL: ${NEXT_PUBLIC_DOCS_GITHUB_URL:-https://github.com/code-chat-br/docs-api}
         NEXT_PUBLIC_POSTMAN_URL: ${VITE_API_POSTMAN:-${NEXT_PUBLIC_POSTMAN_URL:-https://www.postman.com/codechat/codechat-api/collection/1yi47fy/go-v1-0-0}}
+        NEXT_PUBLIC_ANALYTICS_ENABLED: ${NEXT_PUBLIC_ANALYTICS_ENABLED:-}
+        NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID: ${NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID:-}
+        NEXT_PUBLIC_META_PIXEL_ID: ${NEXT_PUBLIC_META_PIXEL_ID:-}
     expose:
       - '3000'
     healthcheck:
