@@ -10,6 +10,8 @@ import Link from 'next/link';
 import { DocumentationShell } from '@/components/layout/documentation-shell';
 import { loadApiReference } from '@/features/openapi/openapi-loader';
 import { getGuideNavigation, getGuideNeighbours, toPlainText } from '@/lib/navigation';
+import { JsonLd } from '@/components/seo/json-ld';
+import { createPageMetadata, createTechArticleJsonLd } from '@/lib/seo';
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
@@ -22,6 +24,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const neighbours = getGuideNeighbours(page.url, guideNavigation);
   const { spec, webhooks } = await loadApiReference();
   const toc = page.data.toc.map((item) => ({ title: toPlainText(item.title, item.url), url: item.url, depth: item.depth }));
+  const description = page.data.description ?? `Guia da CodeChat API: ${page.data.title}.`;
 
   return (
     <DocumentationShell
@@ -29,8 +32,16 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
       webhooks={webhooks}
       guideNavigation={guideNavigation}
       toc={toc}
-      context={{ eyebrow: 'Guia editorial', title: page.data.title, description: page.data.description }}
+      context={{ eyebrow: 'Guia editorial', title: page.data.title, description }}
     >
+      <JsonLd
+        data={createTechArticleJsonLd({
+          title: page.data.title,
+          description,
+          path: page.url,
+          section: 'Guias CodeChat',
+        })}
+      />
       <article className="editorial-page" data-full={page.data.full}>
         <div className="endpoint-breadcrumb">
           <Link href="/docs">Guias</Link>
@@ -93,9 +104,13 @@ export async function generateMetadata(props: PageProps<'/docs/[[...slug]]'>): P
   const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();
+  const description = page.data.description ?? `Guia da CodeChat API: ${page.data.title}.`;
 
-  return {
+  return createPageMetadata({
     title: page.data.title,
-    description: page.data.description,
-  };
+    description,
+    path: page.url,
+    type: 'article',
+    keywords: [page.data.title, 'guia CodeChat', 'documentacao CodeChat'],
+  });
 }

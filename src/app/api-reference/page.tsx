@@ -3,17 +3,33 @@ import { ArrowRight, Braces, ExternalLink, Radio, Search, ShieldCheck, Webhook }
 import Link from 'next/link';
 import { documentationConfig } from '@/config/documentation';
 import { loadApiReference } from '@/features/openapi/openapi-loader';
+import { JsonLd } from '@/components/seo/json-ld';
+import { createApiReferenceJsonLd, createPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Referência da API',
-  description: 'Referência OpenAPI dinâmica da CodeChat com exemplos, schemas e playground seguro.',
-};
+const title = 'Referência da API';
+const description = 'Referência OpenAPI dinâmica da CodeChat com exemplos, schemas e playground seguro.';
+
+export const metadata: Metadata = createPageMetadata({
+  title,
+  description,
+  path: '/api-reference',
+  keywords: ['referência OpenAPI CodeChat', 'endpoints CodeChat', 'schemas CodeChat', 'playground API'],
+});
 
 export default async function ApiReferenceOverview() {
   const { spec, webhooks } = await loadApiReference();
   const first = spec.operations[0];
   return (
     <article className="reference-overview">
+      <JsonLd
+        data={createApiReferenceJsonLd({
+          title,
+          description,
+          path: '/api-reference',
+          operationCount: spec.operations.length,
+          webhookCount: webhooks.total,
+        })}
+      />
       <div className="overview-eyebrow">
         <span /> OpenAPI 3.1 · source-first
       </div>
